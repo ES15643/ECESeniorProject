@@ -7,7 +7,7 @@ class Stepper_Motor
     Stepper_Motor(){};
     Stepper_Motor(int stepsPerRevolution, int directionPin, int stepPin, int startingSpeed); 
     void MoveMotor(int steps, int direction); // Direction should 0 or 1
-    void SetSpeed(int speed){ Speed = speed; } 
+    void SetSpeed(int speed); 
     int GetStepsPerRevolution() { return StepsPerRevolution; }
     int GetDirectionPin() { return DirectionPin; }
     int GetStepPin() { return StepPin; }
@@ -16,5 +16,5 @@ class Stepper_Motor
     int StepsPerRevolution;
     int DirectionPin;
     int StepPin;
-    int Speed;
+    int DelayBetweenSteps;
 };

@@ -6,7 +6,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, int directionPin, int stepPin, int
     StepsPerRevolution = stepsPerRev;
     DirectionPin = directionPin;
     StepPin = stepPin;
-    Speed = startingSpeed;
+    SetSpeed(speed)
 
     pinMode(DirectionPin, OUTPUT);
     pinMode(StepPin, OUTPUT);
@@ -21,6 +21,12 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     {
         digitalWrite(StepPin, HIGH);
         digitalWrite(StepPin, LOW);
-        delay(speed);
+        delay(DelayBetweenSteps);
     }
 }
+
+void Stepper_Motor::SetSpeed(int speed) // Speed given in RPM
+{
+    stepsPerSecond = (speed * 60) / StepsPerRevolution;
+    DelayBetweenSteps = stepsPerSecond * 10;
+} 
