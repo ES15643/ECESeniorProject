@@ -1,11 +1,12 @@
 // Created by Evan Scullion 6/2/2019 for Senior Project Stepper Motor
 #include "Stepper_Motor.h"
 
-Stepper_Motor::Stepper_Motor(int stepsPerRev, int directionPin, int stepPin)
+Stepper_Motor::Stepper_Motor(int stepsPerRev, int directionPin, int stepPin, int startingSpeed)
 {
     StepsPerRevolution = stepsPerRev;
     DirectionPin = directionPin;
     StepPin = stepPin;
+    Speed = startingSpeed;
 
     pinMode(DirectionPin, OUTPUT);
     pinMode(StepPin, OUTPUT);
@@ -20,6 +21,6 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     {
         digitalWrite(StepPin, HIGH);
         digitalWrite(StepPin, LOW);
-        delay(1);
+        delay(speed);
     }
 }
