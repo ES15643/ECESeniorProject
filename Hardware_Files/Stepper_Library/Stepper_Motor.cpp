@@ -28,5 +28,5 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
 void Stepper_Motor::SetSpeed(int speed) // Speed given in RPM
 {
     stepsPerSecond = (speed * 60) / StepsPerRevolution;
-    DelayBetweenSteps = stepsPerSecond * 10;
+    DelayBetweenSteps = (1 / stepsPerSecond) * 1000;
 } 
