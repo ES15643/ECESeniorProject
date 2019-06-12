@@ -7,14 +7,18 @@ class Stepper_Motor
     Stepper_Motor(){};
     Stepper_Motor(int stepsPerRevolution, int directionPin, int stepPin, int startingSpeed); 
     void MoveMotor(int steps, int direction); // Direction should 0 or 1
-    void SetSpeed(int speed); 
+    void SetDefualtSpeed(int speed); // Speed given in RPM
     int GetStepsPerRevolution() { return StepsPerRevolution; }
     int GetDirectionPin() { return DirectionPin; }
     int GetStepPin() { return StepPin; }
 
     private:
+    int DefaultStepsPerSecond;
     int StepsPerRevolution;
     int DirectionPin;
     int StepPin;
     int DelayBetweenSteps;
+    int CalcTimeForTimerRegister();
+    void StepperAccelerationAdjuster();
+
 };

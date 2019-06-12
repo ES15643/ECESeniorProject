@@ -25,8 +25,25 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     }
 }
 
-void Stepper_Motor::SetSpeed(int speed) // Speed given in RPM
+void Stepper_Motor::SetDefualtSpeed(int speed)
 {
-    stepsPerSecond = (speed * 60) / StepsPerRevolution;
-    DelayBetweenSteps = (1 / stepsPerSecond) * 1000;
+
+    DefaultSPS = (speed * 60) / StepsPerRevolution;
+    //DelayBetweenSteps = (1 / stepsPerSecond) * 1000;
 } 
+
+int Stepper_Motor::CalcTimeForTimerRegister(int stepsPerSecond)
+{
+    return 16000000/stepsPerSecond; // Clock speed divided by desired steps per second
+}
+
+void Stepper_Motor::StepperAccelerationAdjuster()
+{
+    // TCNTx - Timer/Counter Register
+    // OCRx - Output Compare Register
+    // ICRx - Input Capture Register (16-bit timer only)
+    // TIMSKx - Timer/Counter Interrupt Mask Register. To enable/disable timer interrupts
+    // TIFRx - Timer/Counter Interrupt Flag Register. Indicates a pending timer interrupt
+    
+     
+}
