@@ -6,7 +6,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, int directionPin, int stepPin, int
     StepsPerRevolution = stepsPerRev;
     DirectionPin = directionPin;
     StepPin = stepPin;
-    SetSpeed(speed)
+    SetSpeed(speed);
 
     pinMode(DirectionPin, OUTPUT);
     pinMode(StepPin, OUTPUT);
@@ -44,6 +44,6 @@ void Stepper_Motor::StepperAccelerationAdjuster()
     // ICRx - Input Capture Register (16-bit timer only)
     // TIMSKx - Timer/Counter Interrupt Mask Register. To enable/disable timer interrupts
     // TIFRx - Timer/Counter Interrupt Flag Register. Indicates a pending timer interrupt
+
     
-     
 }

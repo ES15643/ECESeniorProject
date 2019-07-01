@@ -20,5 +20,4 @@ class Stepper_Motor
     int DelayBetweenSteps;
     int CalcTimeForTimerRegister();
     void StepperAccelerationAdjuster();
-
 };
