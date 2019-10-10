@@ -7,7 +7,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     DirectionPin = directionPin;
     StepPin = stepPin;
     MaxSPS = maxSPS;
-    CurrentSPS = 1;
+    CurrentSPS = 10;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
@@ -24,15 +24,15 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     TCNT1  = 0;
     OCR1A = CalcSPSTimerRegisterValue();  // Compare match regsiter
     TCCR1B |= (1 << WGM12);   // CTC mode
-    TCCR1B |= (1 << CS10);    // 1 prescaler 
+    TCCR1B |= (1 << CS12);    // 1 prescaler 
 
     // Set up interupt for acceleration (Acceleration Timer)
     TCCR3A = 0;
     TCCR3B = 0;
     TCNT3  = 0;
-    OCR3A = 16000; 
+    OCR3A = 1600;
     TCCR3B |= (1 << WGM32);   // CTC mode
-    TCCR3B |= (1 << CS30);    // 1 prescaler 
+    TCCR3B |= (1 << CS32);    // 1 prescaler 
 
     interrupts();   // enable all interrupts
 }
@@ -52,30 +52,32 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
 void Stepper_Motor::Step() 
 {
     digitalWrite(StepPin, HIGH);
+    // delay(1);
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
+
     if (AmountOfStepsTaken == TotalSteps)
-        ResetMotor();
+    {
+        noInterrupts();// disable all interrupts
         MotorIsMoving = false;
+        ResetMotor();
+        Serial.println("Stepping finished\n");
+        interrupts();   // enable all interrupts
+    }
+
+    OCR1A = CalcSPSTimerRegisterValue(); // Set Timer Reg to new value
 }
 
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
-    if (CurrentSPS >= MaxSPS)
-    {
-        return CLCKSPD/MaxSPS; // Clock speed divided by desired steps per second
-    }
-    else
-    {
-        return CLCKSPD/CurrentSPS; // Clock speed divided by desired steps per second
-    }
+    return CLCKSPD/CurrentSPS; // Clock speed divided by desired steps per second
 }
 
 void Stepper_Motor::StepperAccelerationAdjuster()
 {
     float temp = float(AmountOfStepsTaken) / float(TotalSteps);
 
-    if(Accelerate && temp < 0.8)
+    if(Accelerate && temp < 0.5)
     {
         if (CurrentSPS < MaxSPS)
         {
@@ -109,7 +111,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
-    CurrentSPS = 1;
+    CurrentSPS = 10;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
