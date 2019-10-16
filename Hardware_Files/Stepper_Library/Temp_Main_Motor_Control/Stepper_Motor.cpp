@@ -24,7 +24,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     TCNT1  = 0;
     OCR1A = CalcSPSTimerRegisterValue();  // Compare match regsiter
     TCCR1B |= (1 << WGM12);   // CTC mode
-    TCCR1B |= (1 << CS12);    // 1 prescaler 
+    TCCR1B |= (1 << CS12);    // 256 prescaler 
 
     // Set up interupt for acceleration (Acceleration Timer)
     TCCR3A = 0;
@@ -32,7 +32,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     TCNT3  = 0;
     OCR3A = 1600;
     TCCR3B |= (1 << WGM32);   // CTC mode
-    TCCR3B |= (1 << CS32);    // 1 prescaler 
+    TCCR3B |= (1 << CS32);    // 256 prescaler 
 
     interrupts();   // enable all interrupts
 }
