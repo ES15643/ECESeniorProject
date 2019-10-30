@@ -1,0 +1,5 @@
+Main Loop:
+
+Check for boundary input
+   If triggered stop and wait for home command
+
