@@ -19,7 +19,7 @@ class Stepper_Motor
     bool IsMotorMoving() { return MotorIsMoving; }
 
     private:
-    uint32_t CLCKSPD = 62500;
+    uint32_t CLCKSPD = 16000000;
     uint32_t accelerationRate = 1;
     uint32_t AmountOfStepsTaken;
     uint32_t DefaultStepsPerSecond;

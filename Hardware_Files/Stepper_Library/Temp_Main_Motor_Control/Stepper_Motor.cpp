@@ -7,7 +7,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     DirectionPin = directionPin;
     StepPin = stepPin;
     MaxSPS = maxSPS;
-    CurrentSPS = 10;
+    CurrentSPS = 245;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
@@ -70,22 +70,26 @@ void Stepper_Motor::Step()
 
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
-    return CLCKSPD/CurrentSPS; // Clock speed divided by desired steps per second
+    uint16_t temp = 65525 - (CLCKSPD/CurrentSPS);
+    Serial.println(temp);
+    return temp; // Clock speed divided by desired steps per second
 }
 
 void Stepper_Motor::StepperAccelerationAdjuster()
 {
     float temp = float(AmountOfStepsTaken) / float(TotalSteps);
 
-    if(Accelerate && temp < 0.5)
+    if(Accelerate && temp < 0.2)
     {
         if (CurrentSPS < MaxSPS)
         {
             CurrentSPS += accelerationRate;
+            // Serial.println(CurrentSPS);
         }
         
         if (CurrentSPS == MaxSPS)
         {
+            Serial.println("Max reached");
             Accelerate = false;
         }
         
@@ -98,7 +102,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
     }
     else if(Decelerate)
     {
-        if (CurrentSPS > 1)
+        if (CurrentSPS > 245)
         {
             CurrentSPS -= accelerationRate;
         }
@@ -111,7 +115,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
-    CurrentSPS = 10;
+    CurrentSPS = 245;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
