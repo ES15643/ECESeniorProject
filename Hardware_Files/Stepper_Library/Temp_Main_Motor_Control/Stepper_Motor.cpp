@@ -70,7 +70,12 @@ void Stepper_Motor::Step()
 
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
-    uint16_t temp = 65525 - (CLCKSPD/CurrentSPS);
+    uint32_t timePerStep = (CLCKSPD/CurrentSPS);
+    if(timePerStep >= 65535) //Checks for potential overflow
+    {
+        timePerStep = 65534;
+    }
+    uint16_t temp = 65535 - timePerStep;
     Serial.println(temp);
     return temp; // Clock speed divided by desired steps per second
 }
@@ -99,6 +104,8 @@ void Stepper_Motor::StepperAccelerationAdjuster()
     {
         Accelerate = false;
         Decelerate = true;
+        
+        return;
     }
     else if(Decelerate)
     {
@@ -110,6 +117,8 @@ void Stepper_Motor::StepperAccelerationAdjuster()
         {
             Decelerate = false;
         }
+        
+        return;
     }
 }
 
