@@ -60,8 +60,8 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(718, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(957, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -71,7 +71,7 @@
             this.loadImageToolStripMenuItem,
             this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadImageToolStripMenuItem
@@ -80,58 +80,58 @@
             this.LoadFromFileToolbarButton,
             this.fromToolStripMenuItem});
             this.loadImageToolStripMenuItem.Name = "loadImageToolStripMenuItem";
-            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.loadImageToolStripMenuItem.Text = "Load Image";
             // 
             // LoadFromFileToolbarButton
             // 
             this.LoadFromFileToolbarButton.Name = "LoadFromFileToolbarButton";
-            this.LoadFromFileToolbarButton.Size = new System.Drawing.Size(146, 22);
+            this.LoadFromFileToolbarButton.Size = new System.Drawing.Size(181, 26);
             this.LoadFromFileToolbarButton.Text = "From File";
             this.LoadFromFileToolbarButton.Click += new System.EventHandler(this.LoadFromFileToolbarButton_Click);
             // 
             // fromToolStripMenuItem
             // 
             this.fromToolStripMenuItem.Name = "fromToolStripMenuItem";
-            this.fromToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.fromToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.fromToolStripMenuItem.Text = "From Camera";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // OurPictureBox
             // 
             this.OurPictureBox.BackColor = System.Drawing.Color.Transparent;
             this.OurPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OurPictureBox.Location = new System.Drawing.Point(0, 24);
-            this.OurPictureBox.Margin = new System.Windows.Forms.Padding(2);
+            this.OurPictureBox.Location = new System.Drawing.Point(0, 30);
+            this.OurPictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OurPictureBox.Name = "OurPictureBox";
             this.OurPictureBox.Size = new System.Drawing.Size(584, 523);
             this.OurPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -142,10 +142,10 @@
             // LoadFromFileButton
             // 
             this.LoadFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadFromFileButton.Location = new System.Drawing.Point(512, 33);
-            this.LoadFromFileButton.Margin = new System.Windows.Forms.Padding(2);
+            this.LoadFromFileButton.Location = new System.Drawing.Point(683, 41);
+            this.LoadFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromFileButton.Name = "LoadFromFileButton";
-            this.LoadFromFileButton.Size = new System.Drawing.Size(147, 54);
+            this.LoadFromFileButton.Size = new System.Drawing.Size(196, 66);
             this.LoadFromFileButton.TabIndex = 2;
             this.LoadFromFileButton.Text = "Load From File";
             this.LoadFromFileButton.UseVisualStyleBackColor = true;
@@ -154,10 +154,10 @@
             // StopButton
             // 
             this.StopButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StopButton.Location = new System.Drawing.Point(512, 323);
-            this.StopButton.Margin = new System.Windows.Forms.Padding(2);
+            this.StopButton.Location = new System.Drawing.Point(683, 398);
+            this.StopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(147, 54);
+            this.StopButton.Size = new System.Drawing.Size(196, 66);
             this.StopButton.TabIndex = 3;
             this.StopButton.Tag = "StopButton";
             this.StopButton.Text = "Stop";
@@ -166,10 +166,10 @@
             // ConvertImageButton
             // 
             this.ConvertImageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConvertImageButton.Location = new System.Drawing.Point(512, 175);
-            this.ConvertImageButton.Margin = new System.Windows.Forms.Padding(2);
+            this.ConvertImageButton.Location = new System.Drawing.Point(683, 215);
+            this.ConvertImageButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ConvertImageButton.Name = "ConvertImageButton";
-            this.ConvertImageButton.Size = new System.Drawing.Size(147, 54);
+            this.ConvertImageButton.Size = new System.Drawing.Size(196, 66);
             this.ConvertImageButton.TabIndex = 4;
             this.ConvertImageButton.Tag = "EditingOptionsButton";
             this.ConvertImageButton.Text = "Convert Image File";
@@ -180,10 +180,10 @@
             // LoadFromCameraButton
             // 
             this.LoadFromCameraButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadFromCameraButton.Location = new System.Drawing.Point(512, 105);
-            this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(2);
+            this.LoadFromCameraButton.Location = new System.Drawing.Point(683, 129);
+            this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromCameraButton.Name = "LoadFromCameraButton";
-            this.LoadFromCameraButton.Size = new System.Drawing.Size(147, 54);
+            this.LoadFromCameraButton.Size = new System.Drawing.Size(196, 66);
             this.LoadFromCameraButton.TabIndex = 5;
             this.LoadFromCameraButton.Text = "Load From Camera";
             this.LoadFromCameraButton.UseVisualStyleBackColor = true;
@@ -191,20 +191,20 @@
             // StartButton
             // 
             this.StartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartButton.Location = new System.Drawing.Point(512, 247);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(2);
+            this.StartButton.Location = new System.Drawing.Point(683, 304);
+            this.StartButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(147, 54);
+            this.StartButton.Size = new System.Drawing.Size(196, 66);
             this.StartButton.TabIndex = 6;
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
             // 
             // DavinciBotView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(718, 449);
+            this.ClientSize = new System.Drawing.Size(957, 553);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.LoadFromCameraButton);
             this.Controls.Add(this.ConvertImageButton);
@@ -214,7 +214,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DavinciBotView";
             this.Text = "DaVinci-Bot";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DavinciBotView_FormClosing);
