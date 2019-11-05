@@ -7,7 +7,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     DirectionPin = directionPin;
     StepPin = stepPin;
     MaxSPS = maxSPS;
-    CurrentSPS = 245;
+    CurrentSPS = 300;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
@@ -24,7 +24,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     TCNT1  = 0;
     OCR1A = CalcSPSTimerRegisterValue();  // Compare match regsiter
     TCCR1B |= (1 << WGM12);   // CTC mode
-    TCCR1B |= (1 << CS12);    // 256 prescaler 
+    TCCR1B |= (1 << CS10);    // 1 prescaler 
 
     // Set up interupt for acceleration (Acceleration Timer)
     TCCR3A = 0;
@@ -32,7 +32,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     TCNT3  = 0;
     OCR3A = 1600;
     TCCR3B |= (1 << WGM32);   // CTC mode
-    TCCR3B |= (1 << CS32);    // 256 prescaler 
+    TCCR3B |= (1 << CS32);    // 256 prescaler
 
     interrupts();   // enable all interrupts
 }
@@ -52,13 +52,17 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
 void Stepper_Motor::Step() 
 {
     digitalWrite(StepPin, HIGH);
-    // delay(1);
+    // delayMicroseconds(1);
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
 
     if (AmountOfStepsTaken == TotalSteps)
     {
+        Serial.print("Steps Taken: ");
+        Serial.println(AmountOfStepsTaken);
         noInterrupts();// disable all interrupts
+        TIFR1 |= (1 << OCF1A);
+        TIFR3 |= (1 << OCF3A);
         MotorIsMoving = false;
         ResetMotor();
         Serial.println("Stepping finished\n");
@@ -71,24 +75,29 @@ void Stepper_Motor::Step()
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
     uint32_t timePerStep = (CLCKSPD/CurrentSPS);
+    // Serial.print("TimePerStep: ");
+    // Serial.println(timePerStep);
     if(timePerStep >= 65535) //Checks for potential overflow
     {
-        timePerStep = 65534;
+        timePerStep = 65535;
     }
-    uint16_t temp = 65535 - timePerStep;
-    Serial.println(temp);
+    uint16_t temp = timePerStep;
+    // Serial.println(temp);
     return temp; // Clock speed divided by desired steps per second
 }
 
 void Stepper_Motor::StepperAccelerationAdjuster()
 {
-    float temp = float(AmountOfStepsTaken) / float(TotalSteps);
+    float temp = (float)AmountOfStepsTaken / (float)TotalSteps;
+    // Serial.print("Temp: ");
+    // Serial.println(temp);
 
     if(Accelerate && temp < 0.2)
     {
         if (CurrentSPS < MaxSPS)
         {
             CurrentSPS += accelerationRate;
+            // Serial.print("SPS: ");
             // Serial.println(CurrentSPS);
         }
         
@@ -100,22 +109,24 @@ void Stepper_Motor::StepperAccelerationAdjuster()
         
         return;
     }
-    else if ( !Decelerate && temp > 0.8)
+    
+    if ( !Decelerate && temp > 0.8)
     {
         Accelerate = false;
         Decelerate = true;
-        
-        return;
     }
-    else if(Decelerate)
+    
+    if(Decelerate)
     {
-        if (CurrentSPS > 245)
+        if (CurrentSPS > 300)
         {
             CurrentSPS -= accelerationRate;
+            // Serial.print("SPS: ");
+            // Serial.println(CurrentSPS);
         }
         else
         {
-            Decelerate = false;
+            CurrentSPS = 300;
         }
         
         return;
@@ -124,7 +135,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
-    CurrentSPS = 245;
+    CurrentSPS = 300;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;

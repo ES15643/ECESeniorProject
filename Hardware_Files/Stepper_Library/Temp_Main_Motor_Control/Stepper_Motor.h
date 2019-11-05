@@ -20,7 +20,7 @@ class Stepper_Motor
 
     private:
     uint32_t CLCKSPD = 16000000;
-    uint32_t accelerationRate = 1;
+    uint32_t accelerationRate = 2;
     uint32_t AmountOfStepsTaken;
     uint32_t DefaultStepsPerSecond;
     uint32_t StepsPerRevolution;

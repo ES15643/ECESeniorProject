@@ -6,9 +6,8 @@ Stepper_Motor stpm3;
 
 int stmp1_directionpin = 52;
 int stmp1_steppin = 53;
-
-int maxSPS = 260;
-
+int count = 0;
+int maxSPS = 1000;
 
 ISR(TIMER1_COMPA_vect)
 {
@@ -52,7 +51,7 @@ void loop()
         bytesRead = Serial.read();
         if (bytesRead == 'y')
         {
-            stpm1.MoveMotor(1200, 1);
+            stpm1.MoveMotor(2500, 1);
             // stpm2.MoveMotor(600, 1);
             // stpm3.MoveMotor(600, 1);
         }
