@@ -1,5 +1,22 @@
 Main Loop:
 
 Check for boundary input
-   If triggered stop and wait for home command
+   If triggered 
+      Stop and wait for home command
 
+Check for new movement command
+   If new command is available & machine is homed
+      Parse command
+      Send control signals to stepper drivers
+      Return calculated position
+   Else If machine is not homed
+      Home machine
+      Reset position variables
+      Parse command
+      Send control signals to stepper drivers
+      Return calculated position
+      
+Movement Helper Function(parsed command):
+
+If linear
+   
