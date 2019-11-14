@@ -142,6 +142,7 @@ void boundaryTriggeredX()
         stpm1.SetCurrPos(0.0);
         homingx = false;
         detachInterrupt(digitalPinToInterrupt(3));
+        detachInterrupt(digitalPinToInterrupt(18));
     }
 }
 
@@ -159,6 +160,7 @@ void boundaryTriggeredY()
         stpm2.ResetMotor();
         stpm2.SetCurrPos(0.0);
         homingy = false;
+        detachInterrupt(digitalPinToInterrupt(19));
         detachInterrupt(digitalPinToInterrupt(21));
     }
 }
@@ -196,7 +198,11 @@ void Home()
         stpm2.MoveMotor(200, 0);
     }
 
+    while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){}
+
     attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
+    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
     attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
+    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
     Serial.println("Motor Ready");
 }
