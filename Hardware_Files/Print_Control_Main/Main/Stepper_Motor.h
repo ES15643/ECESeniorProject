@@ -29,7 +29,7 @@ class Stepper_Motor
 
     private:
     int Direction = 0;
-    int x_plane;
+    bool X_plane;
     float cur_pos;
     float center_point;
     float dest;

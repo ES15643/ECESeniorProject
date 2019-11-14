@@ -12,13 +12,14 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     Accelerate = false;
     Decelerate = false;
     MotorIsMoving = false;
+    X_plane = x_plane;
 
     pinMode(DirectionPin, OUTPUT);
     pinMode(StepPin, OUTPUT);
 
     noInterrupts();// disable all interrupts
 
-    if (x_plane)
+    if (X_plane)
     {
         // Set up interupt for timer 1 (Stepping Timer)
         TCCR1A = 0;
@@ -60,7 +61,7 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     Accelerate = true;
     MotorIsMoving = true;
 
-    if(x_plane)
+    if(X_plane)
     {
         TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)   
     }
@@ -84,7 +85,7 @@ void Stepper_Motor::Step()
         Serial.print("Steps Taken: ");
         Serial.println(AmountOfStepsTaken);
         noInterrupts();// disable all interrupts
-        if(x_plane)
+        if(X_plane)
         {
             TIFR1 |= (1 << OCF1A);
         }
@@ -106,7 +107,7 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
     if(Circle)
     {
-        if(x_plane)
+        if(X_plane)
         {
             CurrentSPS = sin( ((cur_pos - center_point) * PI)/(2 * rad) ) * DefaultSPS;
         }
@@ -181,29 +182,32 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
+    Serial.print("Plane: ");
+    Serial.print(X_plane);
+    Serial.println(" Hit");
     CurrentSPS = 300;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
 
     uint8_t temp = 0;
-    if(x_plane)
+    if(X_plane)
     {
         temp = (1 << OCIE1A);
         temp != temp;
-        TIMSK1 &= temp;  // disable timer compare interrupt (Steps)
+        TIMSK1 &= 0;  // disable timer compare interrupt (Steps)
     }
     else
     {
-        temp = (1 << OCIE1A);
+        temp = (1 << OCIE4A);
         temp != temp;
-        TIMSK4 &= temp;  // disable timer compare interrupt (Steps)
+        TIMSK4 &= 0;  // disable timer compare interrupt (Steps)
     }
 
     temp = 0;
     temp = (1 << OCIE3A);
     temp != temp;
-    TIMSK3 &= temp;  // disable timer compare interrupt (Acceleration)
+    TIMSK3 &= 0;  // disable timer compare interrupt (Acceleration)
 }
 
 void Stepper_Motor::Home()
@@ -213,7 +217,7 @@ void Stepper_Motor::Home()
     TotalSteps = 20000;
     MotorIsMoving = true;
 
-    if(x_plane)
+    if(X_plane)
         TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)
     else
         TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt (Steps)

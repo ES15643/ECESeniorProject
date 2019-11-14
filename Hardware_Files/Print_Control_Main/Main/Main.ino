@@ -29,7 +29,7 @@ ISR(TIMER1_COMPA_vect)
 }
 
 // Y Motor Step interrupt
-ISR(TIMER5_COMPA_vect)
+ISR(TIMER4_COMPA_vect)
 {
     if (stpm2.IsMotorMoving())
     {
@@ -56,6 +56,9 @@ void setup()
     // Set pinmodes
     pinMode(stmp1_directionpin, OUTPUT);
     pinMode(stmp1_steppin, OUTPUT);
+
+    pinMode(stmp2_directionpin, OUTPUT);
+    pinMode(stmp2_steppin, OUTPUT);
 
     Serial.begin(115200);
     pinMode(21, INPUT_PULLUP);
@@ -87,8 +90,8 @@ void setup()
     stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS, true); // X motor
     stpm2 = Stepper_Motor(200, stmp2_directionpin, stmp2_steppin, maxSPS, false); // y motor
 
-    Home();
-    // WaitForInput();   
+    // Home();
+    WaitForInput();   
 }
 
 void WaitForInput()
@@ -127,43 +130,36 @@ void loop()
 }
 
 void boundaryTriggeredX()
-{
-    // Serial.println("Triggered");
-    // digitalWrite(1, LOW);
-    stpm1.ResetMotor();
-    // stpm2.ResetMotor();
-    // stpm3.ResetMotor();
-
+{   
     if(!homingx)
     {
         digitalWrite(49, HIGH);
         //send error to GUI
     }
-    else
+    else if (homingx)
     {
+        stpm1.ResetMotor();
         stpm1.SetCurrPos(0.0);
-        // z = 0;
         homingx = false;
+        detachInterrupt(digitalPinToInterrupt(3));
     }
 }
 
 void boundaryTriggeredY()
 {
-    // Serial.println("Triggered");
-    // digitalWrite(1, LOW);
-    stpm2.ResetMotor();
-    // stpm2.ResetMotor();
-    // stpm3.ResetMotor();
+    Serial.println("Y Triggered");
 
     if(!homingy)
     {
         digitalWrite(48, HIGH);
         //send error to GUI
     }
-    else
+    else if (homingy)
     {
+        stpm2.ResetMotor();
         stpm2.SetCurrPos(0.0);
         homingy = false;
+        detachInterrupt(digitalPinToInterrupt(21));
     }
 }
 
@@ -181,6 +177,7 @@ void Home()
     Serial.println("Home y");
     while(homingx || homingy){}
 
+    Serial.println("Both were triggered");
     if(stpm1.GetDirection() == 0)
     {
         stpm1.MoveMotor(200, 1);
@@ -199,5 +196,7 @@ void Home()
         stpm2.MoveMotor(200, 0);
     }
 
+    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
+    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
     Serial.println("Motor Ready");
 }
