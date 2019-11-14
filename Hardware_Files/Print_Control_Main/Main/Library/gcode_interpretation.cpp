@@ -1,8 +1,13 @@
 //Created by Nathan Page for Senior Project GCode interpretation on November 1, 2019
+#include <string.h>
+#include "Arduino.h"
+#include "Stepper_Motor.h"
 
-String[] parse_commands(int buffer_length)
+uint32_t stepRatio = 50;
+
+String* parse_commands(int buffer_length)
 {
-  String[] commands = new String[buffer_length];
+  String commands[] = new String[buffer_length];
   int comm_index = 0;
   int line_index = 0;
 
@@ -49,7 +54,7 @@ bool interpret_gcode(String command)
 	    default:
 	      break;
 	    }
-	case'M':
+	case 'M':
 	default:
 	  break;
 	}
@@ -60,26 +65,73 @@ bool interpret_gcode(String command)
 
 bool rapid_positioning(String command)
 {
-  float x, y, z;
+  float x, y, z, X, Y;
 
   x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
   y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
   z = 0.0;
 
-  //Move motor to (x, y, z) with standard methods
+  X = stpm1.GetCurrPos();
+  Y = stpm2.GetCurrPos();
+
+  //Retract Z
+
+  if(x-X > 0) 
+  {
+    stpm1.MoveMotor((x-X)*stepRatio, 1);
+  } 
+  else
+  {
+    stpm1.MoveMotor((x-X)*-stepRatio, 0);
+  }
+  
+  if(y-Y > 0)
+  {
+    stpm2.MoveMotor((y-Y)*stepRatio, 1);      
+  }
+  else
+  {
+    stpm2.MoveMotor((y-Y)*-stepRatio, 0);
+  }
 
   return true;
 }
 
 bool linear_interpolation(String command)
 {
-  float x, y, z;
+  float x, y, z, X, Y, slope;
 
   x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
   y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
   z = -1.0;
 
-  //Drive motor to (x, y, z) along straight line from current position
+  X = stpm1.GetCurrPos();
+  Y = stpm2.GetCurrPos();
+
+  slope = ((y-Y)/(x-X));
+
+  //Actuate Z
+
+  stpm1.SetCurrentSPS(stpm1.GetCurrentSPS()*abs(1/slope));
+  stpm2.SetCurrentSPS(stpm2.GetCurrentSPS()*abs(slope));
+
+  if(x-X > 0) 
+  {
+    stpm1.MoveMotor((x-X)*stepRatio, 1);
+  } 
+  else
+  {
+    stpm1.MoveMotor((x-X)*-stepRatio, 0);
+  }
+  
+  if(y-Y > 0)
+  {
+    stpm2.MoveMotor((y-Y)*stepRatio, 1);      
+  }
+  else
+  {
+    stpm2.MoveMotor((y-Y)*-stepRatio, 0);
+  }
 
   return true;
 }
@@ -95,6 +147,14 @@ bool circ_interpolation_cw(String command)
   j = command.substring(command.indexOf('J'),command.indexOf(' ', command.indexOf('J')).toFloat());
   
   rad = sqrt(sq(x-i)+sq(y-j));
+
+  stpm1.SetRadius(rad);
+  stpm2.SetRadius(rad);
+
+  stpm1.SetCircle(true);
+  stpm2.SetCircle(true);
+
+  
   
   //Move around arc
 

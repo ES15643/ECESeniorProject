@@ -7,7 +7,7 @@ Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t step
     DirectionPin = directionPin;
     StepPin = stepPin;
     MaxSPS = maxSPS;
-    CurrentSPS = 500;
+    CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
@@ -57,7 +57,8 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     digitalWrite(DirectionPin, direction);
     // delay(100);
     Direction = direction;
-    TotalSteps = steps;
+    if(!Circle)
+        TotalSteps = steps;
     Accelerate = true;
     MotorIsMoving = true;
 
@@ -80,7 +81,14 @@ void Stepper_Motor::Step()
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
 
-    if (AmountOfStepsTaken == TotalSteps)
+    if(circle)
+    {
+        if(cur_pos = dest)
+        {
+            
+        }
+    }
+    else if (AmountOfStepsTaken == TotalSteps)
     {
         Serial.print("Steps Taken: ");
         Serial.println(AmountOfStepsTaken);
@@ -185,7 +193,7 @@ void Stepper_Motor::ResetMotor()
     Serial.print("Plane: ");
     Serial.print(X_plane);
     Serial.println(" Hit");
-    CurrentSPS = 300;
+    CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;

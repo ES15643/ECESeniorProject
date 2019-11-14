@@ -24,8 +24,11 @@ class Stepper_Motor
     void SetCircle(bool circle){ Circle = Circle; }
     void SetCurrPos(float pos){ cur_pos = pos; }
     void SetRadius(float r){ rad = r; }
+    void SetDest(float d){ dest = d; }
+    void SetCenter(float c){ center_point = c; }
     bool IsMotorMoving() { return MotorIsMoving; }
     bool GetIfCircle(){ return Circle; }
+    float GetCurrPos(){ return cur_pos; }
 
     private:
     int Direction = 0;
@@ -43,12 +46,12 @@ class Stepper_Motor
     uint8_t StepPin;
     uint32_t MaxSPS;
     uint32_t CurrentSPS;
-    uint32_t DefaultSPS;
+    uint32_t DefaultSPS = 500;
     uint32_t TotalSteps;
     bool Accelerate;
     bool Decelerate;
     bool MotorIsMoving;
-    bool Circle;
+    bool Circle = false;
 
     uint16_t CalcSPSTimerRegisterValue();
 };
