@@ -1,20 +1,25 @@
 #include "Stepper_Motor.h"
 
 Stepper_Motor stpm1;
-// Stepper_Motor stpm2;
+Stepper_Motor stpm2;
 // Stepper_Motor stpm3;
 
 int stmp1_directionpin = 52;
 int stmp1_steppin = 53;
+
+int stmp2_directionpin = 50;
+int stmp2_steppin = 51;
 int maxSPS = 1000;
 
 long x;
 long y;
 // long z;
 
-volatile bool homing = false;
+volatile bool homingx = false;
+volatile bool homingy = false;
 // volatile int triggered = LOW;
 
+// X Motor Step interrupt
 ISR(TIMER1_COMPA_vect)
 {
     if (stpm1.IsMotorMoving())
@@ -23,11 +28,26 @@ ISR(TIMER1_COMPA_vect)
     }
 }
 
+// Y Motor Step interrupt
+ISR(TIMER5_COMPA_vect)
+{
+    if (stpm2.IsMotorMoving())
+    {
+        stpm2.Step();
+    }
+}
+
+// Motor acceleration
 ISR(TIMER3_COMPA_vect)
 {
     if (stpm1.IsMotorMoving())
     {
         stpm1.StepperAccelerationAdjuster();
+    }
+
+    if (stpm2.IsMotorMoving())
+    {
+        stpm2.StepperAccelerationAdjuster();
     }
 }
 
@@ -54,20 +74,41 @@ void setup()
     digitalWrite(20, LOW);
 
     // Set Interrupts
-    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggered, LOW);
-    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggered, LOW);
-    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggered, LOW);
-    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggered, LOW);
+    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
+    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
 
-    pinMode(49, OUTPUT); //Enable interrupt pin
-    pinMode(50, OUTPUT);
-    pinMode(51, OUTPUT);
+    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
+    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
 
-    stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS);
+    //Enable interrupt pins
+    pinMode(48, OUTPUT);
+    pinMode(49, OUTPUT);
+
+    stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS, true); // X motor
+    stpm2 = Stepper_Motor(200, stmp2_directionpin, stmp2_steppin, maxSPS, false); // y motor
 
     Home();
+    // WaitForInput();   
+}
 
-    Serial.println("Motor Ready");
+void WaitForInput()
+{
+    uint8_t bytesRead;
+    bool run = true;
+    Serial.println("Home Motors? Y/N");
+
+    while(run)
+    {
+        if (Serial.available() > 0)
+        {
+            bytesRead = Serial.read();
+            if (bytesRead == 'y')
+            {
+                run = false;
+                Home(); // Home Motors
+            }
+        }
+    }
 }
 
 void loop()
@@ -85,7 +126,7 @@ void loop()
     }
 }
 
-void boundaryTriggered()
+void boundaryTriggeredX()
 {
     // Serial.println("Triggered");
     // digitalWrite(1, LOW);
@@ -93,31 +134,52 @@ void boundaryTriggered()
     // stpm2.ResetMotor();
     // stpm3.ResetMotor();
 
-    if(!homing)
+    if(!homingx)
     {
         digitalWrite(49, HIGH);
-        digitalWrite(50, HIGH);
-        digitalWrite(51, HIGH);
-
         //send error to GUI
     }
     else
     {
-        x = 0;
-        y = 0;
+        stpm1.SetCurrPos(0.0);
         // z = 0;
-        
-        homing = false;
+        homingx = false;
+    }
+}
+
+void boundaryTriggeredY()
+{
+    // Serial.println("Triggered");
+    // digitalWrite(1, LOW);
+    stpm2.ResetMotor();
+    // stpm2.ResetMotor();
+    // stpm3.ResetMotor();
+
+    if(!homingy)
+    {
+        digitalWrite(48, HIGH);
+        //send error to GUI
+    }
+    else
+    {
+        stpm2.SetCurrPos(0.0);
+        homingy = false;
     }
 }
 
 void Home()
 {
-    homing = true;
+    homingx = true;
+    homingy = true;
+
+    stpm1.SetDirection(0);
+    stpm2.SetDirection(0);
 
     stpm1.Home();
-    while(homing){}
-    Serial.println(stpm1.GetDirection());
+    Serial.println("Home x");
+    stpm2.Home();
+    Serial.println("Home y");
+    while(homingx || homingy){}
 
     if(stpm1.GetDirection() == 0)
     {
@@ -127,6 +189,15 @@ void Home()
     {
         stpm1.MoveMotor(200, 0);
     }
-    // stpm2.Home();
-    // stpm3.Home();
+
+    if(stpm2.GetDirection() == 0)
+    {
+        stpm2.MoveMotor(200, 1);
+    }
+    else
+    {
+        stpm2.MoveMotor(200, 0);
+    }
+
+    Serial.println("Motor Ready");
 }
