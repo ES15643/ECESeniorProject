@@ -1,56 +1,124 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
+#include "EEPROM.h"
 
 const char* ssid = "NetworkName";
 const char* password = "NetworkPassword";
 
 WiFiServer server(3333);
+#define EEPROM_SIZE = 10000;
 
 void setup()
 {
-  Serial.begin(115200);
+	Serial.begin(115200);
+	Serial.println("\nTesting EEPROM Library\n");
+	if (!EEPROM.begin(EEPROM_SIZE)) {
+		Serial.println("Failed to initialise EEPROM");
+		Serial.println("Restarting...");
+		delay(1000);
+		ESP.restart();
+	}
 
-  delay(10);
+	delay(10);
 
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.print(ssid);
+	Serial.println();
+	Serial.print("Connecting to ");
+	Serial.print(ssid);
 
-  WiFi.begin(ssid.password);
+	WiFi.begin(ssid.password);
 
-  while(WiFi.status() != WL_CONNECTED)
-    {
-      delay(500);
-      Serial.print(".");
-    }
+	while (WiFi.status() != WL_CONNECTED)
+	{
+		delay(500);
+		Serial.print(".");
+	}
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+	Serial.println("");
+	Serial.println("WiFi connected");
+	Serial.println("IP address: ");
+	Serial.println(WiFi.localIP());
 
-  server.begin();
+	server.begin();
 }
 
 void loop()
 {
-  WiFiClient client = server.available();
+	WiFiClient client = server.available();
 
-  if(client)
-    {
-      Serial.println("New client");
-      String currentLine = "";
-      while(client.connected())
+	bool receivingCmds = false;
+	int addr = 0;
+
+	if (client && !receivingCmds)
 	{
-	  if(client.available())
-	    {
-	      char c = client.read();
-	      Serial.write(c);
-	      if(c == '\n')
+		Serial.println("New client");
+		String currentLine = "";
+		while (client.connected())
 		{
-		  
+			if (client.available())
+			{
+				char c = client.read();
+				//Serial.write(c);
+				if (c == '\n')
+				{
+					if (currentLine == "Transmission Complete")
+					{
+						TransmitData(addr);
+						client.stop();
+						break;
+					}
+					if (currentLine.Length() == 0 && !receivingCmds)
+					{
+						client.println("Connect to DaVinci Bot? Y/N");
+					}
+					else
+					{
+						if (receivingCmds)
+						{
+							EEPROM.writeString(addr, currentLine);
+							addr += currentLine.length();
+							if (addr > EEPROM_SIZE)
+							{
+								TransmitData(addr);
+							}
+						}
+						currentLine = "";
+					}
+				}
+				else if (c != '\r')
+				{
+					currentLine += c;
+				}
+
+				if (currentLine == "Y")
+				{
+					receivingCmds = true;
+				}
+				else 
+				{
+					continue;
+				}
+			}
 		}
-	    }
 	}
-    }
+}
+
+uint32_t TransmitData(uint32_t lastAddr)
+{
+	Serial2.begin(115200);
+	int address = 0;
+	currentInst = "";
+
+	Serial2.println("Instructions ready.  Transmit?");
+
+	while (address < lastAddr)
+	{
+		if (Serial2.available())
+		{
+			currentInst = EEPROM.readString(address);
+			Serial2.println(currentInst);
+			address += currentInst.length();
+		}
+	}
+
+	return address;
 }
