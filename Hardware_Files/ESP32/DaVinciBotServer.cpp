@@ -6,7 +6,7 @@ const char* ssid = "NetworkName";
 const char* password = "NetworkPassword";
 
 WiFiServer server(3333);
-#define EEPROM_SIZE = 10000;
+#define EEPROM_SIZE 10000
 
 void setup()
 {
@@ -25,7 +25,7 @@ void setup()
 	Serial.print("Connecting to ");
 	Serial.print(ssid);
 
-	WiFi.begin(ssid.password);
+	WiFi.begin(ssid, password);
 
 	while (WiFi.status() != WL_CONNECTED)
 	{
@@ -62,11 +62,12 @@ void loop()
 				{
 					if (currentLine == "Transmission Complete")
 					{
+						EEPROM.commit();
 						TransmitData(addr);
 						client.stop();
 						break;
 					}
-					if (currentLine.Length() == 0 && !receivingCmds)
+					if (currentLine.length() == 0 && !receivingCmds)
 					{
 						client.println("Connect to DaVinci Bot? Y/N");
 					}
@@ -78,6 +79,7 @@ void loop()
 							addr += currentLine.length();
 							if (addr > EEPROM_SIZE)
 							{
+								EEPROM.commit();
 								TransmitData(addr);
 							}
 						}
@@ -106,7 +108,7 @@ uint32_t TransmitData(uint32_t lastAddr)
 {
 	Serial2.begin(115200);
 	int address = 0;
-	currentInst = "";
+	String currentInst = "";
 
 	Serial2.println("Instructions ready.  Transmit?");
 
