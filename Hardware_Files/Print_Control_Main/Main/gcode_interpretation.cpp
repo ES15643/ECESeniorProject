@@ -1,15 +1,13 @@
+//Created by Nathan Page for Senior Project GCode interpretation on November 1, 2019
+#include <string.h>
+#include "Arduino.h"
+#include "Stepper_Motor.h"
 
-#include "gcode_interpretation.h"
+uint32_t stepRatio = 50;
 
-gcode_interpretation::gcode_interpretation(Stepper_Motor m1, Stepper_Motor m2)
+String* parse_commands(int buffer_length)
 {
-  stpm1 = m1;
-  stpm2 = m2;
-}
-
-String gcode_interpretation::parse_commands(int buffer_length)
-{
-  String commands[buffer_length];
+  String commands[] = new String[buffer_length];
   int comm_index = 0;
   int line_index = 0;
 
@@ -20,85 +18,57 @@ String gcode_interpretation::parse_commands(int buffer_length)
       command = Serial.readStringUntil('\n');
     }
 
-  String command;
-  command = Serial.readStringUntil('\n');
-
-  return command;
+  return commands;
 }
 
-bool gcode_interpretation::interpret_gcode(String command)
+bool interpret_gcode(String command)
 {
   int index = 0;
 
   while(index < command.length())
     {
       switch(command[index])
-      {
-        case 'G':
-          String temp = command.substring(index, command.indexOf(' ', index));
-
-          if (temp == "G00") //Rapid positioning
-          {
-
-          }
-          else if (temp == "G0")
-          {
-            rapid_positioning(command);
-            break;
-          }
-          else if (temp == "G01") //Linear interpolation
-          {
-
-          }
-          else if (temp == "G1")
-          {
-            linear_interpolation(command);
-            break; 
-          }
-          else if (temp == "G02") //Circular clockwise interpolation
-          {
-
-          }
-          else if (temp == "G2")
-          {
-            circ_interpolation_cw(command);
-            break;
-          }
-          else if (temp == "G03")//Circular counterclockwise interpolation
-          {
-
-          }
-          else if (temp == "G3")
-          {
-            circ_interpolation_ccw(command);
-            break;
-          }
-          else if (temp == "G28")//Home machine
-          {
-            Home();
-            break;
-          }
-          else
-          {
-            break;
-          }
-
-        case 'M':
-
-        default:
-          break;
-      }
+	{
+	case 'G':
+	  switch(command.substring(index, command.indexOf(' ', index)))
+	    {
+	    case"G00": //Rapid positioning
+	    case"G0":
+	      rapid_positioning(command);
+	    break;
+	    case"G01": //Linear interpolation
+	    case"G1":
+	      linear_interpolation(command);
+	    break;
+	    case"G02": //Circular clockwise interpolation
+	    case"G2":
+	      circ_interpolation_cw(command);
+	    break;
+	    case"G03": //Circular counterclockwise interpolation
+	    case"G3":
+	      circ_interpolation_ccw(command);
+	    break;
+	    case"G28": //Home machine
+	      Home();
+	      break;
+	    default:
+	      break;
+	    }
+	case 'M':
+	default:
+	  break;
+	}
 
       index++;
     }
 }
 
-bool gcode_interpretation::rapid_positioning(String command)
+bool rapid_positioning(String command)
 {
   float x, y, z, X, Y;
 
-  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X'))).toFloat();
-  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y'))).toFloat();
+  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
+  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
   z = 0.0;
 
   X = stpm1.GetCurrPos();
@@ -127,12 +97,12 @@ bool gcode_interpretation::rapid_positioning(String command)
   return true;
 }
 
-bool gcode_interpretation::linear_interpolation(String command)
+bool linear_interpolation(String command)
 {
   float x, y, z, X, Y, slope;
 
-  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X'))).toFloat();
-  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y'))).toFloat();
+  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
+  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
   z = -1.0;
 
   X = stpm1.GetCurrPos();
@@ -166,15 +136,15 @@ bool gcode_interpretation::linear_interpolation(String command)
   return true;
 }
 
-bool gcode_interpretation::circ_interpolation_cw(String command)
+bool circ_interpolation_cw(String command)
 {
   float x, y, z, i, j, rad;
 
-  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X'))).toFloat();
-  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y'))).toFloat();
-  z = 1.0;
-  i = command.substring(command.indexOf('I'),command.indexOf(' ', command.indexOf('I'))).toFloat();
-  j = command.substring(command.indexOf('J'),command.indexOf(' ', command.indexOf('J'))).toFloat();
+  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
+  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
+  z = -1.0;
+  i = command.substring(command.indexOf('I'),command.indexOf(' ', command.indexOf('I')).toFloat());
+  j = command.substring(command.indexOf('J'),command.indexOf(' ', command.indexOf('J')).toFloat());
   
   rad = sqrt(sq(x-i)+sq(y-j));
 
@@ -183,61 +153,27 @@ bool gcode_interpretation::circ_interpolation_cw(String command)
 
   stpm1.SetCircle(true);
   stpm2.SetCircle(true);
+
+  
   
   //Move around arc
 
   return true;
 }
 
-bool gcode_interpretation::circ_interpolation_ccw(String command)
+bool circ_interpolation_ccw(String command)
 {
   float x, y, z, i, j, rad;
 
-  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X'))).toFloat();
-  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y'))).toFloat();
+  x = command.substring(command.indexOf('X'),command.indexOf(' ', command.indexOf('X')).toFloat());
+  y = command.substring(command.indexOf('Y'),command.indexOf(' ', command.indexOf('Y')).toFloat());
   z = -1.0;
-  i = command.substring(command.indexOf('I'),command.indexOf(' ', command.indexOf('I'))).toFloat();
-  j = command.substring(command.indexOf('J'),command.indexOf(' ', command.indexOf('J'))).toFloat();
+  i = command.substring(command.indexOf('I'),command.indexOf(' ', command.indexOf('I')).toFloat());
+  j = command.substring(command.indexOf('J'),command.indexOf(' ', command.indexOf('J')).toFloat());
   
   rad = sqrt(sq(x-i)+sq(y-j));
   
   //Move around arc
 
   return true;
-}
-
-void gcode_interpretation::Home()
-{
-    homingx = true;
-    homingy = true;
-
-    stpm1.SetDirection(0);
-    stpm2.SetDirection(0);
-
-    stpm1.Home();
-    Serial.println("Home x");
-    stpm2.Home();
-    Serial.println("Home y");
-    while(homingx || homingy){}
-
-    Serial.println("Both were triggered");
-    if(stpm1.GetDirection() == 0)
-    {
-        stpm1.MoveMotor(200, 1);
-    }
-    else
-    {
-        stpm1.MoveMotor(200, 0);
-    }
-
-    if(stpm2.GetDirection() == 0)
-    {
-        stpm2.MoveMotor(200, 1);
-    }
-    else
-    {
-        stpm2.MoveMotor(200, 0);
-    }
-
-    while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){} // Wait till that stop
 }
