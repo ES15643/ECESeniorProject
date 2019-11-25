@@ -80,6 +80,15 @@ void Stepper_Motor::Step()
     // delayMicroseconds(1);
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
+    
+    if(Direction = 0)
+    {
+        cur_pos-=0.005;
+    }
+    else
+    {
+        cur_pos+=0.005;
+    }
 
     if(Circle)
     {
@@ -98,7 +107,7 @@ void Stepper_Motor::Step()
             TIFR3 |= (1 << OCF3A); 
             MotorIsMoving = false;
             ResetMotor();
-            Serial.println("Stepping finished\n");
+            // Serial.println("Stepping finished\n");
             interrupts();   // enable all interrupts
         }
     }
@@ -118,7 +127,7 @@ void Stepper_Motor::Step()
         TIFR3 |= (1 << OCF3A); 
         MotorIsMoving = false;
         ResetMotor();
-        Serial.println("Stepping finished\n");
+        // Serial.println("Stepping finished\n");
         interrupts();   // enable all interrupts
     }
 
@@ -171,7 +180,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
             
             if (CurrentSPS == MaxSPS)
             {
-                Serial.println("Max reached");
+                // Serial.println("Max reached");
                 Accelerate = false;
             }
             
@@ -204,15 +213,15 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
-    Serial.print("Plane: ");
-    if (X_plane)
-    {
-        Serial.println("X hit");
-    }
-    else
-    {
-        Serial.println("Y hit");
-    }
+    // Serial.print("Plane: ");
+    // if (X_plane)
+    // {
+    //     Serial.println("X hit");
+    // }
+    // else
+    // {
+    //     Serial.println("Y hit");
+    // }
     CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;

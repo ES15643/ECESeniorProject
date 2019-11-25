@@ -13,7 +13,7 @@ int stmp2_directionpin = 50;
 int stmp2_steppin = 51;
 int maxSPS = 1000;
 
-String gcodesForTesting[5] = {"", "", "", "", ""};
+String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
 
 // volatile int triggered = LOW;
 
@@ -80,12 +80,12 @@ void setup()
 
     stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS, true); // X motor
     stpm2 = Stepper_Motor(200, stmp2_directionpin, stmp2_steppin, maxSPS, false); // y motor
-    gcinter = gcode_interpretation(stpm1, stpm2);
+    // gcinter = gcode_interpretation(stpm1, stpm2); // GCode interpeter
 
     // Set Interrupts
     attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
+    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
+    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
     attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
 
     WaitForInput();   
@@ -108,10 +108,11 @@ void WaitForInput()
                 gcinter.Home(); // Home Motors
                 
                 attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-                attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
+                attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
+                attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
                 attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
-                attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
                 Serial.println("Motor Ready");
+                Serial.println("Ready to Start y/n?");
             }
         }
     }
@@ -125,45 +126,51 @@ void loop()
         bytesRead = Serial.read();
         if (bytesRead == 'y')
         {
-            stpm1.MoveMotor(2500, 1);
-            // stpm2.MoveMotor(2500, 1);
-            // stpm3.MoveMotor(2500, 1);
+            Serial.println("Starting");
+            for (int i = 0; i < 3; i++)
+            {
+                Serial.println("Using " + gcodesForTesting[i]);
+                gcinter.interpret_gcode(gcodesForTesting[i]);
+                Serial.print("X pos: ");
+                Serial.println(stpm1.GetCurrPos());
+                Serial.print("Y pos: ");
+                Serial.println(stpm2.GetCurrPos());
+            }
         }
     }
 }
 
 void boundaryTriggeredX()
 {   
-    if(!gcinter.homingx)
+    if(!gcinter.GetHomingx())
     {
         digitalWrite(49, HIGH);
         //send error to GUI
     }
-    else if (gcinter.homingx)
+    else if (gcinter.GetHomingx())
     {
         stpm1.ResetMotor();
         stpm1.SetCurrPos(0.0);
-        gcinter.homingx = false;
+        gcinter.SetHomingx(false);
         detachInterrupt(digitalPinToInterrupt(3));
-        detachInterrupt(digitalPinToInterrupt(18));
+        detachInterrupt(digitalPinToInterrupt(19));        
     }
 }
 
 void boundaryTriggeredY()
 {
-    Serial.println("Y Triggered");
 
-    if(!gcinter.homingy)
+    if(!gcinter.GetHomingy())
     {
         digitalWrite(48, HIGH);
         //send error to GUI
     }
-    else if (gcinter.homingy)
+    else if (gcinter.GetHomingy())
     {
         stpm2.ResetMotor();
         stpm2.SetCurrPos(0.0);
-        gcinter.homingy = false;
-        detachInterrupt(digitalPinToInterrupt(19));
+        gcinter.SetHomingy(false);
+        detachInterrupt(digitalPinToInterrupt(18));
         detachInterrupt(digitalPinToInterrupt(21));
     }
 }
