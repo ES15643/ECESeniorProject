@@ -46,7 +46,7 @@ class Stepper_Motor
     uint8_t StepPin;
     uint32_t MaxSPS;
     uint32_t CurrentSPS;
-    uint32_t DefaultSPS = 700;
+    uint32_t DefaultSPS = 1000;
     uint32_t TotalSteps;
     bool Accelerate;
     bool Decelerate;

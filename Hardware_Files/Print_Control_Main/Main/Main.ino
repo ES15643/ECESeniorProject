@@ -13,7 +13,12 @@ int stmp2_directionpin = 50;
 int stmp2_steppin = 51;
 int maxSPS = 1000;
 
-String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
+//Linear
+// String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
+
+//Circle
+String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I12.0 J10.0"};
+
 
 // volatile int triggered = LOW;
 
@@ -127,7 +132,7 @@ void loop()
         if (bytesRead == 'y')
         {
             Serial.println("Starting");
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Serial.println("Using " + gcodesForTesting[i]);
                 gcinter.interpret_gcode(gcodesForTesting[i]);

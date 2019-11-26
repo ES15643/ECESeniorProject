@@ -143,23 +143,27 @@ bool gcode_interpretation::linear_interpolation(String command)
 
   stpm1.SetCurrentSPS(stpm1.GetCurrentSPS()*abs(1/slope));
   stpm2.SetCurrentSPS(stpm2.GetCurrentSPS()*abs(slope));
+  float changeX = abs((x-X));
+  float changeY = abs((y-Y));
+  Serial.println(changeX);
+  Serial.println(changeY);
 
   if(x-X > 0) 
   {
-    stpm1.MoveMotor(abs((x-X))*stepRatio, 1);
+    stpm1.MoveMotor(changeX*stepRatio, 1);
   } 
   else
   {
-    stpm1.MoveMotor(abs((x-X))*stepRatio, 0);
+    stpm1.MoveMotor(changeX*stepRatio, 0);
   }
   
   if(y-Y > 0)
   {
-    stpm2.MoveMotor(abs((y-Y))*stepRatio, 1);      
+    stpm2.MoveMotor(changeY*stepRatio, 1);      
   }
   else
   {
-    stpm2.MoveMotor(abs((y-Y))*stepRatio, 0);
+    stpm2.MoveMotor(changeY*stepRatio, 0);
   }
 
   while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){delay(1);} // Wait till that stop
@@ -179,6 +183,8 @@ bool gcode_interpretation::circ_interpolation_cw(String command)
   j = command.substring(command.indexOf('J') + 1,command.indexOf(' ', command.indexOf('J'))).toFloat();
   
   rad = sqrt(sq(x-i)+sq(y-j));
+  Serial.print("Radius: ");
+  Serial.println(rad);
 
   stpm1.SetRadius(rad);
   stpm2.SetRadius(rad);

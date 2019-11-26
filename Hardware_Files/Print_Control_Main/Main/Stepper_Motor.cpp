@@ -81,7 +81,7 @@ void Stepper_Motor::Step()
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
     
-    if(Direction = 0)
+    if(Direction == 0)
     {
         cur_pos-=0.005;
     }
@@ -92,7 +92,19 @@ void Stepper_Motor::Step()
 
     if(Circle)
     {
-        if(abs(cur_pos-dest) < 0.2)
+        if(abs(cur_pos - center_point - rad) > 0.01)
+        {
+            if(DirectionPin == 0)
+            {
+                DirectionPin = 1;
+            }
+            else
+            {
+                DirectionPin = 0;
+            }
+        }
+
+        if(abs(cur_pos-dest) < 0.01)
         {
             // Serial.println(AmountOfStepsTaken);
             noInterrupts();// disable all interrupts
@@ -140,13 +152,14 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
     {
         if(X_plane)
         {
-            CurrentSPS = sin( ((cur_pos - center_point) * PI)/(2 * rad) ) * DefaultSPS;
+            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
         }
         else
         {
-            CurrentSPS = cos( ((cur_pos - center_point) * PI)/(2 * rad) ) * DefaultSPS; 
+            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS; 
         }
-        
+        Serial.print("SPS ");
+        Serial.println(CurrentSPS);
     }
 
     uint32_t timePerStep = (CLCKSPD/CurrentSPS);
@@ -226,6 +239,7 @@ void Stepper_Motor::ResetMotor()
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
+    Circle = false;
 
     uint8_t temp = 0;
     if(X_plane)
