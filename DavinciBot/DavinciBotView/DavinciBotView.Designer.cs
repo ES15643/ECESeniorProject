@@ -47,11 +47,13 @@
             this.StartButton = new System.Windows.Forms.Button();
             this.previewImageBox = new System.Windows.Forms.PictureBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.imageProcessingThresholdBox = new System.Windows.Forms.TextBox();
+            this.invertCheckBox = new System.Windows.Forms.CheckBox();
+            this.thresholdNumberBox = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdNumberBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -229,12 +231,30 @@
             this.trackBar1.ValueChanged += new System.EventHandler(this.ImagePreviewThresholdChanged);
             this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
-            // imageProcessingThresholdBox
+            // invertCheckBox
             // 
-            this.imageProcessingThresholdBox.Location = new System.Drawing.Point(410, 445);
-            this.imageProcessingThresholdBox.Name = "imageProcessingThresholdBox";
-            this.imageProcessingThresholdBox.Size = new System.Drawing.Size(160, 22);
-            this.imageProcessingThresholdBox.TabIndex = 8;
+            this.invertCheckBox.AutoSize = true;
+            this.invertCheckBox.Location = new System.Drawing.Point(410, 473);
+            this.invertCheckBox.Name = "invertCheckBox";
+            this.invertCheckBox.Size = new System.Drawing.Size(119, 21);
+            this.invertCheckBox.TabIndex = 9;
+            this.invertCheckBox.Text = "Invert Contour";
+            this.invertCheckBox.UseVisualStyleBackColor = true;
+            this.invertCheckBox.CheckedChanged += new System.EventHandler(this.invertCheckBox_CheckedChanged);
+            this.invertCheckBox.CheckStateChanged += new System.EventHandler(this.invertCheckBox_CheckStateChanged);
+            // 
+            // thresholdNumberBox
+            // 
+            this.thresholdNumberBox.Location = new System.Drawing.Point(410, 445);
+            this.thresholdNumberBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.thresholdNumberBox.Name = "thresholdNumberBox";
+            this.thresholdNumberBox.Size = new System.Drawing.Size(231, 22);
+            this.thresholdNumberBox.TabIndex = 10;
+            this.thresholdNumberBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.thresholdNumberBox_KeyPress);
             // 
             // DavinciBotView
             // 
@@ -242,7 +262,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1482, 1055);
-            this.Controls.Add(this.imageProcessingThresholdBox);
+            this.Controls.Add(this.thresholdNumberBox);
+            this.Controls.Add(this.invertCheckBox);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.previewImageBox);
             this.Controls.Add(this.StartButton);
@@ -264,6 +285,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdNumberBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,7 +311,8 @@
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.PictureBox previewImageBox;
         private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.TextBox imageProcessingThresholdBox;
+        private System.Windows.Forms.CheckBox invertCheckBox;
+        private System.Windows.Forms.NumericUpDown thresholdNumberBox;
     }
 }
 

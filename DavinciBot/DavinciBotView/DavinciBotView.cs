@@ -127,10 +127,18 @@ namespace DavinciBotView
             {
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
                 var thisPath = Environment.CurrentDirectory;
-                var firstModified = File.GetLastWriteTime("preview_contour.jpg");
-                var firstTicks = firstModified.Ticks;
+                string contourFile;
+                if(invertedContour)
+                {
+                    contourFile = "./contours0.py";
+                }
+                else
+                {
+                    contourFile = "./contours.py";
+                }
                 string psScript = "python "
-                                + "./contours.py --image_file "
+                                + contourFile
+                                + " --image_file "
                                 + "./"
                                 + loadedImageName
                                 + " --threshold "
@@ -221,7 +229,7 @@ namespace DavinciBotView
         {
             Controls.Add(trackBar1);
             var curThreshold = trackBar1.Value;
-            imageProcessingThresholdBox.Text = "" + curThreshold;
+            thresholdNumberBox.Value = curThreshold;
 
         }
 
@@ -232,6 +240,30 @@ namespace DavinciBotView
             //Update preview image
             FindContour(curThreshold);
 
+        }
+
+        private void invertCheckBox_CheckStateChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void invertCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            invertedContour = !invertedContour;
+            FindContour((int)thresholdNumberBox.Value);
+        }
+
+        private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == Convert.ToChar(Keys.Enter))
+            {
+                e.Handled = true;
+                e.KeyChar = (char)46;
+                int val = (int)thresholdNumberBox.Value;
+                FindContour(val);
+                trackBar1.Value = val;
+                this.ActiveControl = null;
+            }
         }
     }
 
