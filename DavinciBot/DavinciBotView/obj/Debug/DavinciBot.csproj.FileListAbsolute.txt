@@ -16,3 +16,16 @@ C:\Users\ebrig\Documents\College\Fall 2019\ECESeniorProject\ECESeniorProject\Dav
 C:\Users\ebrig\Documents\College\Fall 2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.GenerateResource.cache
 C:\Users\ebrig\Documents\College\Fall 2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.exe
 C:\Users\ebrig\Documents\College\Fall 2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.pdb
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csprojAssemblyReference.cache
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.DavinciBotView.resources
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.Properties.Resources.resources
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.GenerateResource.cache
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.exe
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.pdb
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.exe.config
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.exe
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.pdb
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\System.Management.Automation.dll
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\Microsoft.Management.Infrastructure.dll
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\System.Management.Automation.xml
+C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.CopyComplete
