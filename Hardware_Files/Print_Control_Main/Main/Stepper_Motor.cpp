@@ -92,20 +92,34 @@ void Stepper_Motor::Step()
 
     if(Circle)
     {
-        if(abs(cur_pos - center_point - rad) > 0.01)
+        // if(X_plane)
+        // {
+        //     Serial.print("Cur Pos X: ");
+        //     Serial.println(cur_pos);            
+        // }
+        // else
+        // {
+        //     Serial.print("Cur Pos: ");
+        //     Serial.print(cur_pos);
+        // }
+
+        if(abs(cur_pos - center_point - rad) < 0.009)
         {
-            if(DirectionPin == 0)
+            Serial.println("Here yo!");
+            if(Direction == 0)
             {
-                DirectionPin = 1;
+                Direction = 1;
             }
             else
             {
-                DirectionPin = 0;
+                Direction = 0;
             }
         }
 
         if(abs(cur_pos-dest) < 0.01)
         {
+            Serial.print("Cur Pos: ");
+            Serial.print(cur_pos);
             // Serial.println(AmountOfStepsTaken);
             noInterrupts();// disable all interrupts
             if(X_plane)
@@ -152,17 +166,42 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
     {
         if(X_plane)
         {
-            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
+            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) -1) * DefaultSPS;
         }
         else
         {
-            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS; 
+            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
         }
-        Serial.print("SPS ");
-        Serial.println(CurrentSPS);
+        if(X_plane)
+        {
+            // Serial.print("Cur Pos X: ");
+            // Serial.println(cur_pos);            
+        }
+        else
+        {
+            // Serial.print("Cur Pos: ");
+            // Serial.print(cur_pos);
+            // Serial.print(" Direction: ");
+            // Serial.println(Direction);
+            // Serial.print("CurSPS: ");
+            // Serial.println(CurrentSPS);
+        }
+
+        if(CurrentSPS < 300.0)
+            {
+                CurrentSPS = 300.0;
+            }
     }
 
-    uint32_t timePerStep = (CLCKSPD/CurrentSPS);
+    uint32_t timePerStep;
+    if (CurrentSPS < 1)
+    {
+        timePerStep = CLCKSPD;
+    }
+    else
+    {
+        timePerStep = (CLCKSPD/(uint32_t)CurrentSPS);
+    }
     // Serial.print("TimePerStep: ");
     // Serial.println(timePerStep);
     if(timePerStep >= 65535) //Checks for potential overflow
@@ -170,7 +209,15 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
         timePerStep = 65535;
     }
     uint16_t temp = timePerStep;
-    // Serial.println(temp);
+    
+    if(X_plane)
+    {
+        // Serial.println(temp);
+    }
+    else
+    {
+        // Serial.println(temp);
+    }
     return temp; // Clock speed divided by desired steps per second
 }
 

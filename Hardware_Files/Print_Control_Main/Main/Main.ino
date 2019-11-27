@@ -17,7 +17,7 @@ int maxSPS = 1000;
 // String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
 
 //Circle
-String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I12.0 J10.0"};
+String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
 
 
 // volatile int triggered = LOW;
@@ -27,6 +27,7 @@ ISR(TIMER1_COMPA_vect)
 {
     if (stpm1.IsMotorMoving())
     {
+
         stpm1.Step();
     }
 }
@@ -150,6 +151,8 @@ void boundaryTriggeredX()
     if(!gcinter.GetHomingx())
     {
         digitalWrite(49, HIGH);
+        digitalWrite(48, HIGH);
+        // stpm1.ResetMotor();
         //send error to GUI
     }
     else if (gcinter.GetHomingx())
@@ -168,6 +171,8 @@ void boundaryTriggeredY()
     if(!gcinter.GetHomingy())
     {
         digitalWrite(48, HIGH);
+        digitalWrite(49, HIGH);
+        // stpm2.ResetMotor();
         //send error to GUI
     }
     else if (gcinter.GetHomingy())

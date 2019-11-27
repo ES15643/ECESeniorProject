@@ -173,18 +173,26 @@ bool gcode_interpretation::linear_interpolation(String command)
 
 bool gcode_interpretation::circ_interpolation_cw(String command)
 {
-  float x, y, z, i, j, rad;
+  float x, y, z, i, j, I, J, rad, theta, arclen;
 
-  Serial.println("Circ");
+  Serial.println("Circ cw");
   x = command.substring(command.indexOf('X') + 1,command.indexOf(' ', command.indexOf('X'))).toFloat();
   y = command.substring(command.indexOf('Y') + 1,command.indexOf(' ', command.indexOf('Y'))).toFloat();
-  z = 1.0;
-  i = command.substring(command.indexOf('I') + 1,command.indexOf(' ', command.indexOf('I'))).toFloat();
-  j = command.substring(command.indexOf('J') + 1,command.indexOf(' ', command.indexOf('J'))).toFloat();
-  
+  z = -1.0;
+  I = command.substring(command.indexOf('I') + 1,command.indexOf(' ', command.indexOf('I'))).toFloat();
+  J = command.substring(command.indexOf('J') + 1,command.indexOf(' ', command.indexOf('J'))).toFloat();
+  i = x + I;
+  j = y + J;
+
   rad = sqrt(sq(x-i)+sq(y-j));
-  Serial.print("Radius: ");
-  Serial.println(rad);
+  
+  theta = atan2( (y - j), (x - i) ) + atan2( (stpm2.GetCurrPos() - j), (stpm1.GetCurrPos() - i) );
+  Serial.print("Theta: ");
+  Serial.println(theta);
+  arclen = rad * theta;
+
+  // Serial.print("X: ");
+  // Serial.println(rad);
 
   stpm1.SetRadius(rad);
   stpm2.SetRadius(rad);
@@ -206,16 +214,21 @@ bool gcode_interpretation::circ_interpolation_cw(String command)
 
 bool gcode_interpretation::circ_interpolation_ccw(String command)
 {
-  float x, y, z, i, j, rad;
+  float x, y, z, i, j, I, J, rad, theta;
 
   Serial.println("Circ ccw");
   x = command.substring(command.indexOf('X') + 1,command.indexOf(' ', command.indexOf('X'))).toFloat();
   y = command.substring(command.indexOf('Y') + 1,command.indexOf(' ', command.indexOf('Y'))).toFloat();
   z = -1.0;
-  i = command.substring(command.indexOf('I') + 1,command.indexOf(' ', command.indexOf('I'))).toFloat();
-  j = command.substring(command.indexOf('J') + 1,command.indexOf(' ', command.indexOf('J'))).toFloat();
-  
+  I = command.substring(command.indexOf('I') + 1,command.indexOf(' ', command.indexOf('I'))).toFloat();
+  J = command.substring(command.indexOf('J') + 1,command.indexOf(' ', command.indexOf('J'))).toFloat();
+  i = x + I;
+  j = y + J;
+
   rad = sqrt(sq(x-i)+sq(y-j));
+  theta = acos( (sq(x - stpm1.GetCurrPos()) - 2*sq(rad) ) / (2*rad) ) * rad;
+  Serial.print("Arclen: ");
+  Serial.println(theta);
 
   stpm1.SetRadius(rad);
   stpm2.SetRadius(rad);
