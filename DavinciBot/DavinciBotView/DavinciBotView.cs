@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms; 
+using System.Windows.Forms;
+using System.Collections.ObjectModel;
+using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 
 namespace DavinciBotView
 {
@@ -94,8 +98,6 @@ namespace DavinciBotView
         //Testing: uses image "Loaded from File" and prints its path to a fileS
         private void ConvertImageButton_Click(object sender, EventArgs e)
         {
-            string[] lines = { "it's", "a", "test" };
-;
             SaveFileDialog saveConvertedImage = new SaveFileDialog();
             if (saveConvertedImage.ShowDialog() == DialogResult.OK)
             {
@@ -107,25 +109,41 @@ namespace DavinciBotView
                      */
                     sw.WriteLine(loadedImagePath);
                 }
-
+                FindContour();
             }
 
         }
 
         private void FindContour()
         {
-            var processInfo = new ProcessStartInfo
-            {
-                UseShellExecute = false, // change value to false
-                FileName = "cmd.exe",
-                Arguments = "/c time"
-            };
+            Runspace runspace = RunspaceFactory.CreateRunspace();
 
-            Console.WriteLine("Starting child process...");
-            using (var process = Process.Start(processInfo))
-            {
-                process.WaitForExit();
-            }
+            // open it
+
+            runspace.Open();
+
+            // create a pipeline and feed it the script text
+            Pipeline pipeline = runspace.CreatePipeline();
+            pipeline.Commands.AddScript("python ./contours0.py --image_file .\\mickey.png --threshold 100");
+
+            // add an extra command to transform the script
+            // output objects into nicely formatted strings
+
+            // remove this line to get the actual objects
+            // that the script returns. For example, the script
+
+            // "Get-Process" returns a collection
+            // of System.Diagnostics.Process instances.
+
+            pipeline.Commands.Add("Out-String");
+
+            // execute the script
+
+            Collection<PSObject> pSObjects = pipeline.Invoke(); 
+            //Collection<psobject /> results = pipeline.Invoke();
+
+            // close the runspace
+            runspace.Close();
         }
     }
 
