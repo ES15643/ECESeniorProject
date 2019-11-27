@@ -1,0 +1,11 @@
+#include <WiFi.h>
+
+const char* ssid = "DaVinci Bot";
+const char* password = "ece4710";
+
+WiFiServer server(3333);
+
+void setup()
+{
+	
+}

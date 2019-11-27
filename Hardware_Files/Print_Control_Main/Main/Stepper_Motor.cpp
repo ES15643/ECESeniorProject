@@ -1,38 +1,53 @@
 // Created by Evan Scullion 6/2/2019 for Senior Project Stepper Motor
 #include "Stepper_Motor.h"
 
-Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t stepPin, int maxSPS)
+Stepper_Motor::Stepper_Motor(int stepsPerRev, uint8_t directionPin, uint8_t stepPin, int maxSPS, bool x_plane)
 {
     StepsPerRevolution = stepsPerRev;
     DirectionPin = directionPin;
     StepPin = stepPin;
     MaxSPS = maxSPS;
-    CurrentSPS = 300;
+    CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
     MotorIsMoving = false;
+    X_plane = x_plane;
 
     pinMode(DirectionPin, OUTPUT);
     pinMode(StepPin, OUTPUT);
 
     noInterrupts();// disable all interrupts
 
-    // Set up interupt for timer 1 (Stepping Timer)
-    TCCR1A = 0;
-    TCCR1B = 0;
-    TCNT1  = 0;
-    OCR1A = CalcSPSTimerRegisterValue();  // Compare match regsiter
-    TCCR1B |= (1 << WGM12);   // CTC mode
-    TCCR1B |= (1 << CS10);    // 1 prescaler 
+    if (X_plane)
+    {
+        // Set up interupt for timer 1 (Stepping Timer)
+        TCCR1A = 0;
+        TCCR1B = 0;
+        TCNT1  = 0;
+        OCR1A = CalcSPSTimerRegisterValue();  // Compare match regsiter
+        TCCR1B |= (1 << WGM12);   // CTC mode
+        TCCR1B |= (1 << CS10);    // 1 prescaler 
+
+    }
+    else
+    {
+        // Set up interupt for timer 1 (Stepping Timer)
+        TCCR4A = 0;
+        TCCR4B = 0;
+        TCNT4  = 0;
+        OCR4A = CalcSPSTimerRegisterValue();  // Compare match regsiter
+        TCCR4B |= (1 << WGM12);   // CTC mode
+        TCCR4B |= (1 << CS10);    // 1 prescaler 
+    }
 
     // Set up interupt for acceleration (Acceleration Timer)
-    TCCR3A = 0;
-    TCCR3B = 0;
-    TCNT3  = 0;
-    OCR3A = 1600;
-    TCCR3B |= (1 << WGM32);   // CTC mode
-    TCCR3B |= (1 << CS32);    // 256 prescaler
+        TCCR3A = 0;
+        TCCR3B = 0;
+        TCNT3  = 0;
+        OCR3A = 1600;
+        TCCR3B |= (1 << WGM32);   // CTC mode
+        TCCR3B |= (1 << CS32);    // 256 prescaler
 
     interrupts();   // enable all interrupts
 }
@@ -42,11 +57,20 @@ void Stepper_Motor::MoveMotor(int steps, int direction)
     digitalWrite(DirectionPin, direction);
     // delay(100);
     Direction = direction;
-    TotalSteps = steps;
+    if(!Circle)
+        TotalSteps = steps;
     Accelerate = true;
     MotorIsMoving = true;
 
-    TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)
+    if(X_plane)
+    {
+        TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)   
+    }
+    else
+    {
+        TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt (Steps)
+    }
+
     TIMSK3 |= (1 << OCIE3A);  // enable timer compare interrupt (Acceleration)
 }
 
@@ -56,17 +80,66 @@ void Stepper_Motor::Step()
     // delayMicroseconds(1);
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
-
-    if (AmountOfStepsTaken == TotalSteps)
+    
+    if(Direction == 0)
     {
-        Serial.print("Steps Taken: ");
-        Serial.println(AmountOfStepsTaken);
+        cur_pos-=0.005;
+    }
+    else
+    {
+        cur_pos+=0.005;
+    }
+
+    if(Circle)
+    {
+        if(abs(cur_pos - center_point - rad) > 0.01)
+        {
+            if(DirectionPin == 0)
+            {
+                DirectionPin = 1;
+            }
+            else
+            {
+                DirectionPin = 0;
+            }
+        }
+
+        if(abs(cur_pos-dest) < 0.01)
+        {
+            // Serial.println(AmountOfStepsTaken);
+            noInterrupts();// disable all interrupts
+            if(X_plane)
+            {
+                TIFR1 |= (1 << OCF1A);
+            }
+            else
+            {
+                TIFR4 |= (1 << OCF4A);
+            }
+            TIFR3 |= (1 << OCF3A); 
+            MotorIsMoving = false;
+            ResetMotor();
+            // Serial.println("Stepping finished\n");
+            interrupts();   // enable all interrupts
+        }
+    }
+    else if (AmountOfStepsTaken == TotalSteps)
+    {
+        // Serial.print("Steps Taken: ");
+        // Serial.println(AmountOfStepsTaken);
         noInterrupts();// disable all interrupts
-        TIFR1 |= (1 << OCF1A);
-        TIFR3 |= (1 << OCF3A);
+        if(X_plane)
+        {
+            TIFR1 |= (1 << OCF1A);
+        }
+        else
+        {
+            TIFR4 |= (1 << OCF4A);
+        }
+        TIFR3 |= (1 << OCF3A); 
         MotorIsMoving = false;
         ResetMotor();
-        Serial.println("Stepping finished\n");
+        // Serial.println("Stepping finished\n");
         interrupts();   // enable all interrupts
     }
 
@@ -75,6 +148,20 @@ void Stepper_Motor::Step()
 
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
+    if(Circle)
+    {
+        if(X_plane)
+        {
+            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
+        }
+        else
+        {
+            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS; 
+        }
+        Serial.print("SPS ");
+        Serial.println(CurrentSPS);
+    }
+
     uint32_t timePerStep = (CLCKSPD/CurrentSPS);
     // Serial.print("TimePerStep: ");
     // Serial.println(timePerStep);
@@ -93,72 +180,96 @@ void Stepper_Motor::StepperAccelerationAdjuster()
     // Serial.print("Temp: ");
     // Serial.println(temp);
 
-    if(Accelerate && temp < 0.2)
+    if (!Circle) 
     {
-        if (CurrentSPS < MaxSPS)
+        if(Accelerate && temp < 0.2)
         {
-            CurrentSPS += accelerationRate;
-            // Serial.print("SPS: ");
-            // Serial.println(CurrentSPS);
+            if (CurrentSPS < MaxSPS)
+            {
+                CurrentSPS += accelerationRate;
+                // Serial.print("SPS: ");
+                // Serial.println(CurrentSPS);
+            }
+            
+            if (CurrentSPS == MaxSPS)
+            {
+                // Serial.println("Max reached");
+                Accelerate = false;
+            }
+            
+            return;
         }
         
-        if (CurrentSPS == MaxSPS)
+        if ( !Decelerate && temp > 0.8)
         {
-            Serial.println("Max reached");
             Accelerate = false;
+            Decelerate = true;
         }
         
-        return;
-    }
-    
-    if ( !Decelerate && temp > 0.8)
-    {
-        Accelerate = false;
-        Decelerate = true;
-    }
-    
-    if(Decelerate)
-    {
-        if (CurrentSPS > 300)
+        if(Decelerate)
         {
-            CurrentSPS -= accelerationRate;
-            // Serial.print("SPS: ");
-            // Serial.println(CurrentSPS);
+            if (CurrentSPS > 300)
+            {
+                CurrentSPS -= accelerationRate;
+                // Serial.print("SPS: ");
+                // Serial.println(CurrentSPS);
+            }
+            else
+            {
+                CurrentSPS = 300;
+            }
+            
+            return;
         }
-        else
-        {
-            CurrentSPS = 300;
-        }
-        
-        return;
     }
 }
 
 void Stepper_Motor::ResetMotor()
 {
-    CurrentSPS = 300;
+    // Serial.print("Plane: ");
+    // if (X_plane)
+    // {
+    //     Serial.println("X hit");
+    // }
+    // else
+    // {
+    //     Serial.println("Y hit");
+    // }
+    CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
+    Circle = false;
 
     uint8_t temp = 0;
-    temp = (1 << OCIE1A);
-    temp != temp;
-    TIMSK1 &= temp;  // disable timer compare interrupt (Steps)
+    if(X_plane)
+    {
+        temp = (1 << OCIE1A);
+        temp != temp;
+        TIMSK1 &= 0;  // disable timer compare interrupt (Steps)
+    }
+    else
+    {
+        temp = (1 << OCIE4A);
+        temp != temp;
+        TIMSK4 &= 0;  // disable timer compare interrupt (Steps)
+    }
 
     temp = 0;
     temp = (1 << OCIE3A);
     temp != temp;
-    TIMSK3 &= temp;  // disable timer compare interrupt (Acceleration)
+    TIMSK3 &= 0;  // disable timer compare interrupt (Acceleration)
 }
 
 void Stepper_Motor::Home()
 {
-    Direction = 0;
     digitalWrite(DirectionPin, Direction);
     // delay(100);
     TotalSteps = 20000;
     MotorIsMoving = true;
 
-    TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)
+    if(X_plane)
+        TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt (Steps)
+    else
+        TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt (Steps)
 }
