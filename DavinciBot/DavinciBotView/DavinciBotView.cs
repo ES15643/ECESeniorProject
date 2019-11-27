@@ -22,6 +22,7 @@ namespace DavinciBotView
         private int imageLoadCount = 0;
         public string loadedImagePath;
         public string loadedImageName;
+        private bool invertedContour = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -138,11 +139,9 @@ namespace DavinciBotView
                 using (Pipeline pipeline = runspace.CreatePipeline())
                 {
                     pipeline.Commands.AddScript(psScript);
-                    pipeline.Invoke();
+                    pipeline.Commands.Add("Out-String");
+                    Collection<PSObject> results=  pipeline.Invoke();
                 }
-                runspace.Close();
-                runspace.Dispose();
-
                 /*while (true)
                 {
                     var lastModified = File.GetLastWriteTime("preview_contour.jpg");
@@ -155,8 +154,17 @@ namespace DavinciBotView
                 */
 
                 Console.WriteLine("Updated file");
+                runspace.Dispose();
             }
-            previewImageBox.Image = new Bitmap("preview_contour.jpg");
+            //Can't write to a bitmap that's already open?
+
+            using (var fs = new System.IO.FileStream("preview_contour.jpg", System.IO.FileMode.Open))
+            {
+                var bmp = new Bitmap(fs);
+                previewImageBox.Image = (Bitmap)bmp.Clone();
+            }
+
+            //previewImageBox.Image = new Bitmap("preview_contour.jpg");
             Environment.CurrentDirectory = oldDir;
 
             Console.WriteLine("FindContour Finished");
@@ -223,7 +231,6 @@ namespace DavinciBotView
             var curThreshold = trackBar1.Value;
             //Update preview image
             FindContour(curThreshold);
-            previewImageBox.Image = new Bitmap("C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\preview_contour.jpg");
 
         }
     }
