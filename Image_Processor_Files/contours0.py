@@ -22,7 +22,8 @@ def main(image_file, threshold, scale=None):
 
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    print(contours)
+    #just changed this
+    #print(contours)
 
     cv2.drawContours(numpy_array, contours, -1, (0,0,0), 1)
 
