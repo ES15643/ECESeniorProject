@@ -147,11 +147,6 @@ img = numpy.rint(numpy.multiply(img, max_laser_power/number_of_colours))
 img=numpy.flip(img,0)
 
 #Gcode processing
-f.write("( imgcode generated code )\n")
-f.write("( developed by M. \"Vidmo\" Widomski )\n") 
-f.write("(  github.com/vidmo91 )\n")
-f.write("(  hackaday.io/vidmo91 )\n")
-f.write(" \n")
 f.write("H5 S0 \n")
 f.write("F"+str(feedrate)+"\n")
 f.write("G0 Z0 ( for some grbl senders compatibility )\n")

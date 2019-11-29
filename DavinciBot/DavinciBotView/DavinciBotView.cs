@@ -5,12 +5,14 @@ using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace DavinciBotView
 {
     public partial class DavinciBotView : Form
     {
-        private int imageLoadCount = 0;
         public string loadedImagePath;
         public string loadedImageName;
         private bool invertedContour = false;
@@ -21,7 +23,18 @@ namespace DavinciBotView
             InitializeComponent();
             InitializeOurPictureBox();
         }
+        private FilterInfoCollection Devices;
+        private VideoCaptureDevice frame;
 
+        /// <summary>
+        /// Initialize all main components of the GUI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DavinciBotView_Load(object sender, EventArgs e)
+        {
+            //videoSource = new VideoCaptureDevice();
+        }
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
         {
             var fileContent = string.Empty;
@@ -42,13 +55,16 @@ namespace DavinciBotView
                 loadedImagePath = filePath;
                 var splitFilePath = filePath.Split('\\');
                 loadedImageName = splitFilePath[splitFilePath.Length - 1];
-                OurPictureBox.Image = new Bitmap(filePath);
+                using (var fs = new System.IO.FileStream(loadedImagePath, System.IO.FileMode.Open))
+                {
+                    var bmp = new Bitmap(fs);
+                    OurPictureBox.Image = (Bitmap)bmp.Clone();
+                }
                 FindContour(50);
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
-        //Our picture box
         private void ImageToBeDrawnBox_Click(object sender, EventArgs e)
         {
             LoadFromFileToolbarButton_Click(sender, e);
@@ -56,18 +72,13 @@ namespace DavinciBotView
 
         public void InitializeOurPictureBox()
         {
-            OurPictureBox.BackColor = Color.Transparent;
-            OurPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            OurPictureBox.BackColor = Color.LightGray;
+            OurPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             LoadFromFileToolbarButton_Click(sender, e);
-        }
-
-        private void DavinciBotView_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void DavinciBotView_FormClosing(object sender, FormClosingEventArgs e)
@@ -89,10 +100,11 @@ namespace DavinciBotView
                 e.Cancel = true;
             }
             */
+            frame.Stop();
         }
 
         /// <summary>
-        /// 
+        /// Processes preview image to rastor-style gcode file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -212,7 +224,11 @@ namespace DavinciBotView
             thresholdNumberBox.Value = curThreshold;
 
         }
-
+        /// <summary>
+        /// Adjusts image processing threshold
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBar1_MouseUp(object sender, MouseEventArgs e)
         {
             Controls.Add(trackBar1);
@@ -222,11 +238,11 @@ namespace DavinciBotView
 
         }
 
-        private void invertCheckBox_CheckStateChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Toggles between proessing with contour.py and contour 2.py
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void invertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             invertedContour = !invertedContour;
@@ -244,6 +260,42 @@ namespace DavinciBotView
                 trackBar1.Value = val;
                 this.ActiveControl = null;
             }
+        }
+
+        private void startCameraButton_Click(object sender, EventArgs e)
+        {
+            startCamera();
+        }
+       
+        /// <summary>
+        /// Turn on camera to take pictures
+        /// References: https://www.youtube.com/watch?v=A4Qcq9GOvGQ
+        /// </summary>
+        private void startCamera()
+        {
+            Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            frame = new VideoCaptureDevice(Devices[1].MonikerString);
+            frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
+            frame.Start();
+        }
+        private void FrameEvent(object sender, NewFrameEventArgs e)
+        {
+            try
+            {
+                Image temp = (Image)e.Frame.Clone();
+                temp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                cameraBox.Image = temp;
+
+            }
+            catch (Exception) //need e?
+            {
+                throw;
+            }
+        }
+
+        private void captureImageButton_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 

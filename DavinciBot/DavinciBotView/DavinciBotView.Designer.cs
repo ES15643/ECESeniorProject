@@ -49,11 +49,16 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.invertCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdNumberBox = new System.Windows.Forms.NumericUpDown();
+            this.cameraBox = new System.Windows.Forms.PictureBox();
+            this.startCameraButton = new System.Windows.Forms.Button();
+            this.captureImageButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumberBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -135,13 +140,13 @@
             // 
             // OurPictureBox
             // 
-            this.OurPictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.OurPictureBox.BackColor = System.Drawing.Color.LightGray;
             this.OurPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OurPictureBox.Location = new System.Drawing.Point(0, 30);
+            this.OurPictureBox.Location = new System.Drawing.Point(12, 90);
             this.OurPictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OurPictureBox.Name = "OurPictureBox";
-            this.OurPictureBox.Size = new System.Drawing.Size(300, 300);
-            this.OurPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.OurPictureBox.Size = new System.Drawing.Size(320, 240);
+            this.OurPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.OurPictureBox.TabIndex = 1;
             this.OurPictureBox.TabStop = false;
             this.OurPictureBox.Click += new System.EventHandler(this.ImageToBeDrawnBox_Click);
@@ -191,7 +196,7 @@
             // 
             this.LoadFromCameraButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadFromCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoadFromCameraButton.Location = new System.Drawing.Point(1208, 129);
+            this.LoadFromCameraButton.Location = new System.Drawing.Point(1208, 128);
             this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromCameraButton.Name = "LoadFromCameraButton";
             this.LoadFromCameraButton.Size = new System.Drawing.Size(196, 66);
@@ -213,22 +218,22 @@
             // 
             // previewImageBox
             // 
-            this.previewImageBox.BackColor = System.Drawing.Color.Transparent;
+            this.previewImageBox.BackColor = System.Drawing.Color.LightGray;
             this.previewImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewImageBox.Location = new System.Drawing.Point(437, 30);
+            this.previewImageBox.Location = new System.Drawing.Point(419, 90);
             this.previewImageBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.previewImageBox.Name = "previewImageBox";
-            this.previewImageBox.Size = new System.Drawing.Size(300, 300);
-            this.previewImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.previewImageBox.Size = new System.Drawing.Size(320, 240);
+            this.previewImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.previewImageBox.TabIndex = 7;
             this.previewImageBox.TabStop = false;
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(0, 445);
+            this.trackBar1.Location = new System.Drawing.Point(12, 405);
             this.trackBar1.Maximum = 200;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(300, 56);
+            this.trackBar1.Size = new System.Drawing.Size(320, 56);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.TickFrequency = 20;
             this.trackBar1.Value = 100;
@@ -239,27 +244,72 @@
             // invertCheckBox
             // 
             this.invertCheckBox.AutoSize = true;
-            this.invertCheckBox.Location = new System.Drawing.Point(410, 473);
+            this.invertCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.invertCheckBox.Location = new System.Drawing.Point(351, 370);
             this.invertCheckBox.Name = "invertCheckBox";
-            this.invertCheckBox.Size = new System.Drawing.Size(119, 21);
+            this.invertCheckBox.Size = new System.Drawing.Size(171, 30);
             this.invertCheckBox.TabIndex = 9;
             this.invertCheckBox.Text = "Invert Contour";
             this.invertCheckBox.UseVisualStyleBackColor = true;
             this.invertCheckBox.CheckedChanged += new System.EventHandler(this.invertCheckBox_CheckedChanged);
-            this.invertCheckBox.CheckStateChanged += new System.EventHandler(this.invertCheckBox_CheckStateChanged);
             // 
             // thresholdNumberBox
             // 
-            this.thresholdNumberBox.Location = new System.Drawing.Point(410, 445);
+            this.thresholdNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thresholdNumberBox.Location = new System.Drawing.Point(12, 370);
             this.thresholdNumberBox.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
             this.thresholdNumberBox.Name = "thresholdNumberBox";
-            this.thresholdNumberBox.Size = new System.Drawing.Size(231, 22);
+            this.thresholdNumberBox.Size = new System.Drawing.Size(320, 32);
             this.thresholdNumberBox.TabIndex = 10;
             this.thresholdNumberBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.thresholdNumberBox_KeyPress);
+            // 
+            // cameraBox
+            // 
+            this.cameraBox.BackColor = System.Drawing.Color.LightGray;
+            this.cameraBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cameraBox.Location = new System.Drawing.Point(826, 90);
+            this.cameraBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cameraBox.Name = "cameraBox";
+            this.cameraBox.Size = new System.Drawing.Size(320, 240);
+            this.cameraBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.cameraBox.TabIndex = 11;
+            this.cameraBox.TabStop = false;
+            // 
+            // startCameraButton
+            // 
+            this.startCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startCameraButton.Location = new System.Drawing.Point(826, 355);
+            this.startCameraButton.Name = "startCameraButton";
+            this.startCameraButton.Size = new System.Drawing.Size(320, 44);
+            this.startCameraButton.TabIndex = 12;
+            this.startCameraButton.Text = "Start Camera";
+            this.startCameraButton.UseVisualStyleBackColor = true;
+            this.startCameraButton.Click += new System.EventHandler(this.startCameraButton_Click);
+            // 
+            // captureImageButton
+            // 
+            this.captureImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.captureImageButton.Location = new System.Drawing.Point(826, 405);
+            this.captureImageButton.Name = "captureImageButton";
+            this.captureImageButton.Size = new System.Drawing.Size(320, 47);
+            this.captureImageButton.TabIndex = 13;
+            this.captureImageButton.Text = "Capture Image";
+            this.captureImageButton.UseVisualStyleBackColor = true;
+            this.captureImageButton.Click += new System.EventHandler(this.captureImageButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(826, 458);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(320, 47);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "Save Image";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // DavinciBotView
             // 
@@ -267,6 +317,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1482, 1055);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.captureImageButton);
+            this.Controls.Add(this.startCameraButton);
+            this.Controls.Add(this.cameraBox);
             this.Controls.Add(this.thresholdNumberBox);
             this.Controls.Add(this.invertCheckBox);
             this.Controls.Add(this.trackBar1);
@@ -291,6 +345,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumberBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -318,6 +373,10 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.CheckBox invertCheckBox;
         private System.Windows.Forms.NumericUpDown thresholdNumberBox;
+        private System.Windows.Forms.PictureBox cameraBox;
+        private System.Windows.Forms.Button startCameraButton;
+        private System.Windows.Forms.Button captureImageButton;
+        private System.Windows.Forms.Button button1;
     }
 }
 
