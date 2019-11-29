@@ -53,6 +53,7 @@
             this.startCameraButton = new System.Windows.Forms.Button();
             this.captureImageButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.stopCameraButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -311,12 +312,24 @@
             this.button1.Text = "Save Image";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // stopCameraButton
+            // 
+            this.stopCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopCameraButton.Location = new System.Drawing.Point(826, 511);
+            this.stopCameraButton.Name = "stopCameraButton";
+            this.stopCameraButton.Size = new System.Drawing.Size(320, 47);
+            this.stopCameraButton.TabIndex = 15;
+            this.stopCameraButton.Text = "Stop Camera";
+            this.stopCameraButton.UseVisualStyleBackColor = true;
+            this.stopCameraButton.Click += new System.EventHandler(this.stopCameraButton_Click);
+            // 
             // DavinciBotView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1482, 1055);
+            this.Controls.Add(this.stopCameraButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.captureImageButton);
             this.Controls.Add(this.startCameraButton);
@@ -377,6 +390,7 @@
         private System.Windows.Forms.Button startCameraButton;
         private System.Windows.Forms.Button captureImageButton;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button stopCameraButton;
     }
 }
 

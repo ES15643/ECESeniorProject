@@ -1,8 +1,3 @@
-( imgcode generated code )
-( developed by M. "Vidmo" Widomski )
-(  github.com/vidmo91 )
-(  hackaday.io/vidmo91 )
- 
 H5 S0 
 F100
 G0 Z0 ( for some grbl senders compatibility )

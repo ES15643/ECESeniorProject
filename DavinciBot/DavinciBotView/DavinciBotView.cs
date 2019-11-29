@@ -143,7 +143,7 @@ namespace DavinciBotView
                 string pScript = "python "
                 + "./imgcode.py "
                 + "preview_contour.jpg "
-                + "./output.gco "
+                + "./commands.gco "
                 + x_offset_mm + ' '
                 + y_offset_mm + ' '
                 + output_image_horizontal_size_mm + ' '
@@ -316,6 +316,11 @@ namespace DavinciBotView
         private void captureImageButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void stopCameraButton_Click(object sender, EventArgs e)
+        {
+            stopCamera();
         }
     }
 
