@@ -47,26 +47,12 @@ son, ApplicationContext context)
 63710416845656684
 637104168456566844
 
-"python ./contours.py --image_file C:\\Users\\ebrig\\Pictures\\Aviary Photos\\Aviary Stock Photo 1.png --threshold 50"
-
+WORKS:
 "python ./contours.py --image_file \"C:\\Users\\ebrig\\Pictures\\Aviary Photos\\Aviary Stock Photo 1.png\" --threshold 50"
 
-"python ./imgcode.py output.gco \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\"004000.51002552"
+WORKS:
 
 
 
 
 
-"python ./imgcode.py ./output.gco \"\" 0 0 400 0.5 100 255 2"
-
-"python ./imgcode.py ./output.gco \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\" 0 0 400 0.5 100 255 2"
-
-
-"python ./contours.py --image_file \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\" --threshold 50"
-
-"python ./imgcode.py ./preview_contour.jpg ./output.gco \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\" 0 0 400 0.5 100 255 2"
-python ./imgcode.py preview_contour.jpg ./output.gco \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\" 0 0 400 0.5 100 255 2
-
-
-
-python ./imgcode.py preview_contour.jpg ./output.gco \"C:\\Users\\ebrig\\Documents\\College\\Fall2019\\ECESeniorProject\\ECESeniorProject\\Image_Processor_Files\\mickey.png\" 0 0 400 0.5 255 2

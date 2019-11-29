@@ -16,6 +16,9 @@ namespace DavinciBotView
         public string loadedImagePath;
         public string loadedImageName;
         private bool invertedContour = false;
+        private static bool startedCamera = false;
+        private static FilterInfoCollection Devices;
+        private static VideoCaptureDevice frame;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -23,8 +26,6 @@ namespace DavinciBotView
             InitializeComponent();
             InitializeOurPictureBox();
         }
-        private FilterInfoCollection Devices;
-        private VideoCaptureDevice frame;
 
         /// <summary>
         /// Initialize all main components of the GUI
@@ -34,6 +35,8 @@ namespace DavinciBotView
         private void DavinciBotView_Load(object sender, EventArgs e)
         {
             //videoSource = new VideoCaptureDevice();
+            Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            frame = new VideoCaptureDevice(Devices[1].MonikerString);
         }
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
         {
@@ -100,7 +103,11 @@ namespace DavinciBotView
                 e.Cancel = true;
             }
             */
-            frame.Stop();
+
+            if (frame != null)
+            {
+                stopCamera();
+            }
         }
 
         /// <summary>
@@ -134,16 +141,16 @@ namespace DavinciBotView
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
                 var thisPath = Environment.CurrentDirectory;
                 string pScript = "python "
-                                + "./imgcode.py "
-                                + "preview_contour.jpg "
-                                + "./output.gco "
-                                + x_offset_mm + ' '
-                                + y_offset_mm + ' '
-                                + output_image_horizontal_size_mm + ' '
-                                + pixel_size_mm + ' '
-                                + feedrate + ' '
-                                + max_laser_power + ' '
-                                + number_of_colours;
+                + "./imgcode.py "
+                + "preview_contour.jpg "
+                + "./output.gco "
+                + x_offset_mm + ' '
+                + y_offset_mm + ' '
+                + output_image_horizontal_size_mm + ' '
+                + pixel_size_mm + ' '
+                + feedrate + ' '
+                + max_laser_power + ' '
+                + number_of_colours;
 
                 runspace.Open();
                 using (Pipeline pipeline = runspace.CreatePipeline())
@@ -181,13 +188,13 @@ namespace DavinciBotView
                     contourFile = "./contours.py";
                 }
                 string psScript = "python "
-                                + contourFile
-                                + " --image_file "
-                                + '"'
-                                + loadedImagePath
-                                + '"'
-                                + " --threshold "
-                                + curThreshold;
+                + contourFile
+                + " --image_file "
+                + '"'
+                + loadedImagePath
+                + '"'
+                + " --threshold "
+                + curThreshold;
                 runspace.Open();
                 using (Pipeline pipeline = runspace.CreatePipeline())
                 {
@@ -266,17 +273,30 @@ namespace DavinciBotView
         {
             startCamera();
         }
-       
+
         /// <summary>
         /// Turn on camera to take pictures
         /// References: https://www.youtube.com/watch?v=A4Qcq9GOvGQ
         /// </summary>
         private void startCamera()
         {
-            Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            frame = new VideoCaptureDevice(Devices[1].MonikerString);
-            frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
-            frame.Start();
+            //STOP ALL PREVIOUS CAMERAS OR YOU GET A THREADING ISSUE
+//            if (startedCamera == false)
+  //          {
+                frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
+                frame.Start();
+                startedCamera = true;
+    //        }
+        }
+        private void stopCamera()
+        {
+            frame.SignalToStop();
+            frame.NewFrame -= new NewFrameEventHandler(FrameEvent);
+            frame.WaitForStop();
+            while (frame.IsRunning)
+            {
+                frame.Stop();
+            }
         }
         private void FrameEvent(object sender, NewFrameEventArgs e)
         {
@@ -295,7 +315,7 @@ namespace DavinciBotView
 
         private void captureImageButton_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 
