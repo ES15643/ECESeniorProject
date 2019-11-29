@@ -80,11 +80,46 @@ void Stepper_Motor::Step()
     // delayMicroseconds(1);
     digitalWrite(StepPin, LOW);
     AmountOfStepsTaken += 1;
+    
+    if(Direction == 0)
+    {
+        cur_pos-=0.005;
+    }
+    else
+    {
+        cur_pos+=0.005;
+    }
 
     if(Circle)
     {
-        if(abs(cur_pos-dest) < 0.2)
+        // if(X_plane)
+        // {
+        //     Serial.print("Cur Pos X: ");
+        //     Serial.println(cur_pos);            
+        // }
+        // else
+        // {
+        //     Serial.print("Cur Pos: ");
+        //     Serial.print(cur_pos);
+        // }
+
+        if(abs(cur_pos - center_point - rad) < 0.009)
         {
+            Serial.println("Here yo!");
+            if(Direction == 0)
+            {
+                Direction = 1;
+            }
+            else
+            {
+                Direction = 0;
+            }
+        }
+
+        if(abs(cur_pos-dest) < 0.01)
+        {
+            Serial.print("Cur Pos: ");
+            Serial.print(cur_pos);
             // Serial.println(AmountOfStepsTaken);
             noInterrupts();// disable all interrupts
             if(X_plane)
@@ -98,7 +133,7 @@ void Stepper_Motor::Step()
             TIFR3 |= (1 << OCF3A); 
             MotorIsMoving = false;
             ResetMotor();
-            Serial.println("Stepping finished\n");
+            // Serial.println("Stepping finished\n");
             interrupts();   // enable all interrupts
         }
     }
@@ -118,7 +153,7 @@ void Stepper_Motor::Step()
         TIFR3 |= (1 << OCF3A); 
         MotorIsMoving = false;
         ResetMotor();
-        Serial.println("Stepping finished\n");
+        // Serial.println("Stepping finished\n");
         interrupts();   // enable all interrupts
     }
 
@@ -131,16 +166,42 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
     {
         if(X_plane)
         {
-            CurrentSPS = sin( ((cur_pos - center_point) * PI)/(2 * rad) ) * DefaultSPS;
+            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) -1) * DefaultSPS;
         }
         else
         {
-            CurrentSPS = cos( ((cur_pos - center_point) * PI)/(2 * rad) ) * DefaultSPS; 
+            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
         }
-        
+        if(X_plane)
+        {
+            // Serial.print("Cur Pos X: ");
+            // Serial.println(cur_pos);            
+        }
+        else
+        {
+            // Serial.print("Cur Pos: ");
+            // Serial.print(cur_pos);
+            // Serial.print(" Direction: ");
+            // Serial.println(Direction);
+            // Serial.print("CurSPS: ");
+            // Serial.println(CurrentSPS);
+        }
+
+        if(CurrentSPS < 300.0)
+            {
+                CurrentSPS = 300.0;
+            }
     }
 
-    uint32_t timePerStep = (CLCKSPD/CurrentSPS);
+    uint32_t timePerStep;
+    if (CurrentSPS < 1)
+    {
+        timePerStep = CLCKSPD;
+    }
+    else
+    {
+        timePerStep = (CLCKSPD/(uint32_t)CurrentSPS);
+    }
     // Serial.print("TimePerStep: ");
     // Serial.println(timePerStep);
     if(timePerStep >= 65535) //Checks for potential overflow
@@ -148,7 +209,15 @@ uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
         timePerStep = 65535;
     }
     uint16_t temp = timePerStep;
-    // Serial.println(temp);
+    
+    if(X_plane)
+    {
+        // Serial.println(temp);
+    }
+    else
+    {
+        // Serial.println(temp);
+    }
     return temp; // Clock speed divided by desired steps per second
 }
 
@@ -171,7 +240,7 @@ void Stepper_Motor::StepperAccelerationAdjuster()
             
             if (CurrentSPS == MaxSPS)
             {
-                Serial.println("Max reached");
+                // Serial.println("Max reached");
                 Accelerate = false;
             }
             
@@ -204,19 +273,20 @@ void Stepper_Motor::StepperAccelerationAdjuster()
 
 void Stepper_Motor::ResetMotor()
 {
-    Serial.print("Plane: ");
-    if (X_plane)
-    {
-        Serial.println("X hit");
-    }
-    else
-    {
-        Serial.println("Y hit");
-    }
+    // Serial.print("Plane: ");
+    // if (X_plane)
+    // {
+    //     Serial.println("X hit");
+    // }
+    // else
+    // {
+    //     Serial.println("Y hit");
+    // }
     CurrentSPS = DefaultSPS;
     AmountOfStepsTaken = 0;
     Accelerate = false;
     Decelerate = false;
+    Circle = false;
 
     uint8_t temp = 0;
     if(X_plane)

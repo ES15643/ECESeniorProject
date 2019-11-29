@@ -21,7 +21,7 @@ class Stepper_Motor
     void IncrementSPS();
     void ResetMotor();
     void StepperAccelerationAdjuster();
-    void SetCircle(bool circle){ Circle = Circle; }
+    void SetCircle(bool circle){ Circle = circle; }
     void SetCurrPos(float pos){ cur_pos = pos; }
     void SetRadius(float r){ rad = r; }
     void SetDest(float d){ dest = d; }
@@ -45,8 +45,8 @@ class Stepper_Motor
     uint8_t DirectionPin;
     uint8_t StepPin;
     uint32_t MaxSPS;
-    uint32_t CurrentSPS;
-    uint32_t DefaultSPS = 700;
+    float CurrentSPS;
+    float DefaultSPS = 1000;
     uint32_t TotalSteps;
     bool Accelerate;
     bool Decelerate;

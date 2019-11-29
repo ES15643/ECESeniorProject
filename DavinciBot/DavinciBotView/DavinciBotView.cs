@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms; 
+using System.Windows.Forms;
+using System.Collections.ObjectModel;
+using System.Management.Automation;
+using System.Management.Automation.Runspaces;
+using System.Threading;
+using System.Reflection;
 
 namespace DavinciBotView
 {
@@ -15,6 +21,8 @@ namespace DavinciBotView
     {
         private int imageLoadCount = 0;
         public string loadedImagePath;
+        public string loadedImageName;
+        private bool invertedContour = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -41,9 +49,11 @@ namespace DavinciBotView
                 //Get the path of specified file
                 filePath = openFile.FileName;
                 loadedImagePath = filePath;
+                var splitFilePath = filePath.Split('\\');
+                loadedImageName = splitFilePath[splitFilePath.Length - 1];
                 OurPictureBox.Image = new Bitmap(filePath);
+                FindContour(50);
             }
-
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
@@ -94,8 +104,6 @@ namespace DavinciBotView
         //Testing: uses image "Loaded from File" and prints its path to a fileS
         private void ConvertImageButton_Click(object sender, EventArgs e)
         {
-            string[] lines = { "it's", "a", "test" };
-;
             SaveFileDialog saveConvertedImage = new SaveFileDialog();
             if (saveConvertedImage.ShowDialog() == DialogResult.OK)
             {
@@ -107,25 +115,123 @@ namespace DavinciBotView
                      */
                     sw.WriteLine(loadedImagePath);
                 }
-
+                FindContour(50);
             }
 
         }
 
-        private void FindContour()
+        private void FindContour(int curThreshold)
         {
-            var processInfo = new ProcessStartInfo
+            string oldDir = Environment.CurrentDirectory;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
-                UseShellExecute = false, // change value to false
-                FileName = "cmd.exe",
-                Arguments = "/c time"
-            };
+                Environment.CurrentDirectory = "../../../../Image_Processor_Files";
+                var thisPath = Environment.CurrentDirectory;
+                var firstModified = File.GetLastWriteTime("preview_contour.jpg");
+                var firstTicks = firstModified.Ticks;
+                string psScript = "python "
+                                + "./contours.py --image_file "
+                                + "./"
+                                + loadedImageName
+                                + " --threshold "
+                                + curThreshold;
+                runspace.Open();
+                using (Pipeline pipeline = runspace.CreatePipeline())
+                {
+                    pipeline.Commands.AddScript(psScript);
+                    pipeline.Commands.Add("Out-String");
+                    Collection<PSObject> results=  pipeline.Invoke();
+                }
+                /*while (true)
+                {
+                    var lastModified = File.GetLastWriteTime("preview_contour.jpg");
+                    long lastTicks = lastModified.Ticks;
+                    if (lastTicks != firstTicks)
+                        break;
+                    else
+                        continue;
+                }
+                */
 
-            Console.WriteLine("Starting child process...");
-            using (var process = Process.Start(processInfo))
-            {
-                process.WaitForExit();
+                Console.WriteLine("Updated file");
+                runspace.Dispose();
             }
+            //Can't write to a bitmap that's already open?
+
+            using (var fs = new System.IO.FileStream("preview_contour.jpg", System.IO.FileMode.Open))
+            {
+                var bmp = new Bitmap(fs);
+                previewImageBox.Image = (Bitmap)bmp.Clone();
+            }
+
+            //previewImageBox.Image = new Bitmap("preview_contour.jpg");
+            Environment.CurrentDirectory = oldDir;
+
+            Console.WriteLine("FindContour Finished");
+
+            //THIRD TRY
+
+            /*
+            using (PowerShell PowerShellInstance = PowerShell.Create())
+            {
+                string ourPath = ".../Image_Processor_Files";
+                string psScript = "python " //+ ourPath
+                        + "./contours.py --image_file "
+                       // + ourPath
+                        + "./"
+                        + loadedImageName
+                        + " --threshold "
+                        + curThreshold;
+                Console.WriteLine(psScript);
+
+                PowerShellInstance.AddScript("cd ....");
+                PowerShellInstance.AddScript("ls");
+
+                var cmd1 = PowerShellInstance.Invoke();
+
+                string dir2 = Directory.GetCurrentDirectory();
+                Console.WriteLine(dir2);
+
+                PowerShellInstance.AddCommand(psScript);
+
+                // begin invoke execution on the pipeline
+                IAsyncResult result = PowerShellInstance.BeginInvoke();
+
+                // do something else until execution has completed.
+                // this could be sleep/wait, or perhaps some other work
+                while (result.IsCompleted == false)
+                {
+             //       Console.WriteLine("Waiting for pipeline to finish...");
+                    Thread.Sleep(500);
+
+                    // might want to place a timeout here...
+                }
+
+                Console.WriteLine("Finished!");
+            }
+            */
+        }
+
+        /// <summary>
+        /// Updates image preview window when threshold for image processing has changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImagePreviewThresholdChanged(object sender, EventArgs e)
+        {
+            Controls.Add(trackBar1);
+            var curThreshold = trackBar1.Value;
+            imageProcessingThresholdBox.Text = "" + curThreshold;
+
+        }
+
+        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        {
+            Controls.Add(trackBar1);
+            var curThreshold = trackBar1.Value;
+            //Update preview image
+            FindContour(curThreshold);
+
         }
     }
 

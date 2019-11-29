@@ -45,8 +45,13 @@
             this.ConvertImageButton = new System.Windows.Forms.Button();
             this.LoadFromCameraButton = new System.Windows.Forms.Button();
             this.StartButton = new System.Windows.Forms.Button();
+            this.previewImageBox = new System.Windows.Forms.PictureBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.imageProcessingThresholdBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -61,7 +66,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(957, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1482, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -133,7 +138,7 @@
             this.OurPictureBox.Location = new System.Drawing.Point(0, 30);
             this.OurPictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OurPictureBox.Name = "OurPictureBox";
-            this.OurPictureBox.Size = new System.Drawing.Size(584, 523);
+            this.OurPictureBox.Size = new System.Drawing.Size(300, 300);
             this.OurPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.OurPictureBox.TabIndex = 1;
             this.OurPictureBox.TabStop = false;
@@ -142,7 +147,7 @@
             // LoadFromFileButton
             // 
             this.LoadFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadFromFileButton.Location = new System.Drawing.Point(683, 41);
+            this.LoadFromFileButton.Location = new System.Drawing.Point(1208, 41);
             this.LoadFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromFileButton.Name = "LoadFromFileButton";
             this.LoadFromFileButton.Size = new System.Drawing.Size(196, 66);
@@ -154,7 +159,7 @@
             // StopButton
             // 
             this.StopButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StopButton.Location = new System.Drawing.Point(683, 398);
+            this.StopButton.Location = new System.Drawing.Point(1208, 398);
             this.StopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StopButton.Name = "StopButton";
             this.StopButton.Size = new System.Drawing.Size(196, 66);
@@ -166,7 +171,7 @@
             // ConvertImageButton
             // 
             this.ConvertImageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConvertImageButton.Location = new System.Drawing.Point(683, 215);
+            this.ConvertImageButton.Location = new System.Drawing.Point(1208, 215);
             this.ConvertImageButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ConvertImageButton.Name = "ConvertImageButton";
             this.ConvertImageButton.Size = new System.Drawing.Size(196, 66);
@@ -180,7 +185,7 @@
             // LoadFromCameraButton
             // 
             this.LoadFromCameraButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadFromCameraButton.Location = new System.Drawing.Point(683, 129);
+            this.LoadFromCameraButton.Location = new System.Drawing.Point(1208, 129);
             this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromCameraButton.Name = "LoadFromCameraButton";
             this.LoadFromCameraButton.Size = new System.Drawing.Size(196, 66);
@@ -191,7 +196,7 @@
             // StartButton
             // 
             this.StartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartButton.Location = new System.Drawing.Point(683, 304);
+            this.StartButton.Location = new System.Drawing.Point(1208, 304);
             this.StartButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(196, 66);
@@ -199,12 +204,47 @@
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
             // 
+            // previewImageBox
+            // 
+            this.previewImageBox.BackColor = System.Drawing.Color.Transparent;
+            this.previewImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.previewImageBox.Location = new System.Drawing.Point(437, 30);
+            this.previewImageBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.previewImageBox.Name = "previewImageBox";
+            this.previewImageBox.Size = new System.Drawing.Size(300, 300);
+            this.previewImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.previewImageBox.TabIndex = 7;
+            this.previewImageBox.TabStop = false;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(0, 445);
+            this.trackBar1.Maximum = 200;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(300, 56);
+            this.trackBar1.TabIndex = 0;
+            this.trackBar1.TickFrequency = 20;
+            this.trackBar1.Value = 100;
+            this.trackBar1.Scroll += new System.EventHandler(this.ImagePreviewThresholdChanged);
+            this.trackBar1.ValueChanged += new System.EventHandler(this.ImagePreviewThresholdChanged);
+            this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
+            // 
+            // imageProcessingThresholdBox
+            // 
+            this.imageProcessingThresholdBox.Location = new System.Drawing.Point(410, 445);
+            this.imageProcessingThresholdBox.Name = "imageProcessingThresholdBox";
+            this.imageProcessingThresholdBox.Size = new System.Drawing.Size(160, 22);
+            this.imageProcessingThresholdBox.TabIndex = 8;
+            // 
             // DavinciBotView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(957, 553);
+            this.ClientSize = new System.Drawing.Size(1482, 1055);
+            this.Controls.Add(this.imageProcessingThresholdBox);
+            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.previewImageBox);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.LoadFromCameraButton);
             this.Controls.Add(this.ConvertImageButton);
@@ -222,6 +262,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -245,6 +287,9 @@
         private System.Windows.Forms.Button ConvertImageButton;
         private System.Windows.Forms.Button LoadFromCameraButton;
         private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.PictureBox previewImageBox;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TextBox imageProcessingThresholdBox;
     }
 }
 

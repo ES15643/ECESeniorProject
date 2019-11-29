@@ -1,8 +1,10 @@
-#include "Stepper_Motor.h"
+// #include "Stepper_Motor.h"
+#include "gcode_interpretation.h"
 
 Stepper_Motor stpm1;
 Stepper_Motor stpm2;
-// Stepper_Motor stpm3;
+
+gcode_interpretation gcinter;
 
 int stmp1_directionpin = 52;
 int stmp1_steppin = 53;
@@ -11,12 +13,13 @@ int stmp2_directionpin = 50;
 int stmp2_steppin = 51;
 int maxSPS = 1000;
 
-long x;
-long y;
-// long z;
+//Linear
+// String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
 
-volatile bool homingx = false;
-volatile bool homingy = false;
+//Circle
+String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
+
+
 // volatile int triggered = LOW;
 
 // X Motor Step interrupt
@@ -24,6 +27,7 @@ ISR(TIMER1_COMPA_vect)
 {
     if (stpm1.IsMotorMoving())
     {
+
         stpm1.Step();
     }
 }
@@ -76,21 +80,20 @@ void setup()
     digitalWrite(17, LOW);
     digitalWrite(20, LOW);
 
-    // Set Interrupts
-    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
-
-    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
-    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
-
     //Enable interrupt pins
     pinMode(48, OUTPUT);
     pinMode(49, OUTPUT);
 
     stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS, true); // X motor
     stpm2 = Stepper_Motor(200, stmp2_directionpin, stmp2_steppin, maxSPS, false); // y motor
+    // gcinter = gcode_interpretation(stpm1, stpm2); // GCode interpeter
 
-    // Home();
+    // Set Interrupts
+    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
+    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
+    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
+    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
+
     WaitForInput();   
 }
 
@@ -108,7 +111,14 @@ void WaitForInput()
             if (bytesRead == 'y')
             {
                 run = false;
-                Home(); // Home Motors
+                gcinter.Home(); // Home Motors
+                
+                attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
+                attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
+                attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
+                attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
+                Serial.println("Motor Ready");
+                Serial.println("Ready to Start y/n?");
             }
         }
     }
@@ -122,87 +132,56 @@ void loop()
         bytesRead = Serial.read();
         if (bytesRead == 'y')
         {
-            stpm1.MoveMotor(2500, 1);
-            // stpm2.MoveMotor(2500, 1);
-            // stpm3.MoveMotor(2500, 1);
+            Serial.println("Starting");
+            for (int i = 0; i < 2; i++)
+            {
+                Serial.println("Using " + gcodesForTesting[i]);
+                gcinter.interpret_gcode(gcodesForTesting[i]);
+                Serial.print("X pos: ");
+                Serial.println(stpm1.GetCurrPos());
+                Serial.print("Y pos: ");
+                Serial.println(stpm2.GetCurrPos());
+            }
         }
     }
 }
 
 void boundaryTriggeredX()
 {   
-    if(!homingx)
+    if(!gcinter.GetHomingx())
     {
         digitalWrite(49, HIGH);
+        digitalWrite(48, HIGH);
+        // stpm1.ResetMotor();
         //send error to GUI
     }
-    else if (homingx)
+    else if (gcinter.GetHomingx())
     {
         stpm1.ResetMotor();
         stpm1.SetCurrPos(0.0);
-        homingx = false;
+        gcinter.SetHomingx(false);
         detachInterrupt(digitalPinToInterrupt(3));
-        detachInterrupt(digitalPinToInterrupt(18));
+        detachInterrupt(digitalPinToInterrupt(19));        
     }
 }
 
 void boundaryTriggeredY()
 {
-    Serial.println("Y Triggered");
 
-    if(!homingy)
+    if(!gcinter.GetHomingy())
     {
         digitalWrite(48, HIGH);
+        digitalWrite(49, HIGH);
+        // stpm2.ResetMotor();
         //send error to GUI
     }
-    else if (homingy)
+    else if (gcinter.GetHomingy())
     {
         stpm2.ResetMotor();
         stpm2.SetCurrPos(0.0);
-        homingy = false;
-        detachInterrupt(digitalPinToInterrupt(19));
+        gcinter.SetHomingy(false);
+        detachInterrupt(digitalPinToInterrupt(18));
         detachInterrupt(digitalPinToInterrupt(21));
     }
 }
 
-void Home()
-{
-    homingx = true;
-    homingy = true;
-
-    stpm1.SetDirection(0);
-    stpm2.SetDirection(0);
-
-    stpm1.Home();
-    Serial.println("Home x");
-    stpm2.Home();
-    Serial.println("Home y");
-    while(homingx || homingy){}
-
-    Serial.println("Both were triggered");
-    if(stpm1.GetDirection() == 0)
-    {
-        stpm1.MoveMotor(200, 1);
-    }
-    else
-    {
-        stpm1.MoveMotor(200, 0);
-    }
-
-    if(stpm2.GetDirection() == 0)
-    {
-        stpm2.MoveMotor(200, 1);
-    }
-    else
-    {
-        stpm2.MoveMotor(200, 0);
-    }
-
-    while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){}
-
-    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
-    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredY, LOW);
-    Serial.println("Motor Ready");
-}
