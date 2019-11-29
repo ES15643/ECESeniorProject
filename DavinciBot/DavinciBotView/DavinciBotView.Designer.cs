@@ -42,7 +42,7 @@
             this.OurPictureBox = new System.Windows.Forms.PictureBox();
             this.LoadFromFileButton = new System.Windows.Forms.Button();
             this.StopButton = new System.Windows.Forms.Button();
-            this.ConvertImageButton = new System.Windows.Forms.Button();
+            this.generateGcodeButton = new System.Windows.Forms.Button();
             this.LoadFromCameraButton = new System.Windows.Forms.Button();
             this.StartButton = new System.Windows.Forms.Button();
             this.previewImageBox = new System.Windows.Forms.PictureBox();
@@ -149,6 +149,7 @@
             // LoadFromFileButton
             // 
             this.LoadFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoadFromFileButton.Location = new System.Drawing.Point(1208, 41);
             this.LoadFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromFileButton.Name = "LoadFromFileButton";
@@ -161,6 +162,7 @@
             // StopButton
             // 
             this.StopButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.StopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StopButton.Location = new System.Drawing.Point(1208, 398);
             this.StopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StopButton.Name = "StopButton";
@@ -170,23 +172,25 @@
             this.StopButton.Text = "Stop";
             this.StopButton.UseVisualStyleBackColor = true;
             // 
-            // ConvertImageButton
+            // generateGcodeButton
             // 
-            this.ConvertImageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConvertImageButton.Location = new System.Drawing.Point(1208, 215);
-            this.ConvertImageButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ConvertImageButton.Name = "ConvertImageButton";
-            this.ConvertImageButton.Size = new System.Drawing.Size(196, 66);
-            this.ConvertImageButton.TabIndex = 4;
-            this.ConvertImageButton.Tag = "EditingOptionsButton";
-            this.ConvertImageButton.Text = "Convert Image File";
-            this.ConvertImageButton.UseCompatibleTextRendering = true;
-            this.ConvertImageButton.UseVisualStyleBackColor = true;
-            this.ConvertImageButton.Click += new System.EventHandler(this.ConvertImageButton_Click);
+            this.generateGcodeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.generateGcodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.generateGcodeButton.Location = new System.Drawing.Point(1208, 215);
+            this.generateGcodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.generateGcodeButton.Name = "generateGcodeButton";
+            this.generateGcodeButton.Size = new System.Drawing.Size(196, 66);
+            this.generateGcodeButton.TabIndex = 4;
+            this.generateGcodeButton.Tag = "EditingOptionsButton";
+            this.generateGcodeButton.Text = "Generate G-Code";
+            this.generateGcodeButton.UseCompatibleTextRendering = true;
+            this.generateGcodeButton.UseVisualStyleBackColor = true;
+            this.generateGcodeButton.Click += new System.EventHandler(this.GenerateGcodeButton_Click);
             // 
             // LoadFromCameraButton
             // 
             this.LoadFromCameraButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadFromCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoadFromCameraButton.Location = new System.Drawing.Point(1208, 129);
             this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromCameraButton.Name = "LoadFromCameraButton";
@@ -198,6 +202,7 @@
             // StartButton
             // 
             this.StartButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.StartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StartButton.Location = new System.Drawing.Point(1208, 304);
             this.StartButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StartButton.Name = "StartButton";
@@ -268,7 +273,7 @@
             this.Controls.Add(this.previewImageBox);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.LoadFromCameraButton);
-            this.Controls.Add(this.ConvertImageButton);
+            this.Controls.Add(this.generateGcodeButton);
             this.Controls.Add(this.StopButton);
             this.Controls.Add(this.LoadFromFileButton);
             this.Controls.Add(this.OurPictureBox);
@@ -306,7 +311,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Button LoadFromFileButton;
         private System.Windows.Forms.Button StopButton;
-        private System.Windows.Forms.Button ConvertImageButton;
+        private System.Windows.Forms.Button generateGcodeButton;
         private System.Windows.Forms.Button LoadFromCameraButton;
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.PictureBox previewImageBox;

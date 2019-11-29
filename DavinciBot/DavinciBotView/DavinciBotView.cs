@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Threading;
-using System.Reflection;
 
 namespace DavinciBotView
 {
@@ -100,26 +91,67 @@ namespace DavinciBotView
             */
         }
 
-        //After the image is loaded, process through python/gcode, print to a .txt file
-        //Testing: uses image "Loaded from File" and prints its path to a fileS
-        private void ConvertImageButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateGcodeButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveConvertedImage = new SaveFileDialog();
-            if (saveConvertedImage.ShowDialog() == DialogResult.OK)
+            //need to change this to scale image properly based on user inputs
+            double x_offset_mm = 0;
+            double y_offset_mm = 0;
+            double output_image_horizontal_size_mm = 400;
+            double pixel_size_mm = .5;
+            double feedrate = 100;
+            double max_laser_power = 255;
+            int number_of_colours = 2;
+            /* SaveFileDialog saveConvertedImage = new SaveFileDialog();
+             if (saveConvertedImage.ShowDialog() == DialogResult.OK)
+             {
+                 using (Stream s = File.Open(saveConvertedImage.FileName, FileMode.OpenOrCreate))
+                 using (StreamWriter sw = new StreamWriter(s))
+                 {
+                     sw.WriteLine(loadedImagePath);
+                 }
+             }
+             */
+            string oldDir = Environment.CurrentDirectory;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
-                using (Stream s = File.Open(saveConvertedImage.FileName, FileMode.OpenOrCreate))
-                using (StreamWriter sw = new StreamWriter(s))
-                {
-                    /* foreach(string line in lines)
-                     sw.WriteLine(line);
-                     */
-                    sw.WriteLine(loadedImagePath);
-                }
-                FindContour(50);
-            }
+                Environment.CurrentDirectory = "../../../../Image_Processor_Files";
+                var thisPath = Environment.CurrentDirectory;
+                string pScript = "python "
+                                + "./imgcode.py "
+                                + "preview_contour.jpg "
+                                + "./output.gco "
+                                + x_offset_mm + ' '
+                                + y_offset_mm + ' '
+                                + output_image_horizontal_size_mm + ' '
+                                + pixel_size_mm + ' '
+                                + feedrate + ' '
+                                + max_laser_power + ' '
+                                + number_of_colours;
 
+                runspace.Open();
+                using (Pipeline pipeline = runspace.CreatePipeline())
+                {
+                    pipeline.Commands.AddScript(pScript);
+                    pipeline.Commands.Add("Out-String");
+                    Collection<PSObject> results = pipeline.Invoke();
+                }
+
+                Console.WriteLine("Updated file");
+                runspace.Dispose();
+            }
+            Environment.CurrentDirectory = oldDir;
         }
 
+        /// <summary>
+        /// Calls python script to find contours in an image and update the image preview
+        /// Referenced from: https://blogs.msdn.microsoft.com/kebab/2014/04/28/executing-powershell-scripts-from-c/
+        /// </summary>
+        /// <param name="curThreshold"></param>
         private void FindContour(int curThreshold)
         {
             string oldDir = Environment.CurrentDirectory;
@@ -128,7 +160,7 @@ namespace DavinciBotView
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
                 var thisPath = Environment.CurrentDirectory;
                 string contourFile;
-                if(invertedContour)
+                if (invertedContour)
                 {
                     contourFile = "./contours0.py";
                 }
@@ -139,8 +171,9 @@ namespace DavinciBotView
                 string psScript = "python "
                                 + contourFile
                                 + " --image_file "
-                                + "./"
-                                + loadedImageName
+                                + '"'
+                                + loadedImagePath
+                                + '"'
                                 + " --threshold "
                                 + curThreshold;
                 runspace.Open();
@@ -148,23 +181,12 @@ namespace DavinciBotView
                 {
                     pipeline.Commands.AddScript(psScript);
                     pipeline.Commands.Add("Out-String");
-                    Collection<PSObject> results=  pipeline.Invoke();
+                    Collection<PSObject> results = pipeline.Invoke();
                 }
-                /*while (true)
-                {
-                    var lastModified = File.GetLastWriteTime("preview_contour.jpg");
-                    long lastTicks = lastModified.Ticks;
-                    if (lastTicks != firstTicks)
-                        break;
-                    else
-                        continue;
-                }
-                */
 
                 Console.WriteLine("Updated file");
                 runspace.Dispose();
             }
-            //Can't write to a bitmap that's already open?
 
             using (var fs = new System.IO.FileStream("preview_contour.jpg", System.IO.FileMode.Open))
             {
@@ -176,48 +198,6 @@ namespace DavinciBotView
             Environment.CurrentDirectory = oldDir;
 
             Console.WriteLine("FindContour Finished");
-
-            //THIRD TRY
-
-            /*
-            using (PowerShell PowerShellInstance = PowerShell.Create())
-            {
-                string ourPath = ".../Image_Processor_Files";
-                string psScript = "python " //+ ourPath
-                        + "./contours.py --image_file "
-                       // + ourPath
-                        + "./"
-                        + loadedImageName
-                        + " --threshold "
-                        + curThreshold;
-                Console.WriteLine(psScript);
-
-                PowerShellInstance.AddScript("cd ....");
-                PowerShellInstance.AddScript("ls");
-
-                var cmd1 = PowerShellInstance.Invoke();
-
-                string dir2 = Directory.GetCurrentDirectory();
-                Console.WriteLine(dir2);
-
-                PowerShellInstance.AddCommand(psScript);
-
-                // begin invoke execution on the pipeline
-                IAsyncResult result = PowerShellInstance.BeginInvoke();
-
-                // do something else until execution has completed.
-                // this could be sleep/wait, or perhaps some other work
-                while (result.IsCompleted == false)
-                {
-             //       Console.WriteLine("Waiting for pipeline to finish...");
-                    Thread.Sleep(500);
-
-                    // might want to place a timeout here...
-                }
-
-                Console.WriteLine("Finished!");
-            }
-            */
         }
 
         /// <summary>
@@ -255,7 +235,7 @@ namespace DavinciBotView
 
         private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == Convert.ToChar(Keys.Enter))
+            if (e.KeyChar == Convert.ToChar(Keys.Enter))
             {
                 e.Handled = true;
                 e.KeyChar = (char)46;
