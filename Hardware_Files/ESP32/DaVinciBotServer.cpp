@@ -1,11 +1,13 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
+#include <WiFiAP.h>
+#include <WiFiClient.h>
 #include "EEPROM.h"
 
-const char* ssid = "NetworkName";
+const char* ssid = "DaVinciBot";
 const char* password = "NetworkPassword";
 
-WiFiServer server(3333);
+WiFiServer server(80);
 #define EEPROM_SIZE 10000
 
 void setup()
@@ -21,24 +23,16 @@ void setup()
 
 	delay(10);
 
-	Serial.println();
-	Serial.print("Connecting to ");
-	Serial.print(ssid);
+	Serial.println("Configuring access point...");
 
-	WiFi.begin(ssid, password);
-
-	while (WiFi.status() != WL_CONNECTED)
-	{
-		delay(500);
-		Serial.print(".");
-	}
-
-	Serial.println("");
-	Serial.println("WiFi connected");
-	Serial.println("IP address: ");
-	Serial.println(WiFi.localIP());
-
+	WiFi.softAP(ssid, password);
+	IPAddress addr = WiFi.softAPIP();
+	Serial.print("AP IP address: ");
+	Serial.println(addr);
+	
 	server.begin();
+
+	Server.println("Server started");
 }
 
 void loop()
