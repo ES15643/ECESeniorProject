@@ -46,5 +46,7 @@ public class DaVinciBotClient
 
             Console.WriteLine(index / numCommands);
         }
+
+        client.Close();
     }
 }
