@@ -1,40 +1,49 @@
 ﻿using System;
 using System.IO;
-using System.IO.File;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 /// <summary>
 /// Client class for the DaVinci Bot.  Loads commands from gcode file and passes them one by one to the esp32 access point.
 /// </summary>
 public class DaVinciBotClient
 {
-	public static void Main()
+	static void Main(string[] args)
     {
         TcpClient client = new TcpClient();
         Console.WriteLine("Connecting...");
 
-        client.Connect("192.168.4.1", 80);
+        //client.Connect("192.168.4.1", 80);
+        client.Connect(IPAddress.Loopback, 80);
 
         Console.WriteLine("Connected");
 
-        string[] commands = System.IO.File.ReadAllLines(@".\commands.ncc");
+        string[] commands = File.ReadAllLines(@"..\..\commands.gco");
 
         int numCommands = commands.Length;
 
-        Stream stream = client.GetStream();
+        NetworkStream stream = client.GetStream();
 
         int count = 0;
         int index = 0;
 
-        foreach(string line in lines)
+        foreach(string line in commands)
         {
-            byte[] command = line;
+            Console.WriteLine(line);
+            byte[] command = Encoding.ASCII.GetBytes(line);
 
             if (count == 0)
             {
                 byte[] request = new byte[5];
 
-                while (request == null) { request = stream.Read(request, 0, 5); }
+                while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
+
+                Console.WriteLine(BitConverter.ToInt32(request, 0));
+
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(request);
 
                 count = BitConverter.ToInt32(request, 0);
             }
@@ -44,7 +53,7 @@ public class DaVinciBotClient
             count--;
             index++;
 
-            Console.WriteLine(index / numCommands);
+            Console.WriteLine((double)index / (double)numCommands);
         }
 
         client.Close();
