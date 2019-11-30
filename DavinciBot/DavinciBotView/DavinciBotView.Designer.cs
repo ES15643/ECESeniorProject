@@ -41,15 +41,15 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OurPictureBox = new System.Windows.Forms.PictureBox();
             this.LoadGCodeFromFileButton = new System.Windows.Forms.Button();
-            this.StopButton = new System.Windows.Forms.Button();
+            this.stopPrintingButton = new System.Windows.Forms.Button();
             this.generateGcodeButton = new System.Windows.Forms.Button();
-            this.StartButton = new System.Windows.Forms.Button();
+            this.startPrintingButton = new System.Windows.Forms.Button();
             this.previewImageBox = new System.Windows.Forms.PictureBox();
             this.invertCheckBox = new System.Windows.Forms.CheckBox();
             this.cameraBox = new System.Windows.Forms.PictureBox();
             this.startCameraButton = new System.Windows.Forms.Button();
-            this.captureImageButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.takePictureButton = new System.Windows.Forms.Button();
+            this.saveCameraImageButton = new System.Windows.Forms.Button();
             this.stopCameraButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.thresholdNumberBox = new System.Windows.Forms.NumericUpDown();
@@ -60,6 +60,7 @@
             this.thresholdControlPanel = new System.Windows.Forms.TableLayoutPanel();
             this.trackbar1Panel = new System.Windows.Forms.Panel();
             this.printingButtonsPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.useCameraImageButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -150,7 +151,7 @@
             // 
             // OurPictureBox
             // 
-            this.OurPictureBox.BackColor = System.Drawing.Color.LightGray;
+            this.OurPictureBox.BackColor = System.Drawing.Color.Transparent;
             this.OurPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.OurPictureBox.Location = new System.Drawing.Point(10, 53);
             this.OurPictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -168,27 +169,28 @@
             this.LoadGCodeFromFileButton.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.LoadGCodeFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
             this.LoadGCodeFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoadGCodeFromFileButton.Location = new System.Drawing.Point(10, 4);
+            this.LoadGCodeFromFileButton.Location = new System.Drawing.Point(10, 9);
             this.LoadGCodeFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadGCodeFromFileButton.Name = "LoadGCodeFromFileButton";
-            this.LoadGCodeFromFileButton.Size = new System.Drawing.Size(230, 60);
+            this.LoadGCodeFromFileButton.Size = new System.Drawing.Size(230, 50);
             this.LoadGCodeFromFileButton.TabIndex = 2;
             this.LoadGCodeFromFileButton.Text = "Load G-Code From File";
             this.LoadGCodeFromFileButton.UseVisualStyleBackColor = false;
             this.LoadGCodeFromFileButton.Click += new System.EventHandler(this.LoadGCodeFromFileButton_Click);
             // 
-            // StopButton
+            // stopPrintingButton
             // 
-            this.StopButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.StopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopButton.Location = new System.Drawing.Point(10, 214);
-            this.StopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(230, 50);
-            this.StopButton.TabIndex = 3;
-            this.StopButton.Tag = "StopButton";
-            this.StopButton.Text = "Stop Printing";
-            this.StopButton.UseVisualStyleBackColor = true;
+            this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopPrintingButton.Location = new System.Drawing.Point(10, 214);
+            this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.stopPrintingButton.Name = "stopPrintingButton";
+            this.stopPrintingButton.Size = new System.Drawing.Size(230, 50);
+            this.stopPrintingButton.TabIndex = 3;
+            this.stopPrintingButton.Tag = "StopButton";
+            this.stopPrintingButton.Text = "Stop Printing";
+            this.stopPrintingButton.UseVisualStyleBackColor = false;
             // 
             // generateGcodeButton
             // 
@@ -206,22 +208,22 @@
             this.generateGcodeButton.UseVisualStyleBackColor = false;
             this.generateGcodeButton.Click += new System.EventHandler(this.GenerateGcodeButton_Click);
             // 
-            // StartButton
+            // startPrintingButton
             // 
-            this.StartButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.StartButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.StartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartButton.Location = new System.Drawing.Point(10, 145);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(230, 50);
-            this.StartButton.TabIndex = 6;
-            this.StartButton.Text = "Start Printing";
-            this.StartButton.UseVisualStyleBackColor = false;
+            this.startPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.startPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.startPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startPrintingButton.Location = new System.Drawing.Point(10, 145);
+            this.startPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.startPrintingButton.Name = "startPrintingButton";
+            this.startPrintingButton.Size = new System.Drawing.Size(230, 50);
+            this.startPrintingButton.TabIndex = 6;
+            this.startPrintingButton.Text = "Start Printing";
+            this.startPrintingButton.UseVisualStyleBackColor = false;
             // 
             // previewImageBox
             // 
-            this.previewImageBox.BackColor = System.Drawing.Color.LightGray;
+            this.previewImageBox.BackColor = System.Drawing.Color.Transparent;
             this.previewImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.previewImageBox.Location = new System.Drawing.Point(411, 52);
             this.previewImageBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -248,7 +250,7 @@
             // 
             // cameraBox
             // 
-            this.cameraBox.BackColor = System.Drawing.Color.LightGray;
+            this.cameraBox.BackColor = System.Drawing.Color.Transparent;
             this.cameraBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.cameraBox.Location = new System.Drawing.Point(803, 52);
             this.cameraBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -269,31 +271,31 @@
             this.startCameraButton.UseVisualStyleBackColor = true;
             this.startCameraButton.Click += new System.EventHandler(this.startCameraButton_Click);
             // 
-            // captureImageButton
+            // takePictureButton
             // 
-            this.captureImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.captureImageButton.Location = new System.Drawing.Point(860, 389);
-            this.captureImageButton.Name = "captureImageButton";
-            this.captureImageButton.Size = new System.Drawing.Size(256, 38);
-            this.captureImageButton.TabIndex = 13;
-            this.captureImageButton.Text = "Capture Image";
-            this.captureImageButton.UseVisualStyleBackColor = true;
-            this.captureImageButton.Click += new System.EventHandler(this.captureImageButton_Click);
+            this.takePictureButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.takePictureButton.Location = new System.Drawing.Point(860, 389);
+            this.takePictureButton.Name = "takePictureButton";
+            this.takePictureButton.Size = new System.Drawing.Size(256, 38);
+            this.takePictureButton.TabIndex = 13;
+            this.takePictureButton.Text = "Take Picture";
+            this.takePictureButton.UseVisualStyleBackColor = true;
+            this.takePictureButton.Click += new System.EventHandler(this.takePictureButton_Click);
             // 
-            // button1
+            // saveCameraImageButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(860, 432);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(256, 38);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "Save Image";
-            this.button1.UseVisualStyleBackColor = true;
+            this.saveCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveCameraImageButton.Location = new System.Drawing.Point(860, 432);
+            this.saveCameraImageButton.Name = "saveCameraImageButton";
+            this.saveCameraImageButton.Size = new System.Drawing.Size(256, 38);
+            this.saveCameraImageButton.TabIndex = 14;
+            this.saveCameraImageButton.Text = "Save Image";
+            this.saveCameraImageButton.UseVisualStyleBackColor = true;
             // 
             // stopCameraButton
             // 
             this.stopCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopCameraButton.Location = new System.Drawing.Point(860, 474);
+            this.stopCameraButton.Location = new System.Drawing.Point(860, 520);
             this.stopCameraButton.Name = "stopCameraButton";
             this.stopCameraButton.Size = new System.Drawing.Size(256, 38);
             this.stopCameraButton.TabIndex = 15;
@@ -370,6 +372,7 @@
             this.trackBar1.TabIndex = 0;
             this.trackBar1.TickFrequency = 20;
             this.trackBar1.Value = 100;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
             // thresholdControlPanel
@@ -413,8 +416,8 @@
             this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.printingButtonsPanel.Controls.Add(this.LoadGCodeFromFileButton, 0, 0);
             this.printingButtonsPanel.Controls.Add(this.generateGcodeButton, 0, 1);
-            this.printingButtonsPanel.Controls.Add(this.StartButton, 0, 2);
-            this.printingButtonsPanel.Controls.Add(this.StopButton, 0, 3);
+            this.printingButtonsPanel.Controls.Add(this.startPrintingButton, 0, 2);
+            this.printingButtonsPanel.Controls.Add(this.stopPrintingButton, 0, 3);
             this.printingButtonsPanel.Location = new System.Drawing.Point(1219, 53);
             this.printingButtonsPanel.Name = "printingButtonsPanel";
             this.printingButtonsPanel.RowCount = 4;
@@ -425,6 +428,16 @@
             this.printingButtonsPanel.Size = new System.Drawing.Size(251, 274);
             this.printingButtonsPanel.TabIndex = 25;
             // 
+            // useCameraImageButton
+            // 
+            this.useCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useCameraImageButton.Location = new System.Drawing.Point(860, 476);
+            this.useCameraImageButton.Name = "useCameraImageButton";
+            this.useCameraImageButton.Size = new System.Drawing.Size(256, 38);
+            this.useCameraImageButton.TabIndex = 26;
+            this.useCameraImageButton.Text = "Use This Image";
+            this.useCameraImageButton.UseVisualStyleBackColor = true;
+            // 
             // DavinciBotView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -433,10 +446,11 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1482, 1055);
+            this.Controls.Add(this.useCameraImageButton);
             this.Controls.Add(this.printingButtonsPanel);
             this.Controls.Add(this.stopCameraButton);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.captureImageButton);
+            this.Controls.Add(this.saveCameraImageButton);
+            this.Controls.Add(this.takePictureButton);
             this.Controls.Add(this.startCameraButton);
             this.Controls.Add(this.cameraBox);
             this.Controls.Add(this.previewImageBox);
@@ -483,15 +497,15 @@
         private System.Windows.Forms.PictureBox OurPictureBox;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Button LoadGCodeFromFileButton;
-        private System.Windows.Forms.Button StopButton;
+        private System.Windows.Forms.Button stopPrintingButton;
         private System.Windows.Forms.Button generateGcodeButton;
-        private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.Button startPrintingButton;
         private System.Windows.Forms.PictureBox previewImageBox;
         private System.Windows.Forms.CheckBox invertCheckBox;
         private System.Windows.Forms.PictureBox cameraBox;
         private System.Windows.Forms.Button startCameraButton;
-        private System.Windows.Forms.Button captureImageButton;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button takePictureButton;
+        private System.Windows.Forms.Button saveCameraImageButton;
         private System.Windows.Forms.Button stopCameraButton;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.NumericUpDown thresholdNumberBox;
@@ -502,6 +516,7 @@
         private System.Windows.Forms.TableLayoutPanel thresholdControlPanel;
         private System.Windows.Forms.Panel trackbar1Panel;
         private System.Windows.Forms.TableLayoutPanel printingButtonsPanel;
+        private System.Windows.Forms.Button useCameraImageButton;
     }
 }
 

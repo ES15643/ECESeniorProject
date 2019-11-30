@@ -24,7 +24,6 @@ namespace DavinciBotView
         public DavinciBotView()
         {
             InitializeComponent();
-            InitializeOurPictureBox();
         }
 
         /// <summary>
@@ -37,19 +36,37 @@ namespace DavinciBotView
             //videoSource = new VideoCaptureDevice();
             Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             frame = new VideoCaptureDevice(Devices[1].MonikerString);
-            enableImageControls(false);
+            EnableImageControls(false);
+            EnableCameraControls(false);
+            EnableGcodeControls(false);
 
         }
+
         /// <summary>
         /// Enables or disables buttons that can only be used when an image is loaded
         /// </summary>
         /// <param name="m"></param>
-        private void enableImageControls(bool m)
+        private void EnableImageControls(bool m)
         {
             trackBar1.Enabled = m;
             thresholdNumberBox.Enabled = m;
             invertCheckBox.Enabled = m;
             generateGcodeButton.Enabled = m;
+        }
+        private void EnableCameraControls(bool m)
+        {
+            startCameraButton.Enabled = !m;
+            takePictureButton.Enabled = m;
+            stopCameraButton.Enabled = m;
+            saveCameraImageButton.Enabled = m;
+            useCameraImageButton.Enabled = m;
+        }
+
+        private void EnableGcodeControls(bool m)
+        {
+            generateGcodeButton.Enabled = m;
+            startPrintingButton.Enabled = m;
+            stopPrintingButton.Enabled = m;
         }
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
@@ -80,7 +97,7 @@ namespace DavinciBotView
                 FindContour();
             }
             imageLoaded = true;
-            enableImageControls(true);
+            EnableImageControls(true);
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
@@ -89,11 +106,6 @@ namespace DavinciBotView
             LoadFromFileToolbarButton_Click(sender, e);
         }
 
-        public void InitializeOurPictureBox()
-        {
-            OurPictureBox.BackColor = Color.LightGray;
-            OurPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-        }
         /// <summary>
         /// Loads gcode from file
         /// </summary>
@@ -314,12 +326,13 @@ namespace DavinciBotView
         private void startCamera()
         {
             //STOP ALL PREVIOUS CAMERAS OR YOU GET A THREADING ISSUE
-            //            if (startedCamera == false)
-            //          {
             frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
             frame.Start();
             startedCamera = true;
-            //        }
+            EnableCameraControls(false); //Reset
+            takePictureButton.Enabled = true;
+            stopCameraButton.Enabled = true;
+            startCameraButton.Enabled = false;
         }
 
         private void stopCamera()
@@ -332,6 +345,7 @@ namespace DavinciBotView
                 frame.Stop();
             }
             cameraBox.Image = null;
+            EnableCameraControls(false);
         }
 
         private void FrameEvent(object sender, NewFrameEventArgs e)
@@ -349,7 +363,7 @@ namespace DavinciBotView
             }
         }
 
-        private void captureImageButton_Click(object sender, EventArgs e)
+        private void takePictureButton_Click(object sender, EventArgs e)
         {
             frame.SignalToStop();
             frame.NewFrame -= new NewFrameEventHandler(FrameEvent);
@@ -358,6 +372,13 @@ namespace DavinciBotView
             {
                 frame.Stop();
             }
+            saveCameraImageButton.Enabled = true;
+            useCameraImageButton.Enabled = true;
+            takePictureButton.Enabled = false;
+            startCameraButton.Enabled = true;
+            //Puts it in the main box. Save this for later.
+            //OurPictureBox.Image = (Image)cameraBox.Image.Clone();
+            //make sure to update loadedImagePath to this temp file
             //SaveFileDialog saveCameraImage = new SaveFileDialog
 
         }
@@ -398,7 +419,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            HandleThresholdValueChange(sender, e, "trackbar");
+            
         }
 
         /// <summary>
@@ -448,7 +469,7 @@ namespace DavinciBotView
         {
             if(!imageLoaded)
             {
-                enableImageControls(false);
+                EnableImageControls(false);
             }
             else
             {
@@ -480,6 +501,11 @@ namespace DavinciBotView
         private void trackbar1Panel_Click(object sender, EventArgs e)
         {
             thresholdControlPanel_Click(sender, e);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            HandleThresholdValueChange(sender, e, "trackbar");
         }
     }
 }
