@@ -63,7 +63,7 @@ namespace DavinciBotView
                     var bmp = new Bitmap(fs);
                     OurPictureBox.Image = (Bitmap)bmp.Clone();
                 }
-                FindContour(50);
+                FindContour();
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
@@ -117,40 +117,11 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void GenerateGcodeButton_Click(object sender, EventArgs e)
         {
-            //need to change this to scale image properly based on user inputs
-            double x_offset_mm = 0;
-            double y_offset_mm = 0;
-            double output_image_horizontal_size_mm = 400;
-            double pixel_size_mm = .5;
-            double feedrate = 100;
-            double max_laser_power = 255;
-            int number_of_colours = 2;
-            /* SaveFileDialog saveConvertedImage = new SaveFileDialog();
-             if (saveConvertedImage.ShowDialog() == DialogResult.OK)
-             {
-                 using (Stream s = File.Open(saveConvertedImage.FileName, FileMode.OpenOrCreate))
-                 using (StreamWriter sw = new StreamWriter(s))
-                 {
-                     sw.WriteLine(loadedImagePath);
-                 }
-             }
-             */
             string oldDir = Environment.CurrentDirectory;
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
-                var thisPath = Environment.CurrentDirectory;
-                string pScript = "python "
-                + "./imgcode.py "
-                + "preview_contour.jpg "
-                + "./commands.gco "
-                + x_offset_mm + ' '
-                + y_offset_mm + ' '
-                + output_image_horizontal_size_mm + ' '
-                + pixel_size_mm + ' '
-                + feedrate + ' '
-                + max_laser_power + ' '
-                + number_of_colours;
+                string pScript = BuildPythonScript("gcode");
 
                 runspace.Open();
                 using (Pipeline pipeline = runspace.CreatePipeline())
@@ -160,50 +131,91 @@ namespace DavinciBotView
                     Collection<PSObject> results = pipeline.Invoke();
                 }
 
-                Console.WriteLine("Updated file");
+                SaveFileDialog saveConvertedImage = new SaveFileDialog();
+                if (saveConvertedImage.ShowDialog() == DialogResult.OK)
+                {
+                    copyFile("commands.gco", saveConvertedImage.FileName);
+                }
+
                 runspace.Dispose();
             }
             Environment.CurrentDirectory = oldDir;
         }
+        private string BuildPythonScript(string mode)
+        {
+            string script;
+            switch (mode)
+            {
+                case "gcode":
+                    {
+                        //need to change this to scale image properly based on user inputs
+                        double x_offset_mm = 0;
+                        double y_offset_mm = 0;
+                        double output_image_horizontal_size_mm = 400;
+                        double pixel_size_mm = .5;
+                        double feedrate = 100;
+                        double max_laser_power = 255;
+                        int number_of_colors = 2;
 
+                        script = "python "
+                            + "./imgcode.py "
+                            + "preview_contour.jpg "
+                            + "./commands.gco "
+                            + x_offset_mm + ' '
+                            + y_offset_mm + ' '
+                            + output_image_horizontal_size_mm + ' '
+                            + pixel_size_mm + ' '
+                            + feedrate + ' '
+                            + max_laser_power + ' '
+                            + number_of_colors;
+
+                        break;
+                    }
+                case "contour":
+                    {
+                        string contourFile;
+                        if (invertedContour)
+                        {
+                            contourFile = "./contours0.py";
+                        }
+                        else
+                        {
+                            contourFile = "./contours.py";
+                        }
+                        script = "python "
+                                + contourFile
+                                + " --image_file "
+                                + '"'
+                                + loadedImagePath
+                                + '"'
+                                + " --threshold "
+                                + trackBar1.Value;
+                        break;
+                    }
+                default:
+                    script = "";
+                    break;
+            }
+            return script;
+        }
         /// <summary>
         /// Calls python script to find contours in an image and update the image preview
         /// Referenced from: https://blogs.msdn.microsoft.com/kebab/2014/04/28/executing-powershell-scripts-from-c/
         /// </summary>
-        /// <param name="curThreshold"></param>
-        private void FindContour(int curThreshold)
+        private void FindContour()
         {
             string oldDir = Environment.CurrentDirectory;
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
-                var thisPath = Environment.CurrentDirectory;
-                string contourFile;
-                if (invertedContour)
-                {
-                    contourFile = "./contours0.py";
-                }
-                else
-                {
-                    contourFile = "./contours.py";
-                }
-                string psScript = "python "
-                + contourFile
-                + " --image_file "
-                + '"'
-                + loadedImagePath
-                + '"'
-                + " --threshold "
-                + curThreshold;
+                string pScript = BuildPythonScript("contour");
                 runspace.Open();
                 using (Pipeline pipeline = runspace.CreatePipeline())
                 {
-                    pipeline.Commands.AddScript(psScript);
+                    pipeline.Commands.AddScript(pScript);
                     pipeline.Commands.Add("Out-String");
                     Collection<PSObject> results = pipeline.Invoke();
                 }
-
-                Console.WriteLine("Updated file");
                 runspace.Dispose();
             }
 
@@ -212,11 +224,7 @@ namespace DavinciBotView
                 var bmp = new Bitmap(fs);
                 previewImageBox.Image = (Bitmap)bmp.Clone();
             }
-
-            //previewImageBox.Image = new Bitmap("preview_contour.jpg");
             Environment.CurrentDirectory = oldDir;
-
-            Console.WriteLine("FindContour Finished");
         }
 
         /// <summary>
@@ -227,10 +235,9 @@ namespace DavinciBotView
         private void ImagePreviewThresholdChanged(object sender, EventArgs e)
         {
             Controls.Add(trackBar1);
-            var curThreshold = trackBar1.Value;
-            thresholdNumberBox.Value = curThreshold;
-
+            thresholdNumberBox.Value = trackBar1.Value;
         }
+
         /// <summary>
         /// Adjusts image processing threshold
         /// </summary>
@@ -239,9 +246,8 @@ namespace DavinciBotView
         private void trackBar1_MouseUp(object sender, MouseEventArgs e)
         {
             Controls.Add(trackBar1);
-            var curThreshold = trackBar1.Value;
             //Update preview image
-            FindContour(curThreshold);
+            FindContour();
 
         }
 
@@ -253,7 +259,7 @@ namespace DavinciBotView
         private void invertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             invertedContour = !invertedContour;
-            FindContour((int)thresholdNumberBox.Value);
+            FindContour();
         }
 
         private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -263,7 +269,7 @@ namespace DavinciBotView
                 e.Handled = true;
                 e.KeyChar = (char)46;
                 int val = (int)thresholdNumberBox.Value;
-                FindContour(val);
+                FindContour();
                 trackBar1.Value = val;
                 this.ActiveControl = null;
             }
@@ -281,12 +287,12 @@ namespace DavinciBotView
         private void startCamera()
         {
             //STOP ALL PREVIOUS CAMERAS OR YOU GET A THREADING ISSUE
-//            if (startedCamera == false)
-  //          {
-                frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
-                frame.Start();
-                startedCamera = true;
-    //        }
+            //            if (startedCamera == false)
+            //          {
+            frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
+            frame.Start();
+            startedCamera = true;
+            //        }
         }
         private void stopCamera()
         {
@@ -321,6 +327,42 @@ namespace DavinciBotView
         private void stopCameraButton_Click(object sender, EventArgs e)
         {
             stopCamera();
+        }
+
+        /// <summary>
+        /// Copies contents of one file to another given two string filenames.
+        /// </summary>
+        /// <param name="fromFile"></param>
+        /// <param name="toFile"></param>
+        private void copyFile(string fromFile, string toFile)
+        {
+            string line;
+            using (System.IO.StreamWriter output = new System.IO.StreamWriter(toFile, true))
+            {
+                System.IO.StreamReader file = new System.IO.StreamReader(fromFile);
+                while ((line = file.ReadLine()) != null)
+                {
+                    output.WriteLine(line);
+                }
+
+                file.Close();
+            }
+        }
+
+        private void thresholdNumberBox_ValueChanged(object sender, EventArgs e)
+        {
+            trackBar1.Value = (int)thresholdNumberBox.Value;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            thresholdNumberBox.Value = trackBar1.Value;
+            FindContour();
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            trackBar1_Scroll(sender, e);
         }
     }
 
