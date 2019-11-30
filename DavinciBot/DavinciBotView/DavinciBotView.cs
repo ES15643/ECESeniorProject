@@ -1,13 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
+﻿using AForge.Video;
+using AForge.Video.DirectShow;
+using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using AForge;
-using AForge.Video;
-using AForge.Video.DirectShow;
+using System.Windows.Forms;
 
 namespace DavinciBotView
 {
@@ -15,7 +13,9 @@ namespace DavinciBotView
     {
         public string loadedImagePath;
         public string loadedImageName;
+        private bool imageLoaded = false;
         private bool invertedContour = false;
+        private bool thresholdErrorReported = false;
         private static bool startedCamera = false;
         private static FilterInfoCollection Devices;
         private static VideoCaptureDevice frame;
@@ -37,8 +37,21 @@ namespace DavinciBotView
             //videoSource = new VideoCaptureDevice();
             Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             frame = new VideoCaptureDevice(Devices[1].MonikerString);
-            this.Activate();
+            enableImageControls(false);
+
         }
+        /// <summary>
+        /// Enables or disables buttons that can only be used when an image is loaded
+        /// </summary>
+        /// <param name="m"></param>
+        private void enableImageControls(bool m)
+        {
+            trackBar1.Enabled = m;
+            thresholdNumberBox.Enabled = m;
+            invertCheckBox.Enabled = m;
+            generateGcodeButton.Enabled = m;
+        }
+
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
         {
             var fileContent = string.Empty;
@@ -66,6 +79,8 @@ namespace DavinciBotView
                 }
                 FindContour();
             }
+            imageLoaded = true;
+            enableImageControls(true);
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
@@ -80,13 +95,14 @@ namespace DavinciBotView
             OurPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
         }
         /// <summary>
-        /// Load File Button clicked
+        /// Loads gcode from file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button1_Click(object sender, EventArgs e)
+        private void LoadGCodeFromFileButton_Click(object sender, EventArgs e)
         {
-            LoadFromFileToolbarButton_Click(sender, e);
+            //WRONG. FIX THIS.
+            //LoadFromFileToolbarButton_Click(sender, e);
         }
 
         /// <summary>
@@ -95,7 +111,7 @@ namespace DavinciBotView
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DavinciBotView_FormClosing(object sender, FormClosingEventArgs e)
-        {   
+        {
             DialogResult dialogue = MessageBox.Show("Are you sure you want to exit?", "Exit",
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 
@@ -135,7 +151,7 @@ namespace DavinciBotView
                 }
             }
         }
-        
+
         /// <summary>
         /// Mode is either "gcode" or "contour"
         /// </summary>
@@ -156,16 +172,16 @@ namespace DavinciBotView
                 }
                 //Put a message box here
                 runspace.Dispose();
-            }           
+            }
             return;
         }
-        
+
         /// <summary>
         /// Builds the python scripts for either the gcode generator or the findContour method
         /// </summary>
         /// <param name="mode"></param>
         /// <returns></returns>
-        
+
         private string BuildPythonScript(string mode)
         {
             string script;
@@ -223,7 +239,7 @@ namespace DavinciBotView
             }
             return script;
         }
-       
+
         /// <summary>
         /// Calls python script to find contours in an image and update the image preview
         /// Referenced from: https://blogs.msdn.microsoft.com/kebab/2014/04/28/executing-powershell-scripts-from-c/
@@ -248,7 +264,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void ImagePreviewThresholdChanged(object sender, EventArgs e)
         {
-            Controls.Add(trackBar1);
+            HandleThresholdValueChange(sender, e, "trackbar");
             thresholdNumberBox.Value = trackBar1.Value;
         }
 
@@ -259,9 +275,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void trackBar1_MouseUp(object sender, MouseEventArgs e)
         {
-            Controls.Add(trackBar1);
-            //Update preview image
-            FindContour();
+            HandleThresholdValueChange(sender, e, "trackbar");
 
         }
 
@@ -272,8 +286,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void invertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            invertedContour = !invertedContour;
-            FindContour();
+
         }
 
         private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -308,7 +321,7 @@ namespace DavinciBotView
             startedCamera = true;
             //        }
         }
-        
+
         private void stopCamera()
         {
             frame.SignalToStop();
@@ -320,7 +333,7 @@ namespace DavinciBotView
             }
             cameraBox.Image = null;
         }
-        
+
         private void FrameEvent(object sender, NewFrameEventArgs e)
         {
             try
@@ -335,7 +348,7 @@ namespace DavinciBotView
                 throw;
             }
         }
-        
+
         private void captureImageButton_Click(object sender, EventArgs e)
         {
             frame.SignalToStop();
@@ -348,7 +361,7 @@ namespace DavinciBotView
             //SaveFileDialog saveCameraImage = new SaveFileDialog
 
         }
-        
+
         private void stopCameraButton_Click(object sender, EventArgs e)
         {
             stopCamera();
@@ -376,20 +389,18 @@ namespace DavinciBotView
 
         private void thresholdNumberBox_ValueChanged(object sender, EventArgs e)
         {
-            trackBar1.Value = (int)thresholdNumberBox.Value;
+            HandleThresholdValueChange(sender, e, "box");
         }
-
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            thresholdNumberBox.Value = trackBar1.Value;
-            FindContour();
-        }
-
+        /// <summary>
+        /// Threshold trackbar event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            trackBar1_Scroll(sender, e);
+            HandleThresholdValueChange(sender, e, "trackbar");
         }
-        
+
         /// <summary>
         ///Closes camera resources before exiting
         /// </summary>
@@ -403,6 +414,72 @@ namespace DavinciBotView
             }
             Application.Exit();
         }
-    }
 
+        /// <summary>
+        /// General error handling for operations that require prerequisites
+        /// </summary>
+        private void ReportImageOperationError()
+        {
+            DialogResult dialogue = MessageBox.Show("You must select an image first.", "Error",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+        }
+
+        private void invertCheckBox_Click(object sender, EventArgs e)
+        {
+            if (imageLoaded)
+            {
+                invertedContour = !invertedContour;
+                FindContour();
+            }
+            else
+            {
+                invertCheckBox.Checked = false;
+            }
+        }
+
+        /// <summary>
+        /// Error handling for threshold changes.
+        /// mode param can either be "trackbar" or "box", whichever event was triggered
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="mode"></param>
+        private void HandleThresholdValueChange(object sender, EventArgs e, string mode)
+        {
+            if(!imageLoaded)
+            {
+                enableImageControls(false);
+            }
+            else
+            {
+                switch (mode)
+                {
+                    case "trackbar":
+                        {
+                            thresholdNumberBox.Value = trackBar1.Value;
+                            break;
+                        }
+                    case "box":
+                        {
+                            trackBar1.Value = (int)thresholdNumberBox.Value;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                FindContour();
+            }    
+        }
+
+        private void thresholdControlPanel_Click(object sender, EventArgs e)
+        {
+            if (!trackBar1.Enabled && !thresholdNumberBox.Enabled && !invertCheckBox.Enabled)
+                ReportImageOperationError();
+        }
+
+        private void trackbar1Panel_Click(object sender, EventArgs e)
+        {
+            thresholdControlPanel_Click(sender, e);
+        }
+    }
 }
