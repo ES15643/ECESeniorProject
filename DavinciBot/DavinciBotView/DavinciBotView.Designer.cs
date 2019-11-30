@@ -164,7 +164,7 @@
             // 
             this.LoadFromFileButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LoadFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoadFromFileButton.Location = new System.Drawing.Point(1208, 41);
+            this.LoadFromFileButton.Location = new System.Drawing.Point(1209, 67);
             this.LoadFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromFileButton.Name = "LoadFromFileButton";
             this.LoadFromFileButton.Size = new System.Drawing.Size(196, 66);
@@ -177,7 +177,7 @@
             // 
             this.StopButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.StopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopButton.Location = new System.Drawing.Point(1208, 398);
+            this.StopButton.Location = new System.Drawing.Point(1209, 424);
             this.StopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StopButton.Name = "StopButton";
             this.StopButton.Size = new System.Drawing.Size(196, 66);
@@ -190,7 +190,7 @@
             // 
             this.generateGcodeButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.generateGcodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.generateGcodeButton.Location = new System.Drawing.Point(1208, 215);
+            this.generateGcodeButton.Location = new System.Drawing.Point(1209, 241);
             this.generateGcodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.generateGcodeButton.Name = "generateGcodeButton";
             this.generateGcodeButton.Size = new System.Drawing.Size(196, 66);
@@ -205,7 +205,7 @@
             // 
             this.LoadFromCameraButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LoadFromCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoadFromCameraButton.Location = new System.Drawing.Point(1208, 128);
+            this.LoadFromCameraButton.Location = new System.Drawing.Point(1209, 154);
             this.LoadFromCameraButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LoadFromCameraButton.Name = "LoadFromCameraButton";
             this.LoadFromCameraButton.Size = new System.Drawing.Size(196, 66);
@@ -216,9 +216,8 @@
             // StartButton
             // 
             this.StartButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.StartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartButton.Location = new System.Drawing.Point(1208, 304);
+            this.StartButton.Location = new System.Drawing.Point(1209, 330);
             this.StartButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(196, 66);
@@ -230,10 +229,10 @@
             // 
             this.previewImageBox.BackColor = System.Drawing.Color.LightGray;
             this.previewImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewImageBox.Location = new System.Drawing.Point(419, 90);
+            this.previewImageBox.Location = new System.Drawing.Point(415, 67);
             this.previewImageBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.previewImageBox.Name = "previewImageBox";
-            this.previewImageBox.Size = new System.Drawing.Size(320, 240);
+            this.previewImageBox.Size = new System.Drawing.Size(367, 300);
             this.previewImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.previewImageBox.TabIndex = 7;
             this.previewImageBox.TabStop = false;
@@ -256,10 +255,10 @@
             // 
             this.cameraBox.BackColor = System.Drawing.Color.LightGray;
             this.cameraBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.cameraBox.Location = new System.Drawing.Point(826, 90);
+            this.cameraBox.Location = new System.Drawing.Point(826, 67);
             this.cameraBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cameraBox.Name = "cameraBox";
-            this.cameraBox.Size = new System.Drawing.Size(320, 240);
+            this.cameraBox.Size = new System.Drawing.Size(353, 300);
             this.cameraBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.cameraBox.TabIndex = 11;
             this.cameraBox.TabStop = false;
@@ -267,7 +266,7 @@
             // startCameraButton
             // 
             this.startCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startCameraButton.Location = new System.Drawing.Point(826, 355);
+            this.startCameraButton.Location = new System.Drawing.Point(826, 382);
             this.startCameraButton.Name = "startCameraButton";
             this.startCameraButton.Size = new System.Drawing.Size(320, 44);
             this.startCameraButton.TabIndex = 12;
@@ -278,7 +277,7 @@
             // captureImageButton
             // 
             this.captureImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.captureImageButton.Location = new System.Drawing.Point(826, 405);
+            this.captureImageButton.Location = new System.Drawing.Point(826, 432);
             this.captureImageButton.Name = "captureImageButton";
             this.captureImageButton.Size = new System.Drawing.Size(320, 47);
             this.captureImageButton.TabIndex = 13;
@@ -289,7 +288,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(826, 458);
+            this.button1.Location = new System.Drawing.Point(826, 485);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(320, 47);
             this.button1.TabIndex = 14;
@@ -299,7 +298,7 @@
             // stopCameraButton
             // 
             this.stopCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopCameraButton.Location = new System.Drawing.Point(826, 511);
+            this.stopCameraButton.Location = new System.Drawing.Point(826, 538);
             this.stopCameraButton.Name = "stopCameraButton";
             this.stopCameraButton.Size = new System.Drawing.Size(320, 47);
             this.stopCameraButton.TabIndex = 15;
@@ -388,7 +387,7 @@
             this.tableLayoutPanel1.Controls.Add(this.thresholdNumberBox, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.invertCheckBox, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 370);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(415, 382);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -438,6 +437,7 @@
             this.Name = "DavinciBotView";
             this.Text = "DaVinci-Bot";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DavinciBotView_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DavinciBotView_FormClosed);
             this.Load += new System.EventHandler(this.DavinciBotView_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

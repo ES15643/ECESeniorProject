@@ -37,6 +37,7 @@ namespace DavinciBotView
             //videoSource = new VideoCaptureDevice();
             Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             frame = new VideoCaptureDevice(Devices[1].MonikerString);
+            this.Activate();
         }
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
         {
@@ -78,36 +79,28 @@ namespace DavinciBotView
             OurPictureBox.BackColor = Color.LightGray;
             OurPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
         }
-
+        /// <summary>
+        /// Load File Button clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             LoadFromFileToolbarButton_Click(sender, e);
         }
 
+        /// <summary>
+        ///Asks the user if they really want to close the program
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DavinciBotView_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //Asks the user if they really want to close the program
-
-            /*
+        {   
             DialogResult dialogue = MessageBox.Show("Are you sure you want to exit?", "Exit",
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 
-            if (dialogue == DialogResult.Yes)
-            {
-                //SaveFileDialog
-                Application.Exit();
-            }
-
-            else
-            {
+            if (dialogue != DialogResult.Yes)
                 e.Cancel = true;
-            }
-            */
-
-            if (frame != null)
-            {
-                stopCamera();
-            }
         }
 
         /// <summary>
@@ -117,11 +110,42 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void GenerateGcodeButton_Click(object sender, EventArgs e)
         {
-            string oldDir = Environment.CurrentDirectory;
+            DialogResult dialogue = MessageBox.Show(
+                    "Would you like to save a copy of your G-Code file?", "DaVinciBot",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            if (dialogue == DialogResult.Cancel)
+            {
+                return;
+            }
+            else
+            {
+                string oldDir = Environment.CurrentDirectory;
+                RunPythonScript("gcode");
+                Environment.CurrentDirectory = oldDir;
+
+                if (dialogue == DialogResult.Yes)
+                {
+                    SaveFileDialog saveConvertedImage = new SaveFileDialog();
+                    saveConvertedImage.Filter = "G-Code File (*.gco)|*.gco";
+                    if (saveConvertedImage.ShowDialog() == DialogResult.OK)
+                    {
+                        copyFile("commands.gco", saveConvertedImage.FileName);
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Mode is either "gcode" or "contour"
+        /// </summary>
+        /// <param name="mode"></param>
+        private void RunPythonScript(string mode)
+        {
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
                 Environment.CurrentDirectory = "../../../../Image_Processor_Files";
-                string pScript = BuildPythonScript("gcode");
+                string pScript = BuildPythonScript(mode);
 
                 runspace.Open();
                 using (Pipeline pipeline = runspace.CreatePipeline())
@@ -130,17 +154,18 @@ namespace DavinciBotView
                     pipeline.Commands.Add("Out-String");
                     Collection<PSObject> results = pipeline.Invoke();
                 }
-
-                SaveFileDialog saveConvertedImage = new SaveFileDialog();
-                if (saveConvertedImage.ShowDialog() == DialogResult.OK)
-                {
-                    copyFile("commands.gco", saveConvertedImage.FileName);
-                }
-
+                //Put a message box here
                 runspace.Dispose();
-            }
-            Environment.CurrentDirectory = oldDir;
+            }           
+            return;
         }
+        
+        /// <summary>
+        /// Builds the python scripts for either the gcode generator or the findContour method
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        
         private string BuildPythonScript(string mode)
         {
             string script;
@@ -198,6 +223,7 @@ namespace DavinciBotView
             }
             return script;
         }
+       
         /// <summary>
         /// Calls python script to find contours in an image and update the image preview
         /// Referenced from: https://blogs.msdn.microsoft.com/kebab/2014/04/28/executing-powershell-scripts-from-c/
@@ -205,19 +231,7 @@ namespace DavinciBotView
         private void FindContour()
         {
             string oldDir = Environment.CurrentDirectory;
-            using (Runspace runspace = RunspaceFactory.CreateRunspace())
-            {
-                Environment.CurrentDirectory = "../../../../Image_Processor_Files";
-                string pScript = BuildPythonScript("contour");
-                runspace.Open();
-                using (Pipeline pipeline = runspace.CreatePipeline())
-                {
-                    pipeline.Commands.AddScript(pScript);
-                    pipeline.Commands.Add("Out-String");
-                    Collection<PSObject> results = pipeline.Invoke();
-                }
-                runspace.Dispose();
-            }
+            RunPythonScript("contour");
 
             using (var fs = new System.IO.FileStream("preview_contour.jpg", System.IO.FileMode.Open))
             {
@@ -294,6 +308,7 @@ namespace DavinciBotView
             startedCamera = true;
             //        }
         }
+        
         private void stopCamera()
         {
             frame.SignalToStop();
@@ -303,7 +318,9 @@ namespace DavinciBotView
             {
                 frame.Stop();
             }
+            cameraBox.Image = null;
         }
+        
         private void FrameEvent(object sender, NewFrameEventArgs e)
         {
             try
@@ -318,12 +335,20 @@ namespace DavinciBotView
                 throw;
             }
         }
-
+        
         private void captureImageButton_Click(object sender, EventArgs e)
         {
+            frame.SignalToStop();
+            frame.NewFrame -= new NewFrameEventHandler(FrameEvent);
+            frame.WaitForStop();
+            while (frame.IsRunning)
+            {
+                frame.Stop();
+            }
+            //SaveFileDialog saveCameraImage = new SaveFileDialog
 
         }
-
+        
         private void stopCameraButton_Click(object sender, EventArgs e)
         {
             stopCamera();
@@ -363,6 +388,20 @@ namespace DavinciBotView
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             trackBar1_Scroll(sender, e);
+        }
+        
+        /// <summary>
+        ///Closes camera resources before exiting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DavinciBotView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (frame != null)
+            {
+                stopCamera();
+            }
+            Application.Exit();
         }
     }
 
