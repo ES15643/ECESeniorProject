@@ -40,12 +40,12 @@ public class DaVinciBotClient
 
                 while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
 
-                Console.WriteLine(BitConverter.ToInt32(request, 0));
+                Console.WriteLine(int.Parse(request.Select(x => int.Parse(x.ToString())).ToString()));
 
                 if (BitConverter.IsLittleEndian)
                     Array.Reverse(request);
 
-                count = BitConverter.ToInt32(request, 0);
+                count = int.Parse(request.Select(x => int.Parse(x.ToString())).ToString());
             }
 
             stream.Write(command, 0, command.Length);
