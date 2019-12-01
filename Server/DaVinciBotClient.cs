@@ -15,8 +15,8 @@ public class DaVinciBotClient
         TcpClient client = new TcpClient();
         Console.WriteLine("Connecting...");
 
-        //client.Connect("192.168.4.1", 80);
-        client.Connect(IPAddress.Loopback, 80);
+        client.Connect("192.168.4.1", 80);
+        //client.Connect(IPAddress.Loopback, 80);
 
         Console.WriteLine("Connected");
 
@@ -50,7 +50,7 @@ public class DaVinciBotClient
 
             stream.Write(command, 0, command.Length);
 
-            count--;
+            count -= command.Length;
             index++;
 
             Console.WriteLine((double)index / (double)numCommands);
