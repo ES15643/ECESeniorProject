@@ -1,1 +1,58 @@
 C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\Image_Processor_Files\mickey.png
+
+
+Activated	Event	Time	Duration	Thread
+	python ../Image_Processor_Files/contours0.py --image_file headshot_Fotor.jpg --threshold 50 	7.76s	
+
+
+
+Activated	Event	Time	Duration	Thread
+	python ../Image_Processor_Files/contours0.py --image_file ../Image_Processor_Files/headshot_Fotor.jpg --threshold 50 	4.09s		
+	
+Activated	Event	Time	Duration	Thread
+	python /contours.py --image_file /mickey.png --threshold 92 	13.35s		
+
+System.Management.Automation.CommandNotFoundException
+  HResult=0x80131501
+  Message=The term 'cd .../Image_Processor_Files' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+  Source=System.Management.Automation
+  StackTrace:
+   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input)
+   at System.Management.Automation.PowerShell.Worker.ConstructPipelineAndDoWork(Runspace rs, Boolean performSyncInvoke)
+   at System.Management.Automation.PowerShell.Worker.CreateRunspaceIfNeededAndDoWork(Runspace rsToUse, Boolean isSync)
+   at System.Management.Automation.PowerShell.CoreInvokeHelper[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings)
+   at System.Management.Automation.PowerShell.CoreInvoke[TInput,TOutput](PSDataCollection`1 input, PSDataCollection`1 output, PSInvocationSettings settings)
+   at System.Management.Automation.PowerShell.CoreInvoke[TOutput](IEnumerable input, PSDataCollection`1 output, PSInvocationSettings settings)
+   at System.Management.Automation.PowerShell.Invoke(IEnumerable input, PSInvocationSettings settings)
+   at System.Management.Automation.PowerShell.Invoke()
+   at DavinciBotView.DavinciBotView.FindContour(Int32 curThreshold) in C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\DavinciBotView.cs:line 155
+   at DavinciBotView.DavinciBotView.LoadFromFileToolbarButton_Click(Object sender, EventArgs e) in C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\DavinciBotView.cs:line 54
+   at DavinciBotView.DavinciBotView.ImageToBeDrawnBox_Click(Object sender, EventArgs e) in C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\DavinciBotView.cs:line 62
+   at System.Windows.Forms.Control.OnClick(EventArgs e)
+   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   at System.Windows.Forms.Control.WndProc(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   at System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   at System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(IntPtr dwComponentID, Int32 reason, Int32 pvLoopData)
+   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 rea
+son, ApplicationContext context)
+   at System.Windows.Forms.Application.Run(Form mainForm)
+
+   at DavinciBotView.Program.Main() in C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\Program.cs:line 19
+
+
+63710416845656684
+637104168456566844
+
+WORKS:
+"python ./contours.py --image_file \"C:\\Users\\ebrig\\Pictures\\Aviary Photos\\Aviary Stock Photo 1.png\" --threshold 50"
+
+WORKS:
+
+
+
+
+

@@ -58,16 +58,16 @@ def fileDialog(fileName):
         f = open(fileName, 'w')
         f.close
     else:
-        answer = input(
-            fileName+" exists, do you want to overwrite it? (Y/n): ")
-        if (answer == 'y')or(answer == 'Y')or(answer == ''):
+#        answer = input(
+#            fileName+" exists, do you want to overwrite it? (Y/n): ")
+#        if (answer == 'y')or(answer == 'Y')or(answer == ''):
             f = open(fileName, 'w')
-            print(fileName+' will be overwritten')
+#            print(fileName+' will be overwritten')
             f.close
-        elif answer == 'n'or(answer == 'N'):
-            raise NameError("Specify right path next time")
-        else:
-            raise NameError("wrong answer")
+#        elif answer == 'n'or(answer == 'N'):
+#            raise NameError("Specify right path next time")
+#        else:
+#            raise NameError("wrong answer")
     return f
 
 if len(sys.argv) != 10:
@@ -147,11 +147,6 @@ img = numpy.rint(numpy.multiply(img, max_laser_power/number_of_colours))
 img=numpy.flip(img,0)
 
 #Gcode processing
-f.write("( imgcode generated code )\n")
-f.write("( developed by M. \"Vidmo\" Widomski )\n") 
-f.write("(  github.com/vidmo91 )\n")
-f.write("(  hackaday.io/vidmo91 )\n")
-f.write(" \n")
 f.write("H5 S0 \n")
 f.write("F"+str(feedrate)+"\n")
 f.write("G0 Z0 ( for some grbl senders compatibility )\n")
@@ -210,4 +205,4 @@ f.close()
             
 #input("everything done, press ENTER to exit, goodbye!")
 print(colorama.Fore.GREEN+"\neverything done, buh bye!\n")
-input("press ENTER to exit")
+#input("press ENTER to exit")
