@@ -90,54 +90,54 @@ void Stepper_Motor::Step()
         cur_pos+=0.005;
     }
 
-    if(Circle)
-    {
-        // if(X_plane)
-        // {
-        //     Serial.print("Cur Pos X: ");
-        //     Serial.println(cur_pos);            
-        // }
-        // else
-        // {
-        //     Serial.print("Cur Pos: ");
-        //     Serial.print(cur_pos);
-        // }
+    // if(Circle)
+    // {
+    //     // if(X_plane)
+    //     // {
+    //     //     Serial.print("Cur Pos X: ");
+    //     //     Serial.println(cur_pos);            
+    //     // }
+    //     // else
+    //     // {
+    //     //     Serial.print("Cur Pos: ");
+    //     //     Serial.print(cur_pos);
+    //     // }
 
-        if(abs(cur_pos - center_point - rad) < 0.009)
-        {
-            Serial.println("Here yo!");
-            if(Direction == 0)
-            {
-                Direction = 1;
-            }
-            else
-            {
-                Direction = 0;
-            }
-        }
+    //     if(abs(cur_pos - center_point - rad) < 0.009)
+    //     {
+    //         Serial.println("Here yo!");
+    //         if(Direction == 0)
+    //         {
+    //             Direction = 1;
+    //         }
+    //         else
+    //         {
+    //             Direction = 0;
+    //         }
+    //     }
 
-        if(abs(cur_pos-dest) < 0.01)
-        {
-            Serial.print("Cur Pos: ");
-            Serial.print(cur_pos);
-            // Serial.println(AmountOfStepsTaken);
-            noInterrupts();// disable all interrupts
-            if(X_plane)
-            {
-                TIFR1 |= (1 << OCF1A);
-            }
-            else
-            {
-                TIFR4 |= (1 << OCF4A);
-            }
-            TIFR3 |= (1 << OCF3A); 
-            MotorIsMoving = false;
-            ResetMotor();
-            // Serial.println("Stepping finished\n");
-            interrupts();   // enable all interrupts
-        }
-    }
-    else if (AmountOfStepsTaken == TotalSteps)
+    //     if(abs(cur_pos-dest) < 0.01)
+    //     {
+    //         Serial.print("Cur Pos: ");
+    //         Serial.print(cur_pos);
+    //         // Serial.println(AmountOfStepsTaken);
+    //         noInterrupts();// disable all interrupts
+    //         if(X_plane)
+    //         {
+    //             TIFR1 |= (1 << OCF1A);
+    //         }
+    //         else
+    //         {
+    //             TIFR4 |= (1 << OCF4A);
+    //         }
+    //         TIFR3 |= (1 << OCF3A); 
+    //         MotorIsMoving = false;
+    //         ResetMotor();
+    //         // Serial.println("Stepping finished\n");
+    //         interrupts();   // enable all interrupts
+    //     }
+    // }
+    if (AmountOfStepsTaken == TotalSteps)
     {
         // Serial.print("Steps Taken: ");
         // Serial.println(AmountOfStepsTaken);
@@ -162,36 +162,27 @@ void Stepper_Motor::Step()
 
 uint16_t Stepper_Motor::CalcSPSTimerRegisterValue()
 {
-    if(Circle)
-    {
-        if(X_plane)
-        {
-            CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) -1) * DefaultSPS;
-        }
-        else
-        {
-            CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
-        }
-        if(X_plane)
-        {
-            // Serial.print("Cur Pos X: ");
-            // Serial.println(cur_pos);            
-        }
-        else
-        {
-            // Serial.print("Cur Pos: ");
-            // Serial.print(cur_pos);
-            // Serial.print(" Direction: ");
-            // Serial.println(Direction);
-            // Serial.print("CurSPS: ");
-            // Serial.println(CurrentSPS);
-        }
+    // if(Circle)
+    // {
+    //     if(X_plane)
+    //     {
+    //         CurrentSPS = abs(acos( ((cur_pos - center_point)/rad))/(PI/2) -1) * DefaultSPS;
+    //         // Serial.print("Cur Pos X: ");
+    //         // Serial.println(cur_pos);  
+    //     }
+    //     else
+    //     {
+    //         CurrentSPS = abs(asin( ((cur_pos - center_point)/rad))/(PI/2) ) * DefaultSPS;
 
-        if(CurrentSPS < 300.0)
-            {
-                CurrentSPS = 300.0;
-            }
-    }
+    //         // Serial.print("Cur Pos: ");
+    //         // Serial.print(cur_pos);
+    //         // Serial.print(" Direction: ");
+    //         // Serial.println(Direction);
+    //         // Serial.print("CurSPS: ");
+    //         // Serial.println(CurrentSPS);
+    //     }
+            
+    // }
 
     uint32_t timePerStep;
     if (CurrentSPS < 1)
@@ -226,48 +217,44 @@ void Stepper_Motor::StepperAccelerationAdjuster()
     float temp = (float)AmountOfStepsTaken / (float)TotalSteps;
     // Serial.print("Temp: ");
     // Serial.println(temp);
-
-    if (!Circle) 
+    if(Accelerate && temp < 0.2)
     {
-        if(Accelerate && temp < 0.2)
+        if (CurrentSPS < MaxSPS)
         {
-            if (CurrentSPS < MaxSPS)
-            {
-                CurrentSPS += accelerationRate;
-                // Serial.print("SPS: ");
-                // Serial.println(CurrentSPS);
-            }
-            
-            if (CurrentSPS == MaxSPS)
-            {
-                // Serial.println("Max reached");
-                Accelerate = false;
-            }
-            
-            return;
+            CurrentSPS += accelerationRate;
+            // Serial.print("SPS: ");
+            // Serial.println(CurrentSPS);
         }
         
-        if ( !Decelerate && temp > 0.8)
+        if (CurrentSPS == MaxSPS)
         {
+            // Serial.println("Max reached");
             Accelerate = false;
-            Decelerate = true;
         }
         
-        if(Decelerate)
+        return;
+    }
+    
+    if ( !Decelerate && temp > 0.8)
+    {
+        Accelerate = false;
+        Decelerate = true;
+    }
+    
+    if(Decelerate)
+    {
+        if (CurrentSPS > 300)
         {
-            if (CurrentSPS > 300)
-            {
-                CurrentSPS -= accelerationRate;
-                // Serial.print("SPS: ");
-                // Serial.println(CurrentSPS);
-            }
-            else
-            {
-                CurrentSPS = 300;
-            }
-            
-            return;
+            CurrentSPS -= accelerationRate;
+            // Serial.print("SPS: ");
+            // Serial.println(CurrentSPS);
         }
+        else
+        {
+            CurrentSPS = 300;
+        }
+        
+        return;
     }
 }
 
