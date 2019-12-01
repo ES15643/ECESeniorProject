@@ -32,7 +32,7 @@ public class DaVinciBotClient
         foreach(string line in commands)
         {
             Console.WriteLine(line);
-            byte[] command = Encoding.ASCII.GetBytes(line);
+            byte[] command = Encoding.ASCII.GetBytes(line + "\n");
 
             if (count == 0)
             {
