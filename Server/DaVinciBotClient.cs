@@ -31,7 +31,6 @@ public class DaVinciBotClient
 
         foreach(string line in commands)
         {
-            //Console.WriteLine(line);
             byte[] command = Encoding.UTF8.GetBytes(line + "\n");
 
             if (count == 0)
@@ -40,9 +39,7 @@ public class DaVinciBotClient
 
                 while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
 
-                string result = System.Text.Encoding.UTF8.GetString(request);
-
-                //Console.WriteLine(Convert.ToUInt32(result));
+                string result = Encoding.UTF8.GetString(request);
 
                 if (BitConverter.IsLittleEndian)
                     Array.Reverse(request);
@@ -66,6 +63,6 @@ public class DaVinciBotClient
         stream.Close();
         client.Close();
 
-        Console.Read();
+        return;
     }
 }
