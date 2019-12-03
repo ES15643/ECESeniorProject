@@ -35,9 +35,6 @@
             this.LoadFromFileToolbarButton = new System.Windows.Forms.ToolStripMenuItem();
             this.fromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OurPictureBox = new System.Windows.Forms.PictureBox();
             this.previewImageBox = new System.Windows.Forms.PictureBox();
@@ -61,13 +58,20 @@
             this.uploadImageFromFileButton = new System.Windows.Forms.Button();
             this.uploadImageFromFileTextbox = new System.Windows.Forms.TextBox();
             this.printingButtonsPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.generateGcodeButton = new System.Windows.Forms.Button();
-            this.stopPrintingButton = new System.Windows.Forms.Button();
             this.startPrintingButton = new System.Windows.Forms.Button();
+            this.stopPrintingButton = new System.Windows.Forms.Button();
+            this.generateGcodeButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.loadedGcodeTextBox = new System.Windows.Forms.TextBox();
             this.LoadGCodeFromFileButton = new System.Windows.Forms.Button();
+            this.loadedGcodeTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -81,6 +85,13 @@
             this.printingButtonsPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            this.tableLayoutPanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -89,9 +100,6 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -118,20 +126,20 @@
             this.fromToolStripMenuItem});
             this.loadImageToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.loadImageToolStripMenuItem.Name = "loadImageToolStripMenuItem";
-            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.loadImageToolStripMenuItem.Text = "Load Image";
             // 
             // LoadFromFileToolbarButton
             // 
             this.LoadFromFileToolbarButton.Name = "LoadFromFileToolbarButton";
-            this.LoadFromFileToolbarButton.Size = new System.Drawing.Size(224, 26);
+            this.LoadFromFileToolbarButton.Size = new System.Drawing.Size(181, 26);
             this.LoadFromFileToolbarButton.Text = "From File";
             this.LoadFromFileToolbarButton.Click += new System.EventHandler(this.LoadFromFileToolbarButton_Click);
             // 
             // fromToolStripMenuItem
             // 
             this.fromToolStripMenuItem.Name = "fromToolStripMenuItem";
-            this.fromToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.fromToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.fromToolStripMenuItem.Text = "From Camera";
             // 
             // saveToolStripMenuItem
@@ -139,29 +147,8 @@
             this.saveToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.saveToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.saveToolStripMenuItem.Text = "Save";
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
-            this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // helpToolStripMenuItem
             // 
@@ -172,14 +159,13 @@
             // 
             // OurPictureBox
             // 
-            this.OurPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.OurPictureBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
+            this.OurPictureBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.OurPictureBox.BackColor = System.Drawing.Color.Transparent;
             this.OurPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OurPictureBox.Location = new System.Drawing.Point(10, 53);
+            this.OurPictureBox.Location = new System.Drawing.Point(125, 46);
             this.OurPictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OurPictureBox.Name = "OurPictureBox";
-            this.OurPictureBox.Size = new System.Drawing.Size(610, 444);
+            this.OurPictureBox.Size = new System.Drawing.Size(597, 345);
             this.OurPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.OurPictureBox.TabIndex = 1;
             this.OurPictureBox.TabStop = false;
@@ -187,14 +173,13 @@
             // 
             // previewImageBox
             // 
-            this.previewImageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.previewImageBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(10)))), ((int)(((byte)(30)))));
+            this.previewImageBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.previewImageBox.BackColor = System.Drawing.Color.Transparent;
             this.previewImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewImageBox.Location = new System.Drawing.Point(668, 53);
+            this.previewImageBox.Location = new System.Drawing.Point(782, 46);
             this.previewImageBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.previewImageBox.Name = "previewImageBox";
-            this.previewImageBox.Size = new System.Drawing.Size(610, 444);
+            this.previewImageBox.Size = new System.Drawing.Size(586, 345);
             this.previewImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.previewImageBox.TabIndex = 7;
             this.previewImageBox.TabStop = false;
@@ -202,7 +187,10 @@
             // invertCheckBox
             // 
             this.invertCheckBox.BackColor = System.Drawing.SystemColors.Control;
+            this.invertCheckBox.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.invertCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.invertCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.invertCheckBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.invertCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.invertCheckBox.Location = new System.Drawing.Point(288, 3);
             this.invertCheckBox.Name = "invertCheckBox";
@@ -215,11 +203,16 @@
             // 
             // startCameraButton
             // 
+            this.startCameraButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.startCameraButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.startCameraButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.tableLayoutPanel3.SetColumnSpan(this.startCameraButton, 2);
+            this.startCameraButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.startCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startCameraButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.startCameraButton.Location = new System.Drawing.Point(3, 3);
             this.startCameraButton.Name = "startCameraButton";
-            this.startCameraButton.Size = new System.Drawing.Size(603, 38);
+            this.startCameraButton.Size = new System.Drawing.Size(603, 46);
             this.startCameraButton.TabIndex = 12;
             this.startCameraButton.Text = "Use Camera";
             this.startCameraButton.UseVisualStyleBackColor = true;
@@ -228,10 +221,14 @@
             // takePictureButton
             // 
             this.takePictureButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.takePictureButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.takePictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.takePictureButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.takePictureButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.takePictureButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.takePictureButton.Location = new System.Drawing.Point(3, 3);
             this.takePictureButton.Name = "takePictureButton";
-            this.takePictureButton.Size = new System.Drawing.Size(295, 38);
+            this.takePictureButton.Size = new System.Drawing.Size(295, 40);
             this.takePictureButton.TabIndex = 13;
             this.takePictureButton.Text = "Take Picture";
             this.takePictureButton.UseVisualStyleBackColor = false;
@@ -240,10 +237,14 @@
             // saveCameraImageButton
             // 
             this.saveCameraImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.saveCameraImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.saveCameraImageButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.saveCameraImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.saveCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveCameraImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.saveCameraImageButton.Location = new System.Drawing.Point(304, 3);
             this.saveCameraImageButton.Name = "saveCameraImageButton";
-            this.saveCameraImageButton.Size = new System.Drawing.Size(296, 38);
+            this.saveCameraImageButton.Size = new System.Drawing.Size(296, 40);
             this.saveCameraImageButton.TabIndex = 14;
             this.saveCameraImageButton.Text = "Save Image";
             this.saveCameraImageButton.UseVisualStyleBackColor = false;
@@ -251,11 +252,15 @@
             // stopCameraButton
             // 
             this.stopCameraButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopCameraButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.stopCameraButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.tableLayoutPanel3.SetColumnSpan(this.stopCameraButton, 2);
+            this.stopCameraButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.stopCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopCameraButton.Location = new System.Drawing.Point(3, 111);
+            this.stopCameraButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopCameraButton.Location = new System.Drawing.Point(3, 107);
             this.stopCameraButton.Name = "stopCameraButton";
-            this.stopCameraButton.Size = new System.Drawing.Size(603, 38);
+            this.stopCameraButton.Size = new System.Drawing.Size(603, 40);
             this.stopCameraButton.TabIndex = 15;
             this.stopCameraButton.Text = "Close Camera";
             this.stopCameraButton.UseVisualStyleBackColor = false;
@@ -263,17 +268,20 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Location = new System.Drawing.Point(190, 547);
+            this.panel1.Location = new System.Drawing.Point(298, 429);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 21;
             // 
             // thresholdNumberBox
             // 
+            this.thresholdNumberBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.thresholdNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thresholdNumberBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.thresholdNumberBox.Location = new System.Drawing.Point(3, 3);
             this.thresholdNumberBox.Maximum = new decimal(new int[] {
             200,
@@ -326,6 +334,7 @@
             // 
             // trackBar1
             // 
+            this.trackBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.trackBar1.Location = new System.Drawing.Point(-3, 12);
             this.trackBar1.Maximum = 200;
             this.trackBar1.Name = "trackBar1";
@@ -338,6 +347,7 @@
             // 
             // thresholdControlPanel
             // 
+            this.thresholdControlPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.thresholdControlPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.thresholdControlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.thresholdControlPanel.ColumnCount = 2;
@@ -346,7 +356,7 @@
             this.thresholdControlPanel.Controls.Add(this.thresholdNumberBox, 0, 0);
             this.thresholdControlPanel.Controls.Add(this.invertCheckBox, 1, 0);
             this.thresholdControlPanel.Controls.Add(this.trackbar1Panel, 0, 1);
-            this.thresholdControlPanel.Location = new System.Drawing.Point(671, 516);
+            this.thresholdControlPanel.Location = new System.Drawing.Point(779, 398);
             this.thresholdControlPanel.Name = "thresholdControlPanel";
             this.thresholdControlPanel.RowCount = 2;
             this.thresholdControlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -357,6 +367,7 @@
             // 
             // trackbar1Panel
             // 
+            this.trackbar1Panel.AutoSize = true;
             this.trackbar1Panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.trackbar1Panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.thresholdControlPanel.SetColumnSpan(this.trackbar1Panel, 2);
@@ -366,18 +377,21 @@
             this.trackbar1Panel.Controls.Add(this.trackBar1);
             this.trackbar1Panel.Location = new System.Drawing.Point(3, 41);
             this.trackbar1Panel.Name = "trackbar1Panel";
-            this.trackbar1Panel.Size = new System.Drawing.Size(601, 96);
+            this.trackbar1Panel.Size = new System.Drawing.Size(601, 74);
             this.trackbar1Panel.TabIndex = 22;
             this.trackbar1Panel.Click += new System.EventHandler(this.Trackbar1Panel_Click);
             // 
             // useCameraImageButton
             // 
             this.useCameraImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.useCameraImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.tableLayoutPanel3.SetColumnSpan(this.useCameraImageButton, 2);
+            this.useCameraImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.useCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useCameraImageButton.Location = new System.Drawing.Point(3, 165);
+            this.useCameraImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.useCameraImageButton.Location = new System.Drawing.Point(3, 159);
             this.useCameraImageButton.Name = "useCameraImageButton";
-            this.useCameraImageButton.Size = new System.Drawing.Size(603, 38);
+            this.useCameraImageButton.Size = new System.Drawing.Size(603, 40);
             this.useCameraImageButton.TabIndex = 26;
             this.useCameraImageButton.Text = "Use This Image";
             this.useCameraImageButton.UseVisualStyleBackColor = false;
@@ -385,6 +399,7 @@
             // 
             // tableLayoutPanel3
             // 
+            this.tableLayoutPanel3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -393,14 +408,14 @@
             this.tableLayoutPanel3.Controls.Add(this.startCameraButton, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.useCameraImageButton, 0, 3);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(11, 575);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(119, 457);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 4;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(609, 218);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(609, 208);
             this.tableLayoutPanel3.TabIndex = 29;
             // 
             // tableLayoutPanel5
@@ -413,24 +428,25 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.Controls.Add(this.takePictureButton, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.saveCameraImageButton, 1, 0);
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 57);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 55);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(603, 48);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(603, 46);
             this.tableLayoutPanel5.TabIndex = 25;
             // 
             // tableLayoutPanel4
             // 
+            this.tableLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.Controls.Add(this.uploadImageFromFileButton, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.uploadImageFromFileTextbox, 0, 0);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(10, 514);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(118, 396);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -443,9 +459,13 @@
             this.uploadImageFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.uploadImageFromFileButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.uploadImageFromFileButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.uploadImageFromFileButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.uploadImageFromFileButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.uploadImageFromFileButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.uploadImageFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.uploadImageFromFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.uploadImageFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.uploadImageFromFileButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.uploadImageFromFileButton.Location = new System.Drawing.Point(308, 2);
             this.uploadImageFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.uploadImageFromFileButton.Name = "uploadImageFromFileButton";
@@ -478,60 +498,72 @@
             this.printingButtonsPanel.Controls.Add(this.startPrintingButton, 0, 1);
             this.printingButtonsPanel.Controls.Add(this.stopPrintingButton, 1, 1);
             this.printingButtonsPanel.Controls.Add(this.generateGcodeButton, 0, 0);
-            this.printingButtonsPanel.Location = new System.Drawing.Point(3, 58);
+            this.printingButtonsPanel.Location = new System.Drawing.Point(3, 55);
             this.printingButtonsPanel.Name = "printingButtonsPanel";
             this.printingButtonsPanel.RowCount = 1;
             this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.printingButtonsPanel.Size = new System.Drawing.Size(604, 90);
+            this.printingButtonsPanel.Size = new System.Drawing.Size(598, 83);
             this.printingButtonsPanel.TabIndex = 25;
+            // 
+            // startPrintingButton
+            // 
+            this.startPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.startPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.startPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.startPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.startPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.startPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startPrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.startPrintingButton.Location = new System.Drawing.Point(3, 43);
+            this.startPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.startPrintingButton.Name = "startPrintingButton";
+            this.startPrintingButton.Size = new System.Drawing.Size(293, 38);
+            this.startPrintingButton.TabIndex = 6;
+            this.startPrintingButton.Text = "Start Printing";
+            this.startPrintingButton.UseVisualStyleBackColor = false;
+            this.startPrintingButton.Click += new System.EventHandler(this.startPrintingButton_Click);
+            // 
+            // stopPrintingButton
+            // 
+            this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.stopPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.stopPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopPrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopPrintingButton.Location = new System.Drawing.Point(302, 43);
+            this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.stopPrintingButton.Name = "stopPrintingButton";
+            this.stopPrintingButton.Size = new System.Drawing.Size(293, 38);
+            this.stopPrintingButton.TabIndex = 3;
+            this.stopPrintingButton.Tag = "StopButton";
+            this.stopPrintingButton.Text = "Stop Printing";
+            this.stopPrintingButton.UseVisualStyleBackColor = false;
             // 
             // generateGcodeButton
             // 
             this.generateGcodeButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.generateGcodeButton.AutoSize = true;
             this.generateGcodeButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.generateGcodeButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.generateGcodeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.printingButtonsPanel.SetColumnSpan(this.generateGcodeButton, 2);
+            this.generateGcodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.generateGcodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.generateGcodeButton.Location = new System.Drawing.Point(3, 4);
+            this.generateGcodeButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.generateGcodeButton.Location = new System.Drawing.Point(8, 2);
             this.generateGcodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.generateGcodeButton.Name = "generateGcodeButton";
-            this.generateGcodeButton.Size = new System.Drawing.Size(598, 36);
+            this.generateGcodeButton.Size = new System.Drawing.Size(581, 37);
             this.generateGcodeButton.TabIndex = 4;
             this.generateGcodeButton.Tag = "EditingOptionsButton";
             this.generateGcodeButton.Text = "Generate G-Code";
             this.generateGcodeButton.UseCompatibleTextRendering = true;
             this.generateGcodeButton.UseVisualStyleBackColor = false;
             this.generateGcodeButton.Click += new System.EventHandler(this.GenerateGcodeButton_Click);
-            // 
-            // stopPrintingButton
-            // 
-            this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopPrintingButton.Location = new System.Drawing.Point(305, 50);
-            this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.stopPrintingButton.Name = "stopPrintingButton";
-            this.stopPrintingButton.Size = new System.Drawing.Size(296, 35);
-            this.stopPrintingButton.TabIndex = 3;
-            this.stopPrintingButton.Tag = "StopButton";
-            this.stopPrintingButton.Text = "Stop Printing";
-            this.stopPrintingButton.UseVisualStyleBackColor = false;
-            // 
-            // startPrintingButton
-            // 
-            this.startPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.startPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.startPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startPrintingButton.Location = new System.Drawing.Point(3, 50);
-            this.startPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.startPrintingButton.Name = "startPrintingButton";
-            this.startPrintingButton.Size = new System.Drawing.Size(296, 34);
-            this.startPrintingButton.TabIndex = 6;
-            this.startPrintingButton.Text = "Start Printing";
-            this.startPrintingButton.UseVisualStyleBackColor = false;
-            this.startPrintingButton.Click += new System.EventHandler(this.startPrintingButton_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -548,8 +580,30 @@
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(604, 49);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(598, 46);
             this.tableLayoutPanel2.TabIndex = 29;
+            // 
+            // LoadGCodeFromFileButton
+            // 
+            this.LoadGCodeFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadGCodeFromFileButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.LoadGCodeFromFileButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.LoadGCodeFromFileButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.LoadGCodeFromFileButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.LoadGCodeFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.LoadGCodeFromFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.LoadGCodeFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LoadGCodeFromFileButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.LoadGCodeFromFileButton.Location = new System.Drawing.Point(302, 2);
+            this.LoadGCodeFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LoadGCodeFromFileButton.Name = "LoadGCodeFromFileButton";
+            this.tableLayoutPanel2.SetRowSpan(this.LoadGCodeFromFileButton, 2);
+            this.LoadGCodeFromFileButton.Size = new System.Drawing.Size(293, 40);
+            this.LoadGCodeFromFileButton.TabIndex = 2;
+            this.LoadGCodeFromFileButton.Text = "Load G-Code From File";
+            this.LoadGCodeFromFileButton.UseVisualStyleBackColor = false;
+            this.LoadGCodeFromFileButton.Click += new System.EventHandler(this.LoadGCodeFromFileButton_Click);
             // 
             // loadedGcodeTextBox
             // 
@@ -559,36 +613,19 @@
             this.loadedGcodeTextBox.ForeColor = System.Drawing.Color.White;
             this.loadedGcodeTextBox.Location = new System.Drawing.Point(3, 3);
             this.loadedGcodeTextBox.Name = "loadedGcodeTextBox";
-            this.loadedGcodeTextBox.Size = new System.Drawing.Size(296, 34);
+            this.loadedGcodeTextBox.Size = new System.Drawing.Size(293, 34);
             this.loadedGcodeTextBox.TabIndex = 29;
-            // 
-            // LoadGCodeFromFileButton
-            // 
-            this.LoadGCodeFromFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadGCodeFromFileButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.LoadGCodeFromFileButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.LoadGCodeFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
-            this.LoadGCodeFromFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LoadGCodeFromFileButton.Location = new System.Drawing.Point(305, 2);
-            this.LoadGCodeFromFileButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LoadGCodeFromFileButton.Name = "LoadGCodeFromFileButton";
-            this.tableLayoutPanel2.SetRowSpan(this.LoadGCodeFromFileButton, 2);
-            this.LoadGCodeFromFileButton.Size = new System.Drawing.Size(296, 38);
-            this.LoadGCodeFromFileButton.TabIndex = 2;
-            this.LoadGCodeFromFileButton.Text = "Load G-Code From File";
-            this.LoadGCodeFromFileButton.UseVisualStyleBackColor = false;
-            this.LoadGCodeFromFileButton.Click += new System.EventHandler(this.LoadGCodeFromFileButton_Click);
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.printingButtonsPanel, 0, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(668, 642);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(776, 524);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.00787F));
@@ -597,8 +634,90 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(610, 151);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(604, 141);
             this.tableLayoutPanel1.TabIndex = 27;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(14, 14);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Padding = new System.Windows.Forms.Padding(5);
+            this.pictureBox1.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 30;
+            this.pictureBox1.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(220, 14);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 31;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Location = new System.Drawing.Point(426, 14);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 32;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Location = new System.Drawing.Point(838, 14);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 33;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Location = new System.Drawing.Point(632, 14);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 34;
+            this.pictureBox5.TabStop = false;
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.AutoSize = true;
+            this.tableLayoutPanel6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tableLayoutPanel6.ColumnCount = 6;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox6, 5, 0);
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox1, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox4, 4, 0);
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox5, 3, 0);
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox2, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.pictureBox3, 2, 0);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(122, 693);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(11);
+            this.tableLayoutPanel6.RowCount = 1;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1258, 228);
+            this.tableLayoutPanel6.TabIndex = 35;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Location = new System.Drawing.Point(1044, 14);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 36;
+            this.pictureBox6.TabStop = false;
             // 
             // DavinciBotView
             // 
@@ -608,7 +727,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1482, 1055);
+            this.ClientSize = new System.Drawing.Size(1482, 953);
+            this.Controls.Add(this.tableLayoutPanel6);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -617,12 +737,14 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.thresholdControlPanel);
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DavinciBotView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DaVinci-Bot";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DavinciBotView_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DavinciBotView_FormClosed);
             this.Load += new System.EventHandler(this.DavinciBotView_Load);
@@ -633,6 +755,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumberBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.thresholdControlPanel.ResumeLayout(false);
+            this.thresholdControlPanel.PerformLayout();
             this.trackbar1Panel.ResumeLayout(false);
             this.trackbar1Panel.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
@@ -645,6 +768,13 @@
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            this.tableLayoutPanel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -655,9 +785,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LoadFromFileToolbarButton;
         private System.Windows.Forms.ToolStripMenuItem fromToolStripMenuItem;
@@ -691,6 +818,13 @@
         private System.Windows.Forms.Button startPrintingButton;
         private System.Windows.Forms.Button stopPrintingButton;
         private System.Windows.Forms.Button generateGcodeButton;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.PictureBox pictureBox6;
     }
 }
 
