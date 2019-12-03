@@ -173,7 +173,7 @@ bool gcode_interpretation::linear_interpolation(String command)
 
 bool gcode_interpretation::circ_interpolation_cw(String command)
 {
-  float x, y, z, i, j, I, J, rad, theta, arclen;
+  float x, y, z, i, j, I, J, rad, theta, arclen, center_angle, x_toMove, y_toMove;
 
   Serial.println("Circ cw");
   x = command.substring(command.indexOf('X') + 1,command.indexOf(' ', command.indexOf('X'))).toFloat();
@@ -185,14 +185,22 @@ bool gcode_interpretation::circ_interpolation_cw(String command)
   j = y + J;
 
   rad = sqrt(sq(x-i)+sq(y-j));
-  
-  theta = atan2( (y - j), (x - i) ) + atan2( (stpm2.GetCurrPos() - j), (stpm1.GetCurrPos() - i) );
-  Serial.print("Theta: ");
-  Serial.println(theta);
-  arclen = rad * theta;
 
-  // Serial.print("X: ");
-  // Serial.println(rad);
+  if (abs(x - stpm1.GetCurrPos()) < 0.01 && abs(y - stpm2.GetCurrPos()) < 0.01)
+  {
+    center_angle = 360.0;
+  }
+  else
+  {
+    center_angle = ( atan2(y - j, x - i) - atan2(stpm2.GetCurrPos() - j, stpm1.GetCurrPos() - i) ) * 180 / PI; 
+  }
+
+  Serial.print("Center angle: ");
+  Serial.println(center_angle);
+
+  arclen = 2 * PI * rad * center_angle / 360;
+  Serial.print("Arclen: ");
+  Serial.println(arclen);
 
   stpm1.SetRadius(rad);
   stpm2.SetRadius(rad);
@@ -202,10 +210,52 @@ bool gcode_interpretation::circ_interpolation_cw(String command)
 
   stpm1.SetCenter(i);
   stpm2.SetCenter(j);
-  
-  //Move around arc
-  stpm1.MoveMotor(0, 1);
-  stpm2.MoveMotor(0, 1);
+
+  int x_direction = 1;
+  int y_direction = 1;
+  float radians;
+
+  for(float angle = 0.0; angle < center_angle; angle++)
+  {
+
+    radians = angle * PI / 180;
+    
+    x_toMove = rad * cos(radians);
+    y_toMove = rad * sin(radians);
+
+    Serial.print("Angle: ");
+    Serial.println(angle);
+
+    Serial.print("x_toMove: ");
+    Serial.println(x_toMove);
+
+    Serial.print("y_toMove: ");
+    Serial.println(y_toMove);
+
+    if(angle < 180.0)
+    {
+      x_direction = 1;
+    }
+    else
+    {
+      x_direction = 0;
+    }
+
+    if(angle > 90.0)
+    {
+      y_direction = 0;
+    }
+    else if (angle > 270.0)
+    {
+      y_direction = 1;
+    }
+
+    stpm1.MoveMotor(x_toMove, x_direction);
+    stpm2.MoveMotor(y_toMove, y_direction);
+
+    while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){delay(1);}
+
+  }
 
   while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){delay(1);} // Wait till that stop
 

@@ -15,8 +15,8 @@ public class DaVinciBotClient
         TcpClient client = new TcpClient();
         Console.WriteLine("Connecting...");
 
-        //client.Connect("192.168.4.1", 80);
-        client.Connect(IPAddress.Loopback, 80);
+        client.Connect("192.168.4.1", 80);
+        //client.Connect(IPAddress.Loopback, 80);
 
         Console.WriteLine("Connected");
 
@@ -31,8 +31,8 @@ public class DaVinciBotClient
 
         foreach(string line in commands)
         {
-            Console.WriteLine(line);
-            byte[] command = Encoding.ASCII.GetBytes(line);
+            //Console.WriteLine(line);
+            byte[] command = Encoding.UTF8.GetBytes(line + "\n");
 
             if (count == 0)
             {
@@ -40,22 +40,32 @@ public class DaVinciBotClient
 
                 while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
 
-                Console.WriteLine(BitConverter.ToInt32(request, 0));
+                string result = System.Text.Encoding.UTF8.GetString(request);
+
+                //Console.WriteLine(Convert.ToUInt32(result));
 
                 if (BitConverter.IsLittleEndian)
                     Array.Reverse(request);
 
-                count = BitConverter.ToInt32(request, 0);
+                count = Convert.ToInt32(result);
             }
 
             stream.Write(command, 0, command.Length);
 
-            count--;
+            count -= command.Length;
             index++;
 
             Console.WriteLine((double)index / (double)numCommands);
         }
 
+        string endMessage = "Transmission Complete\n";
+
+        stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
+        stream.Read(new byte[1], 0, 1);
+
+        stream.Close();
         client.Close();
+
+        Console.Read();
     }
 }

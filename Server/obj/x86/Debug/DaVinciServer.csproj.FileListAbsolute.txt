@@ -4,3 +4,9 @@ C:\Users\Nathan\Documents\GitHub\ECESeniorProject\Server\bin\Debug\ConsoleApplic
 C:\Users\Nathan\Documents\GitHub\ECESeniorProject\Server\bin\Debug\ConsoleApplication.pdb
 C:\Users\Nathan\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\ConsoleApplication.exe
 C:\Users\Nathan\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\ConsoleApplication.pdb
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\bin\Debug\ConsoleApplication.exe
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\bin\Debug\ConsoleApplication.pdb
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\DaVinciServer.csprojAssemblyReference.cache
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\DaVinciServer.csproj.CoreCompileInputs.cache
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\ConsoleApplication.exe
+C:\Users\npage\Documents\GitHub\ECESeniorProject\Server\obj\x86\Debug\ConsoleApplication.pdb

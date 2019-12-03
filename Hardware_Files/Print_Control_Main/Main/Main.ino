@@ -19,7 +19,6 @@ int maxSPS = 1000;
 //Circle
 String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
 
-
 // volatile int triggered = LOW;
 
 // X Motor Step interrupt
@@ -132,8 +131,9 @@ void loop()
         bytesRead = Serial.read();
         if (bytesRead == 'y')
         {
+            int length = sizeof(gcodesForTesting)/sizeof(*gcodesForTesting);
             Serial.println("Starting");
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < length; i++)
             {
                 Serial.println("Using " + gcodesForTesting[i]);
                 gcinter.interpret_gcode(gcodesForTesting[i]);

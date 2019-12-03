@@ -63,7 +63,7 @@ void loop()
 					}
 					if (currentLine.length() == 0 && !receivingCmds)
 					{
-						client.println("Connect to DaVinci Bot? Y/N");
+						client.print(EEPROM_SIZE);
 					}
 					else
 					{
