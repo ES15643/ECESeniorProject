@@ -64,6 +64,8 @@ void setup()
     pinMode(stmp2_steppin, OUTPUT);
 
     Serial.begin(115200);
+    Serial3.begin(115200);
+    
     pinMode(21, INPUT_PULLUP);
     pinMode(3, INPUT_PULLUP);
     pinMode(18, INPUT_PULLUP);
@@ -184,4 +186,3 @@ void boundaryTriggeredY()
         detachInterrupt(digitalPinToInterrupt(21));
     }
 }
-
