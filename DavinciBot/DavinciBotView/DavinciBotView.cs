@@ -13,12 +13,14 @@ namespace DavinciBotView
     {
         public string loadedImagePath;
         public string loadedImageName;
+        public string gCodeFilePath;
+        private Image cameraImage;
         private bool imageLoaded = false;
         private bool invertedContour = false;
-        private bool thresholdErrorReported = false;
         private static bool startedCamera = false;
         private static FilterInfoCollection Devices;
         private static VideoCaptureDevice frame;
+        private const string masterGcodeFile = "commands.gco";
 
         //Customize form objects in here
         public DavinciBotView()
@@ -39,7 +41,6 @@ namespace DavinciBotView
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
-
         }
 
         /// <summary>
@@ -61,7 +62,6 @@ namespace DavinciBotView
             saveCameraImageButton.Enabled = m;
             useCameraImageButton.Enabled = m;
         }
-
         private void EnableGcodeControls(bool m)
         {
             generateGcodeButton.Enabled = m;
@@ -113,8 +113,28 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void LoadGCodeFromFileButton_Click(object sender, EventArgs e)
         {
-            //WRONG. FIX THIS.
-            //LoadFromFileToolbarButton_Click(sender, e);
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            OpenFileDialog openFile = new OpenFileDialog();
+
+            //TODO: Enter the most recently accessed directory instead of c:\\ 
+            // openFile.InitialDirectory = "c:\\";
+            openFile.InitialDirectory = "C:\\Documents and Settings\\USER\\Recent";
+            openFile.Filter = "G-Code Files (*.gco)|*.gco";
+            openFile.FilterIndex = 2;
+            openFile.RestoreDirectory = true;
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                filePath = openFile.FileName;
+                gCodeFilePath = filePath;
+                copyFile(gCodeFilePath, masterGcodeFile);
+                EnableGcodeControls(true);
+                generateGcodeButton.Enabled = false;
+                loadedGcodeTextBox.Text = gCodeFilePath;
+            }
+            // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
         /// <summary>
@@ -155,10 +175,10 @@ namespace DavinciBotView
                 if (dialogue == DialogResult.Yes)
                 {
                     SaveFileDialog saveConvertedImage = new SaveFileDialog();
-                    saveConvertedImage.Filter = "G-Code File (*.gco)|*.gco";
+                    saveConvertedImage.Filter = "G-Code Files (*.gco)|*.gco";
                     if (saveConvertedImage.ShowDialog() == DialogResult.OK)
                     {
-                        copyFile("commands.gco", saveConvertedImage.FileName);
+                        copyFile(masterGcodeFile, saveConvertedImage.FileName);
                     }
                 }
             }
@@ -301,19 +321,6 @@ namespace DavinciBotView
 
         }
 
-        private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == Convert.ToChar(Keys.Enter))
-            {
-                e.Handled = true;
-                e.KeyChar = (char)46;
-                int val = (int)thresholdNumberBox.Value;
-                FindContour();
-                trackBar1.Value = val;
-                this.ActiveControl = null;
-            }
-        }
-
         private void startCameraButton_Click(object sender, EventArgs e)
         {
             startCamera();
@@ -344,7 +351,7 @@ namespace DavinciBotView
             {
                 frame.Stop();
             }
-            cameraBox.Image = null;
+            
             EnableCameraControls(false);
         }
 
@@ -377,7 +384,7 @@ namespace DavinciBotView
             takePictureButton.Enabled = false;
             startCameraButton.Enabled = true;
             //Puts it in the main box. Save this for later.
-            //OurPictureBox.Image = (Image)cameraBox.Image.Clone();
+            OurPictureBox.Image = (Image)cameraBox.Image.Clone();
             //make sure to update loadedImagePath to this temp file
             //SaveFileDialog saveCameraImage = new SaveFileDialog
 
@@ -403,8 +410,25 @@ namespace DavinciBotView
                 {
                     output.WriteLine(line);
                 }
-
                 file.Close();
+            }
+        }
+
+        /// <summary>
+        /// When a user enters a threshold value manually and clicks enter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(Keys.Enter))
+            {
+                e.Handled = true;
+                e.KeyChar = (char)46;
+                int val = (int)thresholdNumberBox.Value;
+                FindContour();
+                trackBar1.Value = val;
+                this.ActiveControl = null;
             }
         }
 
@@ -419,7 +443,40 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            
+
+        }
+        /// <summary>
+        /// Error handling for threshold changes.
+        /// mode param can either be "trackbar" or "box", whichever event was triggered
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="mode"></param>
+        private void HandleThresholdValueChange(object sender, EventArgs e, string mode)
+        {
+            if (!imageLoaded)
+            {
+                EnableImageControls(false);
+            }
+            else
+            {
+                switch (mode)
+                {
+                    case "trackbar":
+                        {
+                            thresholdNumberBox.Value = trackBar1.Value;
+                            break;
+                        }
+                    case "box":
+                        {
+                            trackBar1.Value = (int)thresholdNumberBox.Value;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                FindContour();
+            }
         }
 
         /// <summary>
@@ -458,40 +515,6 @@ namespace DavinciBotView
             }
         }
 
-        /// <summary>
-        /// Error handling for threshold changes.
-        /// mode param can either be "trackbar" or "box", whichever event was triggered
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="mode"></param>
-        private void HandleThresholdValueChange(object sender, EventArgs e, string mode)
-        {
-            if(!imageLoaded)
-            {
-                EnableImageControls(false);
-            }
-            else
-            {
-                switch (mode)
-                {
-                    case "trackbar":
-                        {
-                            thresholdNumberBox.Value = trackBar1.Value;
-                            break;
-                        }
-                    case "box":
-                        {
-                            trackBar1.Value = (int)thresholdNumberBox.Value;
-                            break;
-                        }
-                    default:
-                        break;
-                }
-                FindContour();
-            }    
-        }
-
         private void thresholdControlPanel_Click(object sender, EventArgs e)
         {
             if (!trackBar1.Enabled && !thresholdNumberBox.Enabled && !invertCheckBox.Enabled)
@@ -506,6 +529,11 @@ namespace DavinciBotView
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             HandleThresholdValueChange(sender, e, "trackbar");
+        }
+
+        private void useCameraImageButton_Click(object sender, EventArgs e)
+        {
+            //OurPictureBox.Image = camera
         }
     }
 }
