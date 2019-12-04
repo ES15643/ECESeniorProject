@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from image_to_gcode.image_to_gcode import ImageToGcode
+#from image_to_gcode.image_to_gcode import ImageToGcode
 
 import cv2
 import numpy as np

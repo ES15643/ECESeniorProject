@@ -1,7 +1,6 @@
 ﻿using AForge.Video;
 using AForge.Video.DirectShow;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
@@ -12,7 +11,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DavinciBotGUI
+namespace DavinciBotView
 {
     public partial class DavinciBotView : Form
     {
@@ -28,8 +27,6 @@ namespace DavinciBotGUI
         private const string masterGcodeFile = "commands.gco";
         private const int defaultThresholdValue = 100;
         private const string masterDirectory = "../../../../Image_Processor_Files";
-        private List<Image> recentPictures = new List<Image>(6);
-        private int recentImageCount = 0;
 
 
         //Customize form objects in here
@@ -337,7 +334,7 @@ namespace DavinciBotGUI
             }
 
             //Ask if user wants to save camera image
-            
+
             EnableCameraControls(false);
 
 
@@ -530,16 +527,15 @@ namespace DavinciBotGUI
         {
             string oldDir = Environment.CurrentDirectory;
             Environment.CurrentDirectory = masterDirectory;
-            
+
             loadedImagePath = "temp.jpg";
             OurPictureBox.Image.Save(loadedImagePath);
-            AddToRecentPictures(OurPictureBox.Image);
             Environment.CurrentDirectory = oldDir;
 
             FindContour(defaultThresholdValue);
             imageLoaded = true;
             EnableImageControls(true);
-            
+
         }
 
         //Need to remember to add cancel functionality to this
@@ -632,65 +628,18 @@ namespace DavinciBotGUI
                 {
                     var bmp = new Bitmap(fs);
                     OurPictureBox.Image = (Bitmap)bmp.Clone();
-                    AddToRecentPictures(OurPictureBox.Image);
                 }
                 HandleThresholdValueChange(sender, e, "");
                 FindContour(defaultThresholdValue);
             }
             imageLoaded = true;
-            EnableImageControls(true);            
+            EnableImageControls(true);
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
         private void startPrintingButton_Click(object sender, EventArgs e)
         {
             RunGcodeClient();
-        }
-
-        private void AddToRecentPictures(Image im)
-        {
-            /*
-            for(int i = recent; i < recentImageCount ; i++)
-            {
-                //if(recentPictures[i] != null)
-                {
-                    recentPictures[i + 1] = recentPictures[i];                    
-                }
-            }
-            */
-            if(recentImageCount == 6)
-            {
-                recentImageCount = 0;
-            }
-            recentPictures.Add((Image)im.Clone());
-            UpdateRecentPictureBoxes();
-            recentImageCount++;
-            
-        }
-        private void UpdateRecentPictureBoxes()
-        {
-            recentPicture0.Image = (Image)recentPictures[0];
-
-            if (recentImageCount > 0)
-            {
-                recentPicture1.Image = (Image)recentPictures[1];
-            }
-            if (recentImageCount > 1)
-            {
-                recentPicture2.Image = (Image)recentPictures[2];
-            }
-            if (recentImageCount > 2)
-            {
-                recentPicture3.Image = (Image)recentPictures[3];
-            }
-            if (recentImageCount > 3)
-            {
-                recentPicture4.Image = (Image)recentPictures[4];
-            }
-            if (recentImageCount > 4)
-            {
-                recentPicture5.Image = (Image)recentPictures[5];
-            }
         }
     }
 }

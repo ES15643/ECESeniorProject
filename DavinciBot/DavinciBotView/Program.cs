@@ -7,7 +7,7 @@ using AForge;
 using AForge.Video;
 using AForge.Video.DirectShow;
 
-namespace DavinciBotGUI
+namespace DavinciBotView
 {
     static class Program
     {

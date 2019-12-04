@@ -1,4 +1,4 @@
-﻿namespace DavinciBotGUI
+﻿namespace DavinciBotView
 {
     partial class DavinciBotView
     {
@@ -104,7 +104,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1482, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1482, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -115,7 +115,7 @@
             this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadImageToolStripMenuItem
@@ -154,7 +154,7 @@
             // 
             this.helpToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // OurPictureBox
@@ -187,7 +187,7 @@
             // invertCheckBox
             // 
             this.invertCheckBox.BackColor = System.Drawing.SystemColors.Control;
-            this.invertCheckBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("invertCheckBox.BackgroundImage")));
+            this.invertCheckBox.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.invertCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.invertCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.invertCheckBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
@@ -204,7 +204,7 @@
             // startCameraButton
             // 
             this.startCameraButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.startCameraButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("startCameraButton.BackgroundImage")));
+            this.startCameraButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.startCameraButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.tableLayoutPanel3.SetColumnSpan(this.startCameraButton, 2);
             this.startCameraButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -221,7 +221,7 @@
             // takePictureButton
             // 
             this.takePictureButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.takePictureButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("takePictureButton.BackgroundImage")));
+            this.takePictureButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.takePictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.takePictureButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.takePictureButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -237,7 +237,7 @@
             // saveCameraImageButton
             // 
             this.saveCameraImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.saveCameraImageButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("saveCameraImageButton.BackgroundImage")));
+            this.saveCameraImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.saveCameraImageButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.saveCameraImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.saveCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -252,7 +252,7 @@
             // stopCameraButton
             // 
             this.stopCameraButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopCameraButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("stopCameraButton.BackgroundImage")));
+            this.stopCameraButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.stopCameraButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.tableLayoutPanel3.SetColumnSpan(this.stopCameraButton, 2);
             this.stopCameraButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -384,8 +384,7 @@
             // useCameraImageButton
             // 
             this.useCameraImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.useCameraImageButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("useCameraImageButton.BackgroundImage")));
-            this.useCameraImageButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.useCameraImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.tableLayoutPanel3.SetColumnSpan(this.useCameraImageButton, 2);
             this.useCameraImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.useCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -461,7 +460,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.uploadImageFromFileButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.uploadImageFromFileButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.uploadImageFromFileButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("uploadImageFromFileButton.BackgroundImage")));
+            this.uploadImageFromFileButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.uploadImageFromFileButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.uploadImageFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
             this.uploadImageFromFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -512,7 +511,7 @@
             // 
             this.startPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.startPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.startPrintingButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("startPrintingButton.BackgroundImage")));
+            this.startPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.startPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.startPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.startPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -530,7 +529,7 @@
             // 
             this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopPrintingButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("stopPrintingButton.BackgroundImage")));
+            this.stopPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.stopPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.stopPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -549,7 +548,7 @@
             this.generateGcodeButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.generateGcodeButton.AutoSize = true;
             this.generateGcodeButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.generateGcodeButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("generateGcodeButton.BackgroundImage")));
+            this.generateGcodeButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.generateGcodeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.printingButtonsPanel.SetColumnSpan(this.generateGcodeButton, 2);
             this.generateGcodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -590,7 +589,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadGCodeFromFileButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.LoadGCodeFromFileButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.LoadGCodeFromFileButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("LoadGCodeFromFileButton.BackgroundImage")));
+            this.LoadGCodeFromFileButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.LoadGCodeFromFileButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LoadGCodeFromFileButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
             this.LoadGCodeFromFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
