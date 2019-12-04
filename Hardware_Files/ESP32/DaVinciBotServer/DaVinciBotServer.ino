@@ -109,7 +109,7 @@ uint32_t TransmitData(uint32_t lastAddr)
     while(index < instructions.length())
     {
       while(!Serial2.available()) {}
-      Serial2.read();
+      Serial2.readString();
 
       currentInst = instructions.substring(index, instructions.indexOf('\n', index));
 

@@ -71,7 +71,23 @@ bool gcode_interpretation::interpret_gcode(String command)
           }
 
         case 'M':
+          String temp = command.substring(index, command.indexOf(' ', index));
 
+          if(temp == "M3" || temp == "M03" || temp == "M4" || temp == "M04")
+          {
+            drop_medium(command);
+            break;
+          }
+          else if(temp == "M5" || temp == "M05")
+          {
+            raise_medium(command);
+            break;
+          }
+          else
+          {
+            break;
+          }
+          
         default:
           break;
       }
@@ -297,6 +313,16 @@ bool gcode_interpretation::circ_interpolation_ccw(String command)
   while(stpm1.IsMotorMoving() || stpm2.IsMotorMoving()){delay(1);} // Wait till that stop
 
   return true;
+}
+
+void gcode_interpretation::drop_medium(String command)
+{
+  digitalWrite(13, LOW);
+}
+
+void gcode_interpretation::raise_medium(String command)
+{
+  digitalWrite(13, HIGH);
 }
 
 void gcode_interpretation::Home()

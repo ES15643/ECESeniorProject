@@ -19,6 +19,9 @@ int maxSPS = 1000;
 //Circle
 String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
 
+//Command from server
+String currentGCode = "";
+
 // volatile int triggered = LOW;
 
 // X Motor Step interrupt
@@ -62,6 +65,8 @@ void setup()
 
     pinMode(stmp2_directionpin, OUTPUT);
     pinMode(stmp2_steppin, OUTPUT);
+
+    pinMode(13, OUTPUT);
 
     Serial.begin(115200);
     Serial3.begin(115200);
@@ -146,6 +151,12 @@ void loop()
             }
         }
     }
+
+//    while(!Serial3.available()) {}
+
+//    currentGCode = Serial3.readString();
+//    gcinter.interpret_gcode(currentGCode);
+//    Serial3.print('Y');
 }
 
 void boundaryTriggeredX()
