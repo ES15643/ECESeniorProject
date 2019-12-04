@@ -12,7 +12,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DavinciBotView
+namespace DavinciBotGUI
 {
     public partial class DavinciBotView : Form
     {

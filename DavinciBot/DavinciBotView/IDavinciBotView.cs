@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DavinciBotGUI
 {
-    class CameraCapture
+    public interface IDavinciBotView
     {
 
     }
