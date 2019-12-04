@@ -65,13 +65,13 @@
             this.LoadGCodeFromFileButton = new System.Windows.Forms.Button();
             this.loadedGcodeTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.recentPicture0 = new System.Windows.Forms.PictureBox();
+            this.recentPicture1 = new System.Windows.Forms.PictureBox();
+            this.recentPicture2 = new System.Windows.Forms.PictureBox();
+            this.recentPicture4 = new System.Windows.Forms.PictureBox();
+            this.recentPicture3 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.recentPicture5 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -85,13 +85,13 @@
             this.printingButtonsPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture0)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture3)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture5)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -637,51 +637,51 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(604, 141);
             this.tableLayoutPanel1.TabIndex = 27;
             // 
-            // pictureBox1
+            // recentPicture0
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(14, 14);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Padding = new System.Windows.Forms.Padding(5);
-            this.pictureBox1.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 30;
-            this.pictureBox1.TabStop = false;
+            this.recentPicture0.Location = new System.Drawing.Point(14, 14);
+            this.recentPicture0.Name = "recentPicture0";
+            this.recentPicture0.Padding = new System.Windows.Forms.Padding(5);
+            this.recentPicture0.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture0.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture0.TabIndex = 30;
+            this.recentPicture0.TabStop = false;
             // 
-            // pictureBox2
+            // recentPicture1
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(220, 14);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 31;
-            this.pictureBox2.TabStop = false;
+            this.recentPicture1.Location = new System.Drawing.Point(220, 14);
+            this.recentPicture1.Name = "recentPicture1";
+            this.recentPicture1.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture1.TabIndex = 31;
+            this.recentPicture1.TabStop = false;
             // 
-            // pictureBox3
+            // recentPicture2
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(426, 14);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 32;
-            this.pictureBox3.TabStop = false;
+            this.recentPicture2.Location = new System.Drawing.Point(426, 14);
+            this.recentPicture2.Name = "recentPicture2";
+            this.recentPicture2.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture2.TabIndex = 32;
+            this.recentPicture2.TabStop = false;
             // 
-            // pictureBox4
+            // recentPicture4
             // 
-            this.pictureBox4.Location = new System.Drawing.Point(838, 14);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 33;
-            this.pictureBox4.TabStop = false;
+            this.recentPicture4.Location = new System.Drawing.Point(838, 14);
+            this.recentPicture4.Name = "recentPicture4";
+            this.recentPicture4.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture4.TabIndex = 33;
+            this.recentPicture4.TabStop = false;
             // 
-            // pictureBox5
+            // recentPicture3
             // 
-            this.pictureBox5.Location = new System.Drawing.Point(632, 14);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 34;
-            this.pictureBox5.TabStop = false;
+            this.recentPicture3.Location = new System.Drawing.Point(632, 14);
+            this.recentPicture3.Name = "recentPicture3";
+            this.recentPicture3.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture3.TabIndex = 34;
+            this.recentPicture3.TabStop = false;
             // 
             // tableLayoutPanel6
             // 
@@ -696,28 +696,28 @@
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox6, 5, 0);
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox1, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox4, 4, 0);
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox5, 3, 0);
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox2, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.pictureBox3, 2, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(122, 693);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture5, 5, 0);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture0, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture4, 4, 0);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture3, 3, 0);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture1, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.recentPicture2, 2, 0);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(126, 685);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(11);
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1258, 228);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1258, 178);
             this.tableLayoutPanel6.TabIndex = 35;
             // 
-            // pictureBox6
+            // recentPicture5
             // 
-            this.pictureBox6.Location = new System.Drawing.Point(1044, 14);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 36;
-            this.pictureBox6.TabStop = false;
+            this.recentPicture5.Location = new System.Drawing.Point(1044, 14);
+            this.recentPicture5.Name = "recentPicture5";
+            this.recentPicture5.Size = new System.Drawing.Size(200, 150);
+            this.recentPicture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.recentPicture5.TabIndex = 36;
+            this.recentPicture5.TabStop = false;
             // 
             // DavinciBotView
             // 
@@ -768,13 +768,13 @@
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture0)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture3)).EndInit();
             this.tableLayoutPanel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recentPicture5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -818,13 +818,13 @@
         private System.Windows.Forms.Button startPrintingButton;
         private System.Windows.Forms.Button stopPrintingButton;
         private System.Windows.Forms.Button generateGcodeButton;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.PictureBox recentPicture0;
+        private System.Windows.Forms.PictureBox recentPicture1;
+        private System.Windows.Forms.PictureBox recentPicture2;
+        private System.Windows.Forms.PictureBox recentPicture4;
+        private System.Windows.Forms.PictureBox recentPicture3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
-        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.PictureBox recentPicture5;
     }
 }
 
