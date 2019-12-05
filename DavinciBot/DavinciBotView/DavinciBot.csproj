@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CameraCapture.cs" />
+    <Compile Include="DaVinciBotClient.cs" />
     <Compile Include="DavinciBotFunctionality.cs" />
     <Compile Include="DavinciBotView.cs">
       <SubType>Form</SubType>

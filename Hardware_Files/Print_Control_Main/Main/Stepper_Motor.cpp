@@ -61,7 +61,6 @@ void Stepper_Motor::MoveMotor(unsigned long steps, uint8_t dir)
 
     TotalSteps = steps;
     MovingDone = false;
-    Enable_Timer
 }
 
 void Stepper_Motor::Step() 
@@ -69,13 +68,13 @@ void Stepper_Motor::Step()
     if(XPlane)
     {
         X_Step_High
-        delayMicroseconds(100);
+        delayMicroseconds(50);
         X_Step_Low
     }
     else
     {
         Y_Step_High
-        delayMicroseconds(100);
+        delayMicroseconds(50);
         Y_Step_Low
     }
 
@@ -83,11 +82,11 @@ void Stepper_Motor::Step()
 
     if (Direction == 0)
     {
-        CurPos--;
+        CurPos -= 0.00125;
     }
     else
     {
-        CurPos++;
+        CurPos += 0.00125;
     }
 }
 
@@ -101,6 +100,7 @@ void Stepper_Motor::ResetMotor()
     StepCount = 0;
     TotalSteps = 0;
     AccelCurveIndex = 0;
+    MinDelay = min_delay_default;
 }
 
 void Stepper_Motor::Home()
