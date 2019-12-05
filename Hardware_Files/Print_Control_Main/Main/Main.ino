@@ -35,8 +35,8 @@ void nextInterval()
     nextStepper = 0;
     for(int i = 0; i < NumOFMotors; i++)
     {
-         unsigned long temp = stpms[i].GetTruncDelay();
-          if ( ((1 << i) & stepperFlags) && temp == delay )
+        unsigned long temp = stpms[i].GetTruncDelay();
+        if ( ((1 << i) & stepperFlags) && temp == delay )
         {
             nextStepper |= (1 << i);
         }

@@ -5,6 +5,8 @@
 
 class Stepper_Motor
 {
+    #define min_delay_default 20
+    #define accel_default 1000
     public:
     Stepper_Motor(){}
     Stepper_Motor(int stepsPerRevolution, uint8_t directionPin, uint8_t stepPin, bool x_plane = true); 
@@ -17,6 +19,7 @@ class Stepper_Motor
     bool MotorIsMoving(){ return MovingDone; }
     uint8_t GetDir(){ return Direction; }
     long GetCurPos(){ return CurPos; }
+    float GetAccel(){ return Accel; }
     float GetCurrentDelay(){ return CurrentDelay; }
     unsigned long GetTotalSteps(){ return TotalSteps; }
     unsigned int GetStepsToMax(){ return StepsToMax; }
@@ -24,17 +27,19 @@ class Stepper_Motor
     unsigned int GetAccelIndex(){ return AccelCurveIndex; }
     unsigned long GetStepCount(){ return StepCount; }
     unsigned int GetMinDelay(){ return MinDelay; }
-    unsigned long GetTruncDelay(){ return TruncateDelay; }
+    unsigned int GetTruncDelay(){ return TruncateDelay; }
 
     // Sets
     void SetDir(uint8_t dir);
     void SetMotorDone(){ MovingDone = true; }
-    void SetCurPos(long pos){ CurPos = pos; }
+    void SetCurPos(float pos){ CurPos = pos; }
     void SetCurrentDelay(float delay) { CurrentDelay = delay; }
     void SetTruncDelay(unsigned long delay) { TruncateDelay = delay; }
     void SetAccelIndex(unsigned int i){ AccelCurveIndex = i; }
     void SetMinDelay(unsigned int delay){ MinDelay = delay; }
+    void SetMinDelayToDefault(){ MinDelay = 20; }
     void SetAccel(float accel){ Accel = accel; }
+    void SetAccelToDefault(){ Accel = 1000; }
     void IncrementAccelIndex(){ AccelCurveIndex++; }
     void DecrementAccelIndex(){ AccelCurveIndex--; }
     void SetStepsToMax(unsigned int count){ StepsToMax = count; } 
@@ -47,14 +52,14 @@ class Stepper_Motor
     volatile uint8_t Direction;
     volatile float Accel = 1000;
     volatile float CurrentDelay; // d
-    volatile long CurPos;
+    volatile float CurPos;
     volatile unsigned long TotalSteps;
     volatile unsigned int StepsToMax; // rampUpCount
     volatile unsigned int StartingDelay; // c0
     volatile unsigned int AccelCurveIndex;
     volatile unsigned int SPR; // Steps Per Rev
-    volatile unsigned int MinDelay = 50; // Max Speed
+    volatile unsigned int MinDelay = 20; // Max Speed
     volatile unsigned long StepCount; // Current Step
-    volatile unsigned long TruncateDelay; // d1
+    volatile unsigned int TruncateDelay; // d1
 
 };
