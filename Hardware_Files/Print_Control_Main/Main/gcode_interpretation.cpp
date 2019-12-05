@@ -31,13 +31,14 @@ bool gcode_interpretation::interpret_gcode(String command)
 {
   int index = 0;
   command = command + " ";
+  String temp = "";
 
   while(index < command.length())
     {
       switch(command[index])
       {
         case 'G':
-          String temp = command.substring(index, command.indexOf(' ', index));
+          temp = command.substring(index, command.indexOf(' ', index));
 
           if (temp == "G00" || temp == "G0") //Rapid positioning
           {
@@ -70,7 +71,7 @@ bool gcode_interpretation::interpret_gcode(String command)
           }
 
         case 'M':
-          String temp = command.substring(index, command.indexOf(' ', index));
+          temp = command.substring(index, command.indexOf(' ', index));
 
           if(temp == "M3" || temp == "M03" || temp == "M4" || temp == "M04")
           {
