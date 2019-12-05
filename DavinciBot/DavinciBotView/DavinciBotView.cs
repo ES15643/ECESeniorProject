@@ -703,9 +703,10 @@ namespace DavinciBotView
                 string oldDir = Environment.CurrentDirectory;
                 Environment.CurrentDirectory = MASTER_DIRECTORY;
 
-                var bmp = AutoScaleImage(loadedImagePath);
+                Bitmap bmp = AutoScaleImage(loadedImagePath);
                 bmp.Save(FINAL_SCALED_IMAGE);
                 OurPictureBox.Image = (Bitmap)bmp.Clone();
+                bmp.Dispose();
                 AddToRecentPictures();
 
                 Environment.CurrentDirectory = oldDir;
@@ -760,6 +761,7 @@ namespace DavinciBotView
                 resized = new Bitmap(original, new Size(scaledWidth, scaledHeight));
                 resized.Save("resizedImage.bmp");
                 fs.Dispose();
+                original.Dispose();
             }
             //Bitmap original = (Bitmap)Image.FromFile("DSC_0002.jpg");
             return resized;
@@ -824,8 +826,8 @@ namespace DavinciBotView
         {
             using (var fs = new FileStream(FIRST_SCALED_IMAGE, FileMode.Open))
             {
-                var bmp = new Bitmap(fs);
-                var item = (Bitmap)bmp.Clone();
+                Bitmap bmp = new Bitmap(fs);
+                Bitmap item = (Bitmap)bmp.Clone();
                 recentPictures.AddFirst(new RecentPictureObject(bmp, FIRST_SCALED_IMAGE));
             }
 
@@ -881,6 +883,7 @@ namespace DavinciBotView
         private void HandleThumbnailClicked(int t)
         {
             RecentPictureObject pic = recentPictures.ElementAt<RecentPictureObject>(t);
+            recentPictures.Remove(recentPictures.ElementAt<RecentPictureObject>(t));
             
             string oldDir = Environment.CurrentDirectory;
             
@@ -896,6 +899,15 @@ namespace DavinciBotView
             Environment.CurrentDirectory = oldDir;
             HandleThresholdValueChange("");
             FindContour(DEFAULT_THRESHOLD_VALUE);
+        }
+        /// <summary>
+        /// NATE
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void stopPrintingButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

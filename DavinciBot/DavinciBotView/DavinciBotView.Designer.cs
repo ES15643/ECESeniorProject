@@ -543,6 +543,7 @@
             this.stopPrintingButton.Tag = "StopButton";
             this.stopPrintingButton.Text = "Stop Printing";
             this.stopPrintingButton.UseVisualStyleBackColor = false;
+            this.stopPrintingButton.Click += new System.EventHandler(this.stopPrintingButton_Click);
             // 
             // generateGcodeButton
             // 
