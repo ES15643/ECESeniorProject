@@ -72,6 +72,7 @@
             this.recentPicture3 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.recentPicture5 = new System.Windows.Forms.PictureBox();
+            this.pausePrintingButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -492,19 +493,20 @@
             // 
             this.printingButtonsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.printingButtonsPanel.BackColor = System.Drawing.Color.Transparent;
-            this.printingButtonsPanel.ColumnCount = 2;
+            this.printingButtonsPanel.ColumnCount = 3;
             this.tableLayoutPanel1.SetColumnSpan(this.printingButtonsPanel, 2);
-            this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.printingButtonsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.printingButtonsPanel.Controls.Add(this.startPrintingButton, 0, 1);
-            this.printingButtonsPanel.Controls.Add(this.stopPrintingButton, 1, 1);
             this.printingButtonsPanel.Controls.Add(this.generateGcodeButton, 0, 0);
+            this.printingButtonsPanel.Controls.Add(this.stopPrintingButton, 2, 1);
+            this.printingButtonsPanel.Controls.Add(this.pausePrintingButton, 1, 1);
             this.printingButtonsPanel.Location = new System.Drawing.Point(3, 55);
             this.printingButtonsPanel.Name = "printingButtonsPanel";
             this.printingButtonsPanel.RowCount = 1;
-            this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.printingButtonsPanel.Size = new System.Drawing.Size(598, 83);
             this.printingButtonsPanel.TabIndex = 25;
             // 
@@ -520,7 +522,7 @@
             this.startPrintingButton.Location = new System.Drawing.Point(3, 43);
             this.startPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.startPrintingButton.Name = "startPrintingButton";
-            this.startPrintingButton.Size = new System.Drawing.Size(293, 38);
+            this.startPrintingButton.Size = new System.Drawing.Size(196, 38);
             this.startPrintingButton.TabIndex = 6;
             this.startPrintingButton.Text = "Start Printing";
             this.startPrintingButton.UseVisualStyleBackColor = false;
@@ -535,10 +537,10 @@
             this.stopPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopPrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopPrintingButton.Location = new System.Drawing.Point(302, 43);
+            this.stopPrintingButton.Location = new System.Drawing.Point(420, 43);
             this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.stopPrintingButton.Name = "stopPrintingButton";
-            this.stopPrintingButton.Size = new System.Drawing.Size(293, 38);
+            this.stopPrintingButton.Size = new System.Drawing.Size(171, 38);
             this.stopPrintingButton.TabIndex = 3;
             this.stopPrintingButton.Tag = "StopButton";
             this.stopPrintingButton.Text = "Stop Printing";
@@ -552,14 +554,14 @@
             this.generateGcodeButton.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.generateGcodeButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
             this.generateGcodeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.printingButtonsPanel.SetColumnSpan(this.generateGcodeButton, 2);
+            this.printingButtonsPanel.SetColumnSpan(this.generateGcodeButton, 3);
             this.generateGcodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.generateGcodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.generateGcodeButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.generateGcodeButton.Location = new System.Drawing.Point(8, 2);
+            this.generateGcodeButton.Location = new System.Drawing.Point(13, 2);
             this.generateGcodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.generateGcodeButton.Name = "generateGcodeButton";
-            this.generateGcodeButton.Size = new System.Drawing.Size(581, 37);
+            this.generateGcodeButton.Size = new System.Drawing.Size(572, 37);
             this.generateGcodeButton.TabIndex = 4;
             this.generateGcodeButton.Tag = "EditingOptionsButton";
             this.generateGcodeButton.Text = "Generate G-Code";
@@ -733,6 +735,25 @@
             this.recentPicture5.TabStop = false;
             this.recentPicture5.Click += new System.EventHandler(this.recentPicture5_Click);
             // 
+            // pausePrintingButton
+            // 
+            this.pausePrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pausePrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pausePrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.pausePrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pausePrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.pausePrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pausePrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.pausePrintingButton.Location = new System.Drawing.Point(205, 43);
+            this.pausePrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pausePrintingButton.Name = "pausePrintingButton";
+            this.pausePrintingButton.Size = new System.Drawing.Size(206, 38);
+            this.pausePrintingButton.TabIndex = 36;
+            this.pausePrintingButton.Tag = "StopButton";
+            this.pausePrintingButton.Text = "Pause Printing";
+            this.pausePrintingButton.UseVisualStyleBackColor = false;
+            this.pausePrintingButton.Click += new System.EventHandler(this.pausePrintingButton_Click);
+            // 
             // DavinciBotView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -839,6 +860,7 @@
         private System.Windows.Forms.PictureBox recentPicture3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.PictureBox recentPicture5;
+        private System.Windows.Forms.Button pausePrintingButton;
     }
 }
 

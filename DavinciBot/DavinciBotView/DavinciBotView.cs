@@ -35,6 +35,8 @@ namespace DavinciBotView
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
+        private int CAMERA_DEVICE_NUMBER = 5;
+        private bool paused = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -51,7 +53,7 @@ namespace DavinciBotView
         {
             //videoSource = new VideoCaptureDevice();
             Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            frame = new VideoCaptureDevice(Devices[1].MonikerString);
+            frame = new VideoCaptureDevice(Devices[CAMERA_DEVICE_NUMBER].MonikerString);
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
@@ -92,6 +94,8 @@ namespace DavinciBotView
             generateGcodeButton.Enabled = m;
             startPrintingButton.Enabled = m;
             stopPrintingButton.Enabled = m;
+            pausePrintingButton.Enabled = m;
+            paused = false;
         }
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
@@ -379,7 +383,7 @@ namespace DavinciBotView
             }
             catch (Exception) //need e?
             {
-                throw;
+                //throw;
             }
         }
 
@@ -908,6 +912,16 @@ namespace DavinciBotView
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// Toggles between pause/unpause
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pausePrintingButton_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
