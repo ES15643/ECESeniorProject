@@ -3,8 +3,12 @@ using AForge.Video.DirectShow;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 
 namespace DavinciBotView
@@ -13,12 +17,17 @@ namespace DavinciBotView
     {
         public string loadedImagePath;
         public string loadedImageName;
+        public string gCodeFilePath;
+        private bool pictureTakenWithCamera = false;
         private bool imageLoaded = false;
         private bool invertedContour = false;
-        private bool thresholdErrorReported = false;
         private static bool startedCamera = false;
         private static FilterInfoCollection Devices;
         private static VideoCaptureDevice frame;
+        private const string masterGcodeFile = "commands.gco";
+        private const int defaultThresholdValue = 100;
+        private const string masterDirectory = "../../../../Image_Processor_Files";
+
 
         //Customize form objects in here
         public DavinciBotView()
@@ -39,7 +48,7 @@ namespace DavinciBotView
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
-
+            this.ActiveControl = uploadImageFromFileButton;
         }
 
         /// <summary>
@@ -61,7 +70,6 @@ namespace DavinciBotView
             saveCameraImageButton.Enabled = m;
             useCameraImageButton.Enabled = m;
         }
-
         private void EnableGcodeControls(bool m)
         {
             generateGcodeButton.Enabled = m;
@@ -71,39 +79,12 @@ namespace DavinciBotView
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
         {
-            var fileContent = string.Empty;
-            var filePath = string.Empty;
-            OpenFileDialog openFile = new OpenFileDialog();
-
-            //TODO: Enter the most recently accessed directory instead of c:\\ 
-            // openFile.InitialDirectory = "c:\\";
-            openFile.InitialDirectory = "C:\\Documents and Settings\\USER\\Recent";
-            openFile.Filter = "Image files (*.jpg; *.jpeg; *.png; *.bmp)|*.jpg; *.jpeg; *.png; *.bmp ";
-            openFile.FilterIndex = 2;
-            openFile.RestoreDirectory = true;
-
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                //Get the path of specified file
-                filePath = openFile.FileName;
-                loadedImagePath = filePath;
-                var splitFilePath = filePath.Split('\\');
-                loadedImageName = splitFilePath[splitFilePath.Length - 1];
-                using (var fs = new System.IO.FileStream(loadedImagePath, System.IO.FileMode.Open))
-                {
-                    var bmp = new Bitmap(fs);
-                    OurPictureBox.Image = (Bitmap)bmp.Clone();
-                }
-                FindContour();
-            }
-            imageLoaded = true;
-            EnableImageControls(true);
-            // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+            HandleUploadedImage(sender, e);
         }
 
         private void ImageToBeDrawnBox_Click(object sender, EventArgs e)
         {
-            LoadFromFileToolbarButton_Click(sender, e);
+            HandleUploadedImage(sender, e);
         }
 
         /// <summary>
@@ -113,8 +94,28 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void LoadGCodeFromFileButton_Click(object sender, EventArgs e)
         {
-            //WRONG. FIX THIS.
-            //LoadFromFileToolbarButton_Click(sender, e);
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            OpenFileDialog openFile = new OpenFileDialog();
+
+            //TODO: Enter the most recently accessed directory instead of c:\\ 
+            // openFile.InitialDirectory = "c:\\";
+            openFile.InitialDirectory = "C:\\Documents and Settings\\USER\\Recent";
+            openFile.Filter = "G-Code Files (*.gco)|*.gco";
+            openFile.FilterIndex = 2;
+            openFile.RestoreDirectory = true;
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                filePath = openFile.FileName;
+                gCodeFilePath = filePath;
+                CopyFile(gCodeFilePath, masterGcodeFile);
+                EnableGcodeControls(true);
+                generateGcodeButton.Enabled = false;
+                loadedGcodeTextBox.Text = gCodeFilePath;
+            }
+            // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
         /// <summary>
@@ -149,16 +150,16 @@ namespace DavinciBotView
             else
             {
                 string oldDir = Environment.CurrentDirectory;
-                RunPythonScript("gcode");
+                RunPythonScript("gcode", 0);
                 Environment.CurrentDirectory = oldDir;
 
                 if (dialogue == DialogResult.Yes)
                 {
                     SaveFileDialog saveConvertedImage = new SaveFileDialog();
-                    saveConvertedImage.Filter = "G-Code File (*.gco)|*.gco";
+                    saveConvertedImage.Filter = "G-Code Files (*.gco)|*.gco";
                     if (saveConvertedImage.ShowDialog() == DialogResult.OK)
                     {
-                        copyFile("commands.gco", saveConvertedImage.FileName);
+                        CopyFile(masterGcodeFile, saveConvertedImage.FileName);
                     }
                 }
             }
@@ -168,11 +169,11 @@ namespace DavinciBotView
         /// Mode is either "gcode" or "contour"
         /// </summary>
         /// <param name="mode"></param>
-        private void RunPythonScript(string mode)
+        private void RunPythonScript(string mode, int threshold)
         {
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
-                Environment.CurrentDirectory = "../../../../Image_Processor_Files";
+                Environment.CurrentDirectory = masterDirectory;
                 string pScript = BuildPythonScript(mode);
 
                 runspace.Open();
@@ -256,10 +257,10 @@ namespace DavinciBotView
         /// Calls python script to find contours in an image and update the image preview
         /// Referenced from: https://blogs.msdn.microsoft.com/kebab/2014/04/28/executing-powershell-scripts-from-c/
         /// </summary>
-        private void FindContour()
+        private void FindContour(int threshold)
         {
             string oldDir = Environment.CurrentDirectory;
-            RunPythonScript("contour");
+            RunPythonScript("contour", threshold);
 
             using (var fs = new System.IO.FileStream("preview_contour.jpg", System.IO.FileMode.Open))
             {
@@ -285,7 +286,7 @@ namespace DavinciBotView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        private void TrackBar1_MouseUp(object sender, MouseEventArgs e)
         {
             HandleThresholdValueChange(sender, e, "trackbar");
 
@@ -296,34 +297,21 @@ namespace DavinciBotView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void invertCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void InvertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void thresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void StartCameraButton_Click(object sender, EventArgs e)
         {
-            if (e.KeyChar == Convert.ToChar(Keys.Enter))
-            {
-                e.Handled = true;
-                e.KeyChar = (char)46;
-                int val = (int)thresholdNumberBox.Value;
-                FindContour();
-                trackBar1.Value = val;
-                this.ActiveControl = null;
-            }
-        }
-
-        private void startCameraButton_Click(object sender, EventArgs e)
-        {
-            startCamera();
+            StartCamera();
         }
 
         /// <summary>
         /// Turn on camera to take pictures
         /// References: https://www.youtube.com/watch?v=A4Qcq9GOvGQ
         /// </summary>
-        private void startCamera()
+        private void StartCamera()
         {
             //STOP ALL PREVIOUS CAMERAS OR YOU GET A THREADING ISSUE
             frame.NewFrame += new AForge.Video.NewFrameEventHandler(FrameEvent);
@@ -335,7 +323,7 @@ namespace DavinciBotView
             startCameraButton.Enabled = false;
         }
 
-        private void stopCamera()
+        private void StopCamera()
         {
             frame.SignalToStop();
             frame.NewFrame -= new NewFrameEventHandler(FrameEvent);
@@ -344,8 +332,12 @@ namespace DavinciBotView
             {
                 frame.Stop();
             }
-            cameraBox.Image = null;
+
+            //Ask if user wants to save camera image
+
             EnableCameraControls(false);
+
+
         }
 
         private void FrameEvent(object sender, NewFrameEventArgs e)
@@ -354,7 +346,7 @@ namespace DavinciBotView
             {
                 Image temp = (Image)e.Frame.Clone();
                 temp.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                cameraBox.Image = temp;
+                OurPictureBox.Image = temp;
 
             }
             catch (Exception) //need e?
@@ -363,7 +355,7 @@ namespace DavinciBotView
             }
         }
 
-        private void takePictureButton_Click(object sender, EventArgs e)
+        private void TakePictureButton_Click(object sender, EventArgs e)
         {
             frame.SignalToStop();
             frame.NewFrame -= new NewFrameEventHandler(FrameEvent);
@@ -376,16 +368,19 @@ namespace DavinciBotView
             useCameraImageButton.Enabled = true;
             takePictureButton.Enabled = false;
             startCameraButton.Enabled = true;
+            Image temp = (Image)OurPictureBox.Image.Clone();
             //Puts it in the main box. Save this for later.
-            //OurPictureBox.Image = (Image)cameraBox.Image.Clone();
+            OurPictureBox.Image = temp;
+            pictureTakenWithCamera = true;
             //make sure to update loadedImagePath to this temp file
+            //uploadImageFromFileTextbox 
             //SaveFileDialog saveCameraImage = new SaveFileDialog
 
         }
 
-        private void stopCameraButton_Click(object sender, EventArgs e)
+        private void StopCameraButton_Click(object sender, EventArgs e)
         {
-            stopCamera();
+            StopCamera();
         }
 
         /// <summary>
@@ -393,7 +388,7 @@ namespace DavinciBotView
         /// </summary>
         /// <param name="fromFile"></param>
         /// <param name="toFile"></param>
-        private void copyFile(string fromFile, string toFile)
+        private void CopyFile(string fromFile, string toFile)
         {
             string line;
             using (System.IO.StreamWriter output = new System.IO.StreamWriter(toFile, true))
@@ -403,12 +398,29 @@ namespace DavinciBotView
                 {
                     output.WriteLine(line);
                 }
-
                 file.Close();
             }
         }
 
-        private void thresholdNumberBox_ValueChanged(object sender, EventArgs e)
+        /// <summary>
+        /// When a user enters a threshold value manually and clicks enter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ThresholdNumberBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(Keys.Enter))
+            {
+                e.Handled = true;
+                e.KeyChar = (char)46;
+                int val = (int)thresholdNumberBox.Value;
+                FindContour(val);
+                trackBar1.Value = val;
+                this.ActiveControl = null;
+            }
+        }
+
+        private void ThresholdNumberBox_ValueChanged(object sender, EventArgs e)
         {
             HandleThresholdValueChange(sender, e, "box");
         }
@@ -417,47 +429,10 @@ namespace DavinciBotView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void TrackBar1_ValueChanged(object sender, EventArgs e)
         {
-            
-        }
 
-        /// <summary>
-        ///Closes camera resources before exiting
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DavinciBotView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (frame != null)
-            {
-                stopCamera();
-            }
-            Application.Exit();
         }
-
-        /// <summary>
-        /// General error handling for operations that require prerequisites
-        /// </summary>
-        private void ReportImageOperationError()
-        {
-            DialogResult dialogue = MessageBox.Show("You must select an image first.", "Error",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-        }
-
-        private void invertCheckBox_Click(object sender, EventArgs e)
-        {
-            if (imageLoaded)
-            {
-                invertedContour = !invertedContour;
-                FindContour();
-            }
-            else
-            {
-                invertCheckBox.Checked = false;
-            }
-        }
-
         /// <summary>
         /// Error handling for threshold changes.
         /// mode param can either be "trackbar" or "box", whichever event was triggered
@@ -467,7 +442,7 @@ namespace DavinciBotView
         /// <param name="mode"></param>
         private void HandleThresholdValueChange(object sender, EventArgs e, string mode)
         {
-            if(!imageLoaded)
+            if (!imageLoaded)
             {
                 EnableImageControls(false);
             }
@@ -486,26 +461,185 @@ namespace DavinciBotView
                             break;
                         }
                     default:
-                        break;
+                        {
+                            trackBar1.Value = defaultThresholdValue;
+                            thresholdNumberBox.Value = defaultThresholdValue;
+                            break;
+                        }
                 }
-                FindContour();
-            }    
+                FindContour(trackBar1.Value);
+            }
         }
 
-        private void thresholdControlPanel_Click(object sender, EventArgs e)
+        /// <summary>
+        ///Closes camera resources before exiting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DavinciBotView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (frame != null)
+            {
+                StopCamera();
+            }
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// General error handling for operations that require prerequisites
+        /// </summary>
+        private void ReportImageOperationError()
+        {
+            DialogResult dialogue = MessageBox.Show("You must select an image first.", "Error",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+        }
+
+        private void InvertCheckBox_Click(object sender, EventArgs e)
+        {
+            if (imageLoaded)
+            {
+                invertedContour = !invertedContour;
+                FindContour(trackBar1.Value);
+            }
+            else
+            {
+                invertCheckBox.Checked = false;
+            }
+        }
+
+        private void ThresholdControlPanel_Click(object sender, EventArgs e)
         {
             if (!trackBar1.Enabled && !thresholdNumberBox.Enabled && !invertCheckBox.Enabled)
                 ReportImageOperationError();
         }
 
-        private void trackbar1Panel_Click(object sender, EventArgs e)
+        private void Trackbar1Panel_Click(object sender, EventArgs e)
         {
-            thresholdControlPanel_Click(sender, e);
+            ThresholdControlPanel_Click(sender, e);
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void TrackBar1_Scroll(object sender, EventArgs e)
         {
             HandleThresholdValueChange(sender, e, "trackbar");
+        }
+
+        private void UseCameraImageButton_Click(object sender, EventArgs e)
+        {
+            string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = masterDirectory;
+
+            loadedImagePath = "temp.jpg";
+            OurPictureBox.Image.Save(loadedImagePath);
+            Environment.CurrentDirectory = oldDir;
+
+            FindContour(defaultThresholdValue);
+            imageLoaded = true;
+            EnableImageControls(true);
+
+        }
+
+        //Need to remember to add cancel functionality to this
+        private void RunGcodeClient()
+        {
+            TcpClient client = new TcpClient();
+            Console.WriteLine("Connecting...");
+
+            client.Connect("192.168.4.1", 80);
+            //client.Connect(IPAddress.Loopback, 80);
+
+            Console.WriteLine("Connected");
+
+            string[] commands = File.ReadAllLines(@"..\..\commands.gco");
+
+            int numCommands = commands.Length;
+
+            NetworkStream stream = client.GetStream();
+
+            int count = 0;
+            int index = 0;
+
+            foreach (string line in commands)
+            {
+                byte[] command = Encoding.UTF8.GetBytes(line + "\n");
+
+                if (count == 0)
+                {
+                    byte[] request = new byte[5];
+
+                    while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
+
+                    string result = Encoding.UTF8.GetString(request);
+
+                    if (BitConverter.IsLittleEndian)
+                        Array.Reverse(request);
+
+                    count = Convert.ToInt32(result);
+                }
+
+                stream.Write(command, 0, command.Length);
+
+                count -= command.Length;
+                index++;
+
+                Console.WriteLine((double)index / (double)numCommands);
+            }
+
+            string endMessage = "Transmission Complete\n";
+
+            stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
+            stream.Read(new byte[1], 0, 1);
+
+            stream.Close();
+            client.Close();
+
+            return;
+        }
+
+        private void UploadImageFromFileButton_Click(object sender, EventArgs e)
+        {
+            HandleUploadedImage(sender, e);
+        }
+
+        private void AskToSaveCameraImage()
+        {
+
+        }
+
+        private void HandleUploadedImage(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            OpenFileDialog openFile = new OpenFileDialog();
+
+            //TODO: Enter the most recently accessed directory instead of c:\\ 
+            // openFile.InitialDirectory = "c:\\";
+            openFile.InitialDirectory = "C:\\Documents and Settings\\USER\\Recent";
+            openFile.Filter = "Image files (*.jpg; *.jpeg; *.png; *.bmp)|*.jpg; *.jpeg; *.png; *.bmp ";
+            openFile.FilterIndex = 2;
+            openFile.RestoreDirectory = true;
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                filePath = openFile.FileName;
+                loadedImagePath = filePath;
+                uploadImageFromFileTextbox.Text = loadedImagePath;
+                using (var fs = new System.IO.FileStream(loadedImagePath, System.IO.FileMode.Open))
+                {
+                    var bmp = new Bitmap(fs);
+                    OurPictureBox.Image = (Bitmap)bmp.Clone();
+                }
+                HandleThresholdValueChange(sender, e, "");
+                FindContour(defaultThresholdValue);
+            }
+            imageLoaded = true;
+            EnableImageControls(true);
+            // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+        }
+
+        private void startPrintingButton_Click(object sender, EventArgs e)
+        {
+            RunGcodeClient();
         }
     }
 }

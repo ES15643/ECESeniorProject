@@ -14,6 +14,11 @@ String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y
 //Circle
 //String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
 
+//Command from server
+String currentGCode = "";
+
+// volatile int triggered = LOW;
+
 void nextInterval()
 {
     unsigned int delay = 65500;
@@ -214,6 +219,12 @@ void loop()
             }
         }
     }
+
+//    while(!Serial3.available()) {}
+
+//    currentGCode = Serial3.readString();
+//    gcinter.interpret_gcode(currentGCode);
+//    Serial3.print('Y');
 }
 
 void boundaryTriggeredX()
@@ -255,4 +266,3 @@ void boundaryTriggeredY()
         }
     }
 }
-
