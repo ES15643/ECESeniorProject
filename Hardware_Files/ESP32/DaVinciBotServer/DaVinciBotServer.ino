@@ -8,13 +8,17 @@
 const char* ssid = "DaVinciBot";
 const char* password = "Ricktruvian";
 
+bool paused;
+
 uint32_t TransmitData(uint32_t lastAddr);
 
 WiFiServer server(80);
-const int EEPROM_SIZE = 10000;
+const int EEPROM_SIZE = EEPROM.length();
 
 void setup()
 {
+  paused = false;
+  
 	Serial.begin(115200);
   Serial2.begin(115200); 
 	Serial.println("\nTesting EEPROM Library\n");
@@ -52,10 +56,9 @@ void loop()
     client.print(EEPROM_SIZE);
 		while (client.connected())
 		{
-			if (client.available())
+			if (client.available() || !pause)
 			{
 				char c = client.read();
-//				Serial.print(c);
 				if (c == '\n')
 				{
 					if (currentLine == "Transmission Complete")
@@ -63,7 +66,33 @@ void loop()
 						EEPROM.commit();
 						TransmitData(addr);
 						client.stop();
+            
+            for(int index = 0; index < EEPROM_SIZE; index++)
+            {
+              EEPROM.write(index, 0);
+            }
 					}
+          else if (currentLine == "Stop")
+          {
+            paused == true;
+            continue;
+          }
+          else if (currentLine == "Resume")
+          {
+            paused == false;
+            continue;
+          }
+          else if (currentLine == "Kill")
+          {
+            Serial2.print("G28\r\n");
+
+            client.stop();
+            
+            for(int index = 0; index < EEPROM_SIZE; index++)
+            {
+              EEPROM.write(index, 0);
+            }
+          }
 					else
 					{
 						EEPROM.writeString(addr, currentLine + '\n');

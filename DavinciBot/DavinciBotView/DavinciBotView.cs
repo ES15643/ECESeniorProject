@@ -35,6 +35,7 @@ namespace DavinciBotView
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
+        private DaVinciBotClient client = new DaVinciBotClient();
 
         //Customize form objects in here
         public DavinciBotView()
@@ -589,63 +590,6 @@ namespace DavinciBotView
             StartCamera();
         }
 
-        //Need to remember to add cancel functionality to this
-        private void RunGcodeClient()
-        {
-            TcpClient client = new TcpClient();
-            Console.WriteLine("Connecting...");
-
-            client.Connect("192.168.4.1", 80);
-            //client.Connect(IPAddress.Loopback, 80);
-
-            Console.WriteLine("Connected");
-
-            string[] commands = File.ReadAllLines(@"..\..\commands.gco");
-
-            int numCommands = commands.Length;
-
-            NetworkStream stream = client.GetStream();
-
-            int count = 0;
-            int index = 0;
-
-            foreach (string line in commands)
-            {
-                byte[] command = Encoding.UTF8.GetBytes(line + "\n");
-
-                if (count == 0)
-                {
-                    byte[] request = new byte[5];
-
-                    while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
-
-                    string result = Encoding.UTF8.GetString(request);
-
-                    if (BitConverter.IsLittleEndian)
-                        Array.Reverse(request);
-
-                    count = Convert.ToInt32(result);
-                }
-
-                stream.Write(command, 0, command.Length);
-
-                count -= command.Length;
-                index++;
-
-                Console.WriteLine((double)index / (double)numCommands);
-            }
-
-            string endMessage = "Transmission Complete\n";
-
-            stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
-            stream.Read(new byte[1], 0, 1);
-
-            stream.Close();
-            client.Close();
-
-            return;
-        }
-
         private void UploadImageFromFileButton_Click(object sender, EventArgs e)
         {
             /*
@@ -723,7 +667,7 @@ namespace DavinciBotView
 
         private void StartPrintingButton_Click(object sender, EventArgs e)
         {
-            RunGcodeClient();
+            client.RunClient();
         }
 
         private void SaveCameraImageButton_Click(object sender, EventArgs e)
@@ -907,7 +851,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
-
+            client.StopJob();
         }
     }
 }
