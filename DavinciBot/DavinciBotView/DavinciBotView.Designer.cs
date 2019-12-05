@@ -59,8 +59,9 @@
             this.uploadImageFromFileTextbox = new System.Windows.Forms.TextBox();
             this.printingButtonsPanel = new System.Windows.Forms.TableLayoutPanel();
             this.startPrintingButton = new System.Windows.Forms.Button();
-            this.stopPrintingButton = new System.Windows.Forms.Button();
             this.generateGcodeButton = new System.Windows.Forms.Button();
+            this.stopPrintingButton = new System.Windows.Forms.Button();
+            this.pausePrintingButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.LoadGCodeFromFileButton = new System.Windows.Forms.Button();
             this.loadedGcodeTextBox = new System.Windows.Forms.TextBox();
@@ -72,7 +73,6 @@
             this.recentPicture3 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.recentPicture5 = new System.Windows.Forms.PictureBox();
-            this.pausePrintingButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OurPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
@@ -528,25 +528,6 @@
             this.startPrintingButton.UseVisualStyleBackColor = false;
             this.startPrintingButton.Click += new System.EventHandler(this.StartPrintingButton_Click);
             // 
-            // stopPrintingButton
-            // 
-            this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
-            this.stopPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.stopPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopPrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.stopPrintingButton.Location = new System.Drawing.Point(420, 43);
-            this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.stopPrintingButton.Name = "stopPrintingButton";
-            this.stopPrintingButton.Size = new System.Drawing.Size(171, 38);
-            this.stopPrintingButton.TabIndex = 3;
-            this.stopPrintingButton.Tag = "StopButton";
-            this.stopPrintingButton.Text = "Stop Printing";
-            this.stopPrintingButton.UseVisualStyleBackColor = false;
-            this.stopPrintingButton.Click += new System.EventHandler(this.stopPrintingButton_Click);
-            // 
             // generateGcodeButton
             // 
             this.generateGcodeButton.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -568,6 +549,44 @@
             this.generateGcodeButton.UseCompatibleTextRendering = true;
             this.generateGcodeButton.UseVisualStyleBackColor = false;
             this.generateGcodeButton.Click += new System.EventHandler(this.GenerateGcodeButton_Click);
+            // 
+            // stopPrintingButton
+            // 
+            this.stopPrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.stopPrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopPrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.stopPrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.stopPrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.stopPrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopPrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.stopPrintingButton.Location = new System.Drawing.Point(420, 43);
+            this.stopPrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.stopPrintingButton.Name = "stopPrintingButton";
+            this.stopPrintingButton.Size = new System.Drawing.Size(171, 38);
+            this.stopPrintingButton.TabIndex = 3;
+            this.stopPrintingButton.Tag = "StopButton";
+            this.stopPrintingButton.Text = "Stop Printing";
+            this.stopPrintingButton.UseVisualStyleBackColor = false;
+            this.stopPrintingButton.Click += new System.EventHandler(this.stopPrintingButton_Click);
+            // 
+            // pausePrintingButton
+            // 
+            this.pausePrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pausePrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pausePrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.pausePrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pausePrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.pausePrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pausePrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.pausePrintingButton.Location = new System.Drawing.Point(205, 43);
+            this.pausePrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pausePrintingButton.Name = "pausePrintingButton";
+            this.pausePrintingButton.Size = new System.Drawing.Size(206, 38);
+            this.pausePrintingButton.TabIndex = 36;
+            this.pausePrintingButton.Tag = "StopButton";
+            this.pausePrintingButton.Text = "Pause Printing";
+            this.pausePrintingButton.UseVisualStyleBackColor = false;
+            this.pausePrintingButton.Click += new System.EventHandler(this.pausePrintingButton_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -734,25 +753,6 @@
             this.recentPicture5.TabIndex = 36;
             this.recentPicture5.TabStop = false;
             this.recentPicture5.Click += new System.EventHandler(this.recentPicture5_Click);
-            // 
-            // pausePrintingButton
-            // 
-            this.pausePrintingButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pausePrintingButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.pausePrintingButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
-            this.pausePrintingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pausePrintingButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.pausePrintingButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pausePrintingButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.pausePrintingButton.Location = new System.Drawing.Point(205, 43);
-            this.pausePrintingButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pausePrintingButton.Name = "pausePrintingButton";
-            this.pausePrintingButton.Size = new System.Drawing.Size(206, 38);
-            this.pausePrintingButton.TabIndex = 36;
-            this.pausePrintingButton.Tag = "StopButton";
-            this.pausePrintingButton.Text = "Pause Printing";
-            this.pausePrintingButton.UseVisualStyleBackColor = false;
-            this.pausePrintingButton.Click += new System.EventHandler(this.pausePrintingButton_Click);
             // 
             // DavinciBotView
             // 
