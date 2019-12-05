@@ -2,37 +2,40 @@
 void setup()
 {
     Serial.begin(115200);
-    pinMode(21, INPUT_PULLUP);
-    pinMode(3, INPUT_PULLUP);
-    pinMode(18, INPUT_PULLUP);
-    pinMode(19, INPUT_PULLUP);
+    // x plane switches
+    pinMode(40, INPUT_PULLUP);
+    pinMode(41, OUTPUT);
+    pinMode(46, INPUT_PULLUP);
+    pinMode(47, OUTPUT);
 
-    pinMode(22, OUTPUT);
-    pinMode(4, OUTPUT);
-    pinMode(17, OUTPUT);
-    pinMode(20, OUTPUT);
+    digitalWrite(41, LOW);
+    digitalWrite(47, LOW);
 
-    digitalWrite(22, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(17, LOW);
-    digitalWrite(20, LOW);
+    // Y plane switches
+    pinMode(38, INPUT_PULLUP);
+    pinMode(39, OUTPUT);
+    pinMode(44, INPUT_PULLUP);
+    pinMode(45, OUTPUT);
+
+    digitalWrite(39, LOW);
+    digitalWrite(45, LOW);
 }
 
 void loop()
 {
-    if(digitalRead(21) == 0)
+    if(digitalRead(40) == 0)
     {
         Serial.println("Switch 1");
     }
-    if(digitalRead(3) == 0)
+    if(digitalRead(46) == 0)
     {
         Serial.println("Switch 2");
     }
-    if(digitalRead(18) == 0)
+    if(digitalRead(38) == 0)
     {
         Serial.println("Switch 3");
     }
-    if(digitalRead(19) == 0)
+    if(digitalRead(44) == 0)
     {
         Serial.println("Switch 4");
     }

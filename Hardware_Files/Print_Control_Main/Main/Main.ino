@@ -1,104 +1,182 @@
-// #include "Stepper_Motor.h"
 #include "gcode_interpretation.h"
 
-Stepper_Motor stpm1;
-Stepper_Motor stpm2;
+// Globals for Printer
+gcode_interpretation gcinter = gcode_interpretation();
+Stepper_Motor* stpms = gcinter.GetMotors();
+volatile byte stepperFlags = 0;
+volatile byte nextStepper = 0;
+volatile bool x_home, y_home;
 
-gcode_interpretation gcinter;
-
-int stmp1_directionpin = 52;
-int stmp1_steppin = 53;
-
-int stmp2_directionpin = 50;
-int stmp2_steppin = 51;
-int maxSPS = 1000;
-
+// GCodes for Testing
 //Linear
-// String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
+String gcodesForTesting[5] = {"G00 X10.0 Y10.0", "G01 X12.0 Y12.0", "G01 X14.0 Y10.0", "G01 X12.0 Y8.0", "G01 X10.0 Y10.0"};
 
 //Circle
-String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
+//String gcodesForTesting[2] = {"G00 X10.0 Y10.0", "G02 X10.0 Y10.0 I2.0 J0.0"};
+
+//Command from server
+String currentGCode = "";
 
 // volatile int triggered = LOW;
 
-// X Motor Step interrupt
+void nextInterval()
+{
+    unsigned int delay = 65500;
+
+    for(int i = 0; i < NumOFMotors; i++)
+    {
+        unsigned long temp = stpms[i].GetTruncDelay();
+        if ( ((1 << i) & stepperFlags) && temp < delay )
+        {
+            delay = temp;
+        }
+    }
+
+    nextStepper = 0;
+    for(int i = 0; i < NumOFMotors; i++)
+    {
+         unsigned long temp = stpms[i].GetTruncDelay();
+          if ( ((1 << i) & stepperFlags) && temp == delay )
+        {
+            nextStepper |= (1 << i);
+        }
+    }
+
+    if (stepperFlags == 0)
+    {
+        OCR1A = 65500;
+    }
+    
+    OCR1A = delay;
+
+}
+
 ISR(TIMER1_COMPA_vect)
 {
-    if (stpm1.IsMotorMoving())
-    {
+    unsigned int temp_ORC1A = OCR1A;
 
-        stpm1.Step();
-    }
-}
+    OCR1A = 65500;
 
-// Y Motor Step interrupt
-ISR(TIMER4_COMPA_vect)
-{
-    if (stpm2.IsMotorMoving())
+    for (int i = 0; i < NumOFMotors; i++)
     {
-        stpm2.Step();
-    }
-}
+        if ( !((1 << i) & stepperFlags) )
+        {
+            continue;
+        }
 
-// Motor acceleration
-ISR(TIMER3_COMPA_vect)
-{
-    if (stpm1.IsMotorMoving())
-    {
-        stpm1.StepperAccelerationAdjuster();
+        if (! (nextStepper & (1 << i)) )
+        {
+            unsigned long temp_truc = stpms[i].GetTruncDelay();
+            stpms[i].SetTruncDelay(temp_truc - temp_ORC1A);
+            continue;
+        }
+
+        if (stpms[i].GetStepCount() < stpms[i].GetTotalSteps())
+        {
+            stpms[i].Step();
+
+            if(digitalRead(X_Left_Switch) == 0 || digitalRead(X_Right_Switch) == 0)
+            {
+                boundaryTriggeredX();
+            }
+
+            if (digitalRead(Y_Bot_Switch) == 0 || digitalRead(Y_Top_Switch) == 0)
+            {
+                boundaryTriggeredY();
+            }
+
+            if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps())
+            {
+                stpms[i].SetMotorDone();
+                stepperFlags &= ~(1 << i);
+            }
+        }
+
+        if (stpms[i].GetStepsToMax() == 0)
+        {
+            stpms[i].IncrementAccelIndex();
+            float temp = stpms[i].GetCurrentDelay();
+            temp = temp - (2 * temp) / (4 * stpms[i].GetAccelIndex() + 1);
+            stpms[i].SetCurrentDelay(temp);
+
+            if (temp <= stpms[i].GetMinDelay() )
+            {
+                stpms[i].SetCurrentDelay(stpms[i].GetMinDelay());
+                stpms[i].SetStepsToMax(stpms[i].GetStepCount());
+            }
+            if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps() / 2)
+            {
+                stpms[i].SetStepsToMax(stpms[i].GetStepCount());
+            }
+        }
+        else if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps() - stpms[i].GetStepsToMax())
+        {
+            float temp = stpms[i].GetCurrentDelay();
+            temp = (temp * (4 * stpms[i].GetAccelIndex() + 1) / (4 * stpms[i].GetAccelIndex() + 1 - 2));
+            stpms[i].SetCurrentDelay(temp);
+            stpms[i].DecrementAccelIndex();
+        }
+
+        stpms[i].SetTruncDelay(stpms[i].GetCurrentDelay());
     }
 
-    if (stpm2.IsMotorMoving())
-    {
-        stpm2.StepperAccelerationAdjuster();
-    }
+    nextInterval();
+
+    TCNT1 = 0;
 }
 
 void setup()
 {
+     Serial.begin(115200);
+
+    x_home = true;
+    y_home = true;
+
+    noInterrupts();// disable all interrupts
+
+    // Set up interupt for timer 1 (Stepping Timer)
+    TCCR1A = 0;
+    TCCR1B = 0;
+    TCNT1  = 0;
+    OCR1A = 1000;  // Compare match regsiter
+    TCCR1B |= (1 << WGM12);   // CTC mode
+    TCCR1B |= (1 << CS11) | (1 << CS10);    // 64 prescaler 
+
+    interrupts();   // enable all interrupts
+
     // Set pinmodes
-    pinMode(stmp1_directionpin, OUTPUT);
-    pinMode(stmp1_steppin, OUTPUT);
+    pinMode(stmp1_DirectionPin, OUTPUT);
+    pinMode(stmp1_StepPin, OUTPUT);
 
-    pinMode(stmp2_directionpin, OUTPUT);
-    pinMode(stmp2_steppin, OUTPUT);
-
-    Serial.begin(115200);
-    Serial3.begin(115200);
+    pinMode(stmp2_DirectionPin, OUTPUT);
+    pinMode(stmp2_StepPin, OUTPUT);
     
-    pinMode(21, INPUT_PULLUP);
-    pinMode(3, INPUT_PULLUP);
-    pinMode(18, INPUT_PULLUP);
-    pinMode(19, INPUT_PULLUP);
+    // x plane switches
+    pinMode(40, INPUT_PULLUP);
+    pinMode(41, OUTPUT);
+    pinMode(46, INPUT_PULLUP);
+    pinMode(47, OUTPUT);
+    
+    digitalWrite(41, LOW);
+    digitalWrite(47, LOW);
 
-    pinMode(22, OUTPUT);
-    pinMode(4, OUTPUT);
-    pinMode(17, OUTPUT);
-    pinMode(20, OUTPUT);
+    // Y plane switches
+    pinMode(38, INPUT_PULLUP);
+    pinMode(39, OUTPUT);
+    pinMode(44, INPUT_PULLUP);
+    pinMode(45, OUTPUT);
 
-    digitalWrite(22, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(17, LOW);
-    digitalWrite(20, LOW);
+    digitalWrite(39, LOW);
+    digitalWrite(45, LOW);
 
     //Enable interrupt pins
     pinMode(48, OUTPUT);
     pinMode(49, OUTPUT);
 
-    stpm1 = Stepper_Motor(200, stmp1_directionpin, stmp1_steppin, maxSPS, true); // X motor
-    stpm2 = Stepper_Motor(200, stmp2_directionpin, stmp2_steppin, maxSPS, false); // y motor
-    // gcinter = gcode_interpretation(stpm1, stpm2); // GCode interpeter
-
-    // Set Interrupts
-    attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
-    attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
-    attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
-
-    WaitForInput();   
+    Home();   
 }
 
-void WaitForInput()
+void Home()
 {
     uint8_t bytesRead;
     bool run = true;
@@ -113,12 +191,7 @@ void WaitForInput()
             {
                 run = false;
                 gcinter.Home(); // Home Motors
-                
-                attachInterrupt(digitalPinToInterrupt(3), boundaryTriggeredX, LOW);
-                attachInterrupt(digitalPinToInterrupt(18), boundaryTriggeredY, LOW);
-                attachInterrupt(digitalPinToInterrupt(19), boundaryTriggeredX, LOW);
-                attachInterrupt(digitalPinToInterrupt(21), boundaryTriggeredY, LOW);
-                Serial.println("Motor Ready");
+                Serial.println("motor Ready");
                 Serial.println("Ready to Start y/n?");
             }
         }
@@ -140,49 +213,56 @@ void loop()
                 Serial.println("Using " + gcodesForTesting[i]);
                 gcinter.interpret_gcode(gcodesForTesting[i]);
                 Serial.print("X pos: ");
-                Serial.println(stpm1.GetCurrPos());
+                Serial.println(stpms[0].GetCurPos());
                 Serial.print("Y pos: ");
-                Serial.println(stpm2.GetCurrPos());
+                Serial.println(stpms[1].GetCurPos());
             }
         }
     }
+
+//    while(!Serial3.available()) {}
+
+//    currentGCode = Serial3.readString();
+//    gcinter.interpret_gcode(currentGCode);
+//    Serial3.print('Y');
 }
 
 void boundaryTriggeredX()
 {   
+    // Serial.println(x_home);
     if(!gcinter.GetHomingx())
     {
         digitalWrite(49, HIGH);
         digitalWrite(48, HIGH);
-        // stpm1.ResetMotor();
-        //send error to GUI
     }
     else if (gcinter.GetHomingx())
     {
-        stpm1.ResetMotor();
-        stpm1.SetCurrPos(0.0);
-        gcinter.SetHomingx(false);
-        detachInterrupt(digitalPinToInterrupt(3));
-        detachInterrupt(digitalPinToInterrupt(19));        
+        if(x_home)
+        {
+            // Serial.println("X here");
+            x_home = false;
+            stpms[0].ResetMotor();
+            stepperFlags &= ~(1 << 0); 
+        }
     }
 }
 
 void boundaryTriggeredY()
 {
-
+    // Serial.println(gcinter.GetHomingy());
     if(!gcinter.GetHomingy())
     {
         digitalWrite(48, HIGH);
         digitalWrite(49, HIGH);
-        // stpm2.ResetMotor();
-        //send error to GUI
     }
     else if (gcinter.GetHomingy())
     {
-        stpm2.ResetMotor();
-        stpm2.SetCurrPos(0.0);
-        gcinter.SetHomingy(false);
-        detachInterrupt(digitalPinToInterrupt(18));
-        detachInterrupt(digitalPinToInterrupt(21));
+        if(y_home)
+        {
+            // Serial.println("Y here");
+            y_home = false;
+            stpms[1].ResetMotor();
+            stepperFlags &= ~(1 << 1);
+        }
     }
 }
