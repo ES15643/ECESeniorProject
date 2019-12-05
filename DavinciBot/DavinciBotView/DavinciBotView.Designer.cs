@@ -51,7 +51,7 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.thresholdControlPanel = new System.Windows.Forms.TableLayoutPanel();
             this.trackbar1Panel = new System.Windows.Forms.Panel();
-            this.useCameraImageButton = new System.Windows.Forms.Button();
+            this.clearImageButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -248,6 +248,7 @@
             this.saveCameraImageButton.TabIndex = 14;
             this.saveCameraImageButton.Text = "Save Image";
             this.saveCameraImageButton.UseVisualStyleBackColor = false;
+            this.saveCameraImageButton.Click += new System.EventHandler(this.SaveCameraImageButton_Click);
             // 
             // stopCameraButton
             // 
@@ -381,21 +382,21 @@
             this.trackbar1Panel.TabIndex = 22;
             this.trackbar1Panel.Click += new System.EventHandler(this.Trackbar1Panel_Click);
             // 
-            // useCameraImageButton
+            // clearImageButton
             // 
-            this.useCameraImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.useCameraImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
-            this.tableLayoutPanel3.SetColumnSpan(this.useCameraImageButton, 2);
-            this.useCameraImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.useCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useCameraImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.useCameraImageButton.Location = new System.Drawing.Point(3, 159);
-            this.useCameraImageButton.Name = "useCameraImageButton";
-            this.useCameraImageButton.Size = new System.Drawing.Size(603, 40);
-            this.useCameraImageButton.TabIndex = 26;
-            this.useCameraImageButton.Text = "Use This Image";
-            this.useCameraImageButton.UseVisualStyleBackColor = false;
-            this.useCameraImageButton.Click += new System.EventHandler(this.UseCameraImageButton_Click);
+            this.clearImageButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.clearImageButton.BackgroundImage = global::DavinciBotView.Properties.Resources.actualDarkestbutton;
+            this.tableLayoutPanel3.SetColumnSpan(this.clearImageButton, 2);
+            this.clearImageButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.clearImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clearImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.clearImageButton.Location = new System.Drawing.Point(3, 159);
+            this.clearImageButton.Name = "clearImageButton";
+            this.clearImageButton.Size = new System.Drawing.Size(603, 40);
+            this.clearImageButton.TabIndex = 26;
+            this.clearImageButton.Text = "Clear Image";
+            this.clearImageButton.UseVisualStyleBackColor = false;
+            this.clearImageButton.Click += new System.EventHandler(this.ClearImageButton_Click);
             // 
             // tableLayoutPanel3
             // 
@@ -407,7 +408,7 @@
             this.tableLayoutPanel3.Controls.Add(this.stopCameraButton, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.startCameraButton, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel5, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.useCameraImageButton, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.clearImageButton, 0, 3);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(119, 457);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 4;
@@ -523,7 +524,7 @@
             this.startPrintingButton.TabIndex = 6;
             this.startPrintingButton.Text = "Start Printing";
             this.startPrintingButton.UseVisualStyleBackColor = false;
-            this.startPrintingButton.Click += new System.EventHandler(this.startPrintingButton_Click);
+            this.startPrintingButton.Click += new System.EventHandler(this.StartPrintingButton_Click);
             // 
             // stopPrintingButton
             // 
@@ -542,6 +543,7 @@
             this.stopPrintingButton.Tag = "StopButton";
             this.stopPrintingButton.Text = "Stop Printing";
             this.stopPrintingButton.UseVisualStyleBackColor = false;
+            this.stopPrintingButton.Click += new System.EventHandler(this.stopPrintingButton_Click);
             // 
             // generateGcodeButton
             // 
@@ -639,6 +641,7 @@
             // 
             // recentPicture0
             // 
+            this.recentPicture0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture0.Location = new System.Drawing.Point(14, 14);
             this.recentPicture0.Name = "recentPicture0";
             this.recentPicture0.Padding = new System.Windows.Forms.Padding(5);
@@ -646,42 +649,51 @@
             this.recentPicture0.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture0.TabIndex = 30;
             this.recentPicture0.TabStop = false;
+            this.recentPicture0.Click += new System.EventHandler(this.recentPicture0_Click);
             // 
             // recentPicture1
             // 
+            this.recentPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture1.Location = new System.Drawing.Point(220, 14);
             this.recentPicture1.Name = "recentPicture1";
             this.recentPicture1.Size = new System.Drawing.Size(200, 150);
             this.recentPicture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture1.TabIndex = 31;
             this.recentPicture1.TabStop = false;
+            this.recentPicture1.Click += new System.EventHandler(this.recentPicture1_Click);
             // 
             // recentPicture2
             // 
+            this.recentPicture2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture2.Location = new System.Drawing.Point(426, 14);
             this.recentPicture2.Name = "recentPicture2";
             this.recentPicture2.Size = new System.Drawing.Size(200, 150);
             this.recentPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture2.TabIndex = 32;
             this.recentPicture2.TabStop = false;
+            this.recentPicture2.Click += new System.EventHandler(this.recentPicture2_Click);
             // 
             // recentPicture4
             // 
+            this.recentPicture4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture4.Location = new System.Drawing.Point(838, 14);
             this.recentPicture4.Name = "recentPicture4";
             this.recentPicture4.Size = new System.Drawing.Size(200, 150);
             this.recentPicture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture4.TabIndex = 33;
             this.recentPicture4.TabStop = false;
+            this.recentPicture4.Click += new System.EventHandler(this.recentPicture4_Click);
             // 
             // recentPicture3
             // 
+            this.recentPicture3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture3.Location = new System.Drawing.Point(632, 14);
             this.recentPicture3.Name = "recentPicture3";
             this.recentPicture3.Size = new System.Drawing.Size(200, 150);
             this.recentPicture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture3.TabIndex = 34;
             this.recentPicture3.TabStop = false;
+            this.recentPicture3.Click += new System.EventHandler(this.recentPicture3_Click);
             // 
             // tableLayoutPanel6
             // 
@@ -702,7 +714,7 @@
             this.tableLayoutPanel6.Controls.Add(this.recentPicture3, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.recentPicture1, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.recentPicture2, 2, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(126, 685);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(118, 686);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(11);
             this.tableLayoutPanel6.RowCount = 1;
@@ -712,12 +724,14 @@
             // 
             // recentPicture5
             // 
+            this.recentPicture5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture5.Location = new System.Drawing.Point(1044, 14);
             this.recentPicture5.Name = "recentPicture5";
             this.recentPicture5.Size = new System.Drawing.Size(200, 150);
             this.recentPicture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture5.TabIndex = 36;
             this.recentPicture5.TabStop = false;
+            this.recentPicture5.Click += new System.EventHandler(this.recentPicture5_Click);
             // 
             // DavinciBotView
             // 
@@ -804,7 +818,7 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.TableLayoutPanel thresholdControlPanel;
         private System.Windows.Forms.Panel trackbar1Panel;
-        private System.Windows.Forms.Button useCameraImageButton;
+        private System.Windows.Forms.Button clearImageButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Button uploadImageFromFileButton;
