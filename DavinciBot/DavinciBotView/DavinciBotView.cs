@@ -38,6 +38,9 @@ namespace DavinciBotView
         private int CAMERA_DEVICE_NUMBER = 5;
         private bool printingPaused = false;
         private DaVinciBotClient client = new DaVinciBotClient();
+        private bool stopLoadingImageProgressBar = false;
+        private bool stopContourProgressBar = false;
+        private bool stopGcodeProgressBar = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -68,6 +71,8 @@ namespace DavinciBotView
             recentPictureBoxes.Add(recentPicture3);
             recentPictureBoxes.Add(recentPicture4);
             recentPictureBoxes.Add(recentPicture5);
+
+            EnableAllRecentPictureBoxes(false);
         }
 
         /// <summary>
@@ -91,6 +96,9 @@ namespace DavinciBotView
         }
         private void EnableGcodeControls(bool m)
         {
+            startPrintingButton.Enabled = m;
+            pausePrintingButton.Enabled = m;
+            stopPrintingButton.Enabled = m;
             generateGcodeButton.Enabled = m;
             printingPaused = false;
         }
@@ -644,6 +652,9 @@ namespace DavinciBotView
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                //SPIN THREAD TO START A PROGRESS BAR
+                // -> run loadingImage progress bar here
+                //
                 ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
@@ -662,10 +673,17 @@ namespace DavinciBotView
                 AddToRecentPictures();
 
                 Environment.CurrentDirectory = oldDir;
+                
+                //END THREAD
+                //stopLoadingImageProgressBar
+
                 HandleThresholdValueChange("");
 
+
+                //START THREAD 
+                //Contour thread
                 FindContour(DEFAULT_THRESHOLD_VALUE);
-                //END HERE
+                //END CONTOUR THREAD HERE
                 EnableImageControls(true);
                 EnableGcodeControls(true);
                 imageLoaded = true;
@@ -675,10 +693,12 @@ namespace DavinciBotView
 
         private void StartPrintingButton_Click(object sender, EventArgs e)
         {
-            client.RunClient();
             startPrintingButton.Enabled = false;
             LoadGCodeFromFileButton.Enabled = false;
             generateGcodeButton.Enabled = false;
+            client.RunClient(); //SHOULD START 
+            //TESTING ONLY
+            startPrintingButton.Enabled = true;
         }
 
         private void SaveCameraImageButton_Click(object sender, EventArgs e)
@@ -800,6 +820,7 @@ namespace DavinciBotView
             foreach (RecentPictureObject o in recentPictures)
             {
                 recentPictureBoxes[i].Image = o.Image;
+                EnableRecentPictureBox(i, true);
                 i++;
                 if (i == 6)
                     return;
@@ -863,7 +884,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
-            client.PauseJob();
+            client.CancelJob();
         }
 
         /// <summary>
@@ -888,6 +909,41 @@ namespace DavinciBotView
                 pausePrintingButton.Text = "Resume Printing";
             }
             printingPaused = !printingPaused;
+        }
+
+        private void EnableRecentPictureBox(int i, bool m)
+        {
+            if(i == 0)
+            {
+                recentPicture0.Enabled = m;
+            }
+            if (i == 1)
+            {
+                recentPicture1.Enabled = m;
+            }
+            if (i == 2)
+            {
+                recentPicture2.Enabled = m;
+            }
+            if (i == 3)
+            {
+                recentPicture3.Enabled = m;
+            }
+            if (i == 4)
+            {
+                recentPicture4.Enabled = m;
+            }
+            if (i == 5)
+            {
+                recentPicture5.Enabled = m;
+            }
+        }
+        private void EnableAllRecentPictureBoxes(bool m)
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                EnableRecentPictureBox(i, m);
+            }
         }
     }
 }

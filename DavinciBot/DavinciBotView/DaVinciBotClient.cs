@@ -24,7 +24,7 @@ namespace DavinciBotView
             this.killed = false;
         }
 
-        public void RunClient()
+        public bool RunClient()
         {
             client = new TcpClient();
             Console.WriteLine("Connecting...");
@@ -34,7 +34,7 @@ namespace DavinciBotView
 
             Console.WriteLine("Connected");
 
-            string[] commands = File.ReadAllLines(@"..\..\commands.gco");
+            string[] commands = File.ReadAllLines("../../../../Image_Processor_Files/commands.gco");
 
             int numCommands = commands.Length;
 
@@ -49,7 +49,7 @@ namespace DavinciBotView
 
                 if (killed)
                 {
-                    return;
+                    return true;
                 }
 
                 byte[] command = Encoding.UTF8.GetBytes(line + "\n");
@@ -79,12 +79,22 @@ namespace DavinciBotView
             string endMessage = "Transmission Complete\n";
 
             stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
-            stream.Read(new byte[1], 0, 1);
+            //stream.Read(new byte[1], 0, 1);
 
-            stream.Close();
-            client.Close();
+            byte[] finished = new byte[9];
 
-            return;
+            while (!stream.DataAvailable) { }
+            
+            stream.Read(finished, 0, finished.Length);
+
+            if (Encoding.UTF8.GetString(finished) == "Finished")
+            {
+                stream.Close();
+                client.Close();
+            }
+
+            //CHANGE THIS LATERRRRRR
+            return true;
         }
 
         public bool CancelJob()
