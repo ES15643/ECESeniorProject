@@ -118,6 +118,7 @@ bool gcode_interpretation::rapid_positioning(String command)
   float x, y, z, X, Y;
 
   Serial.println("Rapid");
+  raise_medium();
   if (command.indexOf('X') == -1 || command.indexOf('Y') == -1)
   {
     return false;
@@ -134,7 +135,6 @@ bool gcode_interpretation::rapid_positioning(String command)
   if(x-X > 0) 
   {
     stpms[0].MoveMotor(abs((x-X)) * stepRatio , 1);
-    //Serial.println(abs((x-X)) * stepRatio);
   } 
   else
   {
@@ -181,33 +181,53 @@ bool gcode_interpretation::linear_interpolation(String command)
   slope_X = diff_X/mag;
   slope_Y = diff_Y/mag;
 
-  delay_x = stpms[0].GetAccel() * slope_Y;
-  delay_y = stpms[1].GetAccel() * slope_X;
+  delay_x = stpms[0].GetAccel() * 1/slope_Y;
+  delay_y = stpms[1].GetAccel() * 1/slope_X;
 
   min_delay_x = stpms[0].GetMinDelay() * 1/slope_Y;
   min_delay_y = stpms[1].GetMinDelay() * 1/slope_X;
+
+  Serial.println(delay_x);
+  Serial.println(min_delay_x);
+
+  if(min_delay_x < min_delay_default)
+  {
+    min_delay_x = min_delay_default;
+  }
+
+  if(min_delay_y < min_delay_default)
+  {
+    min_delay_y = min_delay_default;
+  }
 
   stpms[0].SetAccel(delay_x);
   stpms[0].SetMinDelay(min_delay_x);
   stpms[1].SetAccel(delay_y);
   stpms[1].SetMinDelay(min_delay_y);
 
-  if(x - X > 0) 
+
+  if(diff_X > 0)
   {
-    stpms[0].MoveMotor(diff_X*stepRatio, 1);
-  } 
-  else
-  {
-    stpms[0].MoveMotor(diff_X*stepRatio, 0);
+    if(x - X > 0) 
+    {
+      stpms[0].MoveMotor(diff_X*stepRatio, 1);
+    } 
+    else
+    {
+      stpms[0].MoveMotor(diff_X*stepRatio, 0);
+    }
   }
   
-  if(y - Y > 0)
+  if(diff_Y > 0)
   {
-    stpms[1].MoveMotor(diff_X*stepRatio, 1);      
-  }
-  else
-  {
-    stpms[1].MoveMotor(diff_X*stepRatio, 0);
+    if(y - Y > 0)
+    {
+      stpms[1].MoveMotor(diff_X*stepRatio, 1);      
+    }
+    else
+    {
+      stpms[1].MoveMotor(diff_X*stepRatio, 0);
+    }
   }
 
   while(stepperFlags);

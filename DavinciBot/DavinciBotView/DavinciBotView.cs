@@ -36,7 +36,7 @@ namespace DavinciBotView
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
         private int nextRecentPictureIndex;
-        private int CAMERA_DEVICE_NUMBER = 5;
+        private int CAMERA_DEVICE_NUMBER = 0;
         private bool printingPaused = false;
         private DaVinciBotClient client = new DaVinciBotClient();
         private bool stopLoadingImageProgressBar = false;

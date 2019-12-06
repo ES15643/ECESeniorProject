@@ -87,13 +87,13 @@ ISR(TIMER1_COMPA_vect)
             {
                 boundaryTriggeredY();
             }
+        }
 
-            if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps())
+        if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps())
             {
                 stpms[i].SetMotorDone();
                 stepperFlags &= ~(1 << i);
             }
-        }
 
         if (stpms[i].GetStepsToMax() == 0)
         {
@@ -226,7 +226,7 @@ void loop()
         }
         else
         {
-            Serial.print(currentGCode);
+            // Serial.print(currentGCode);
             gcinter.interpret_gcode(currentGCode);
             Serial3.println('Y');
         }

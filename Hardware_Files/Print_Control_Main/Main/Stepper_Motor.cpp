@@ -113,7 +113,7 @@ void Stepper_Motor::Home()
     {
         stepperFlags |= (1 << 1);
     }
-    TotalSteps = 20000;
+    TotalSteps = 80000;
     MovingDone = false;
 
     Enable_Timer
