@@ -81,8 +81,8 @@ namespace DavinciBotView
             stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
             stream.Read(new byte[1], 0, 1);
 
-            stream.Close();
-            client.Close();
+            //stream.Close();
+            //client.Close();
 
             return;
         }

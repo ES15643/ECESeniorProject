@@ -3,7 +3,7 @@
 #include <WiFiAP.h>
 #include <WiFiClient.h>
 #include "EEPROM.h"
-#include <HardwareSerial.h>
+//#include <HardwareSerial.h>
 
 const char* ssid = "DaVinciBot";
 const char* password = "Ricktruvian";
@@ -13,7 +13,8 @@ bool paused;
 uint32_t TransmitData(uint32_t lastAddr);
 
 WiFiServer server(80);
-const int EEPROM_SIZE = EEPROM.length();
+WiFiClient client;
+const int EEPROM_SIZE = 5000;
 
 void setup()
 {
@@ -41,35 +42,50 @@ void setup()
 	server.begin();
 
 	Serial.println("Server started");
+
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
 }
 
 void loop()
 {
-	WiFiClient client = server.available();
+	client = server.available();
 
 	int addr = 0;
+  bool down = false;
 
 	if (client)
 	{
 		Serial.println("New client");
 		String currentLine = "";
-    client.print(EEPROM_SIZE);
+    client.println(EEPROM_SIZE);
+//    if(!down)
+//    {
+//      Serial2.print("Z2.0\r\n");
+//      down = true;
+//    }
 		while (client.connected())
 		{
 			if (client.available())
 			{
 				char c = client.read();
-				if (c == '\n')
+        //Serial.print(c);
+				if (c == '\n') 
 				{
-					if (currentLine == "Transmission Complete" && !pause)
+					if (currentLine == "Transmission Complete")
 					{
+            //Serial.println("Transmission");
 						EEPROM.commit();
 						TransmitData(addr);
-						client.stop();
+            Serial2.print("Z-2.0\r\n");
+            down = false;
+            client.println("Finished");
+//						client.stop();
             
             for(int index = 0; index < EEPROM_SIZE; index++)
             {
               EEPROM.write(index, 0);
+              EEPROM.commit();
             }
 					}
           else if (currentLine == "Stop")
@@ -86,14 +102,14 @@ void loop()
           {
             Serial2.print("G28\r\n");
 
-            client.stop();
+//            client.stop();
             
             for(int index = 0; index < EEPROM_SIZE; index++)
             {
               EEPROM.write(index, 0);
             }
           }
-					else if (!pause)
+					else if (!paused)
 					{
 						EEPROM.writeString(addr, currentLine + '\n');
 						addr += currentLine.length() + 1;
@@ -103,6 +119,11 @@ void loop()
 							EEPROM.commit();
 							TransmitData(addr);
               addr = 0;
+
+              for(int index = 0; index < EEPROM_SIZE; index++)
+              {
+                EEPROM.write(index, 0);
+              }
 						}
            
 						currentLine = "";
@@ -124,10 +145,12 @@ void loop()
 uint32_t TransmitData(uint32_t lastAddr)
 {
 	int address = 0;
+  int count = 0;
 	String instructions = "";
   String currentInst = "";
+  Serial.print("Transmitting");
 
-	Serial2.println("Instructions ready.  Transmit?");
+	Serial2.println("Instructions ready. Transmit?");
 
 	while (address < lastAddr)
 	{    
@@ -135,11 +158,21 @@ uint32_t TransmitData(uint32_t lastAddr)
 
     int index = 0;
 
+    //while(!Serial2.available()) {}
+
     while(index < instructions.length())
     {
       while(!Serial2.available()) {}
-      Serial2.readString();
+      Serial2.read();
 
+      if(count == 20)
+      {
+        client.println();
+        count = 0;
+      }
+
+      count++;
+      
       currentInst = instructions.substring(index, instructions.indexOf('\n', index));
 
       currentInst.trim();
@@ -148,7 +181,7 @@ uint32_t TransmitData(uint32_t lastAddr)
       currentInst.replace("\0", "");
       
       currentInst += "\r\n";
-      
+
       Serial2.print(currentInst);
 
       index += currentInst.length() - 1;  

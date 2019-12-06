@@ -194,7 +194,7 @@
             this.invertCheckBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.invertCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.invertCheckBox.Location = new System.Drawing.Point(403, 4);
-            this.invertCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.invertCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.invertCheckBox.Name = "invertCheckBox";
             this.invertCheckBox.Size = new System.Drawing.Size(438, 42);
             this.invertCheckBox.TabIndex = 9;
@@ -213,7 +213,7 @@
             this.startCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startCameraButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.startCameraButton.Location = new System.Drawing.Point(4, 4);
-            this.startCameraButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.startCameraButton.Margin = new System.Windows.Forms.Padding(4);
             this.startCameraButton.Name = "startCameraButton";
             this.startCameraButton.Size = new System.Drawing.Size(844, 64);
             this.startCameraButton.TabIndex = 12;
@@ -230,7 +230,7 @@
             this.takePictureButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.takePictureButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.takePictureButton.Location = new System.Drawing.Point(4, 4);
-            this.takePictureButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.takePictureButton.Margin = new System.Windows.Forms.Padding(4);
             this.takePictureButton.Name = "takePictureButton";
             this.takePictureButton.Size = new System.Drawing.Size(413, 56);
             this.takePictureButton.TabIndex = 13;
@@ -247,7 +247,7 @@
             this.saveCameraImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.saveCameraImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.saveCameraImageButton.Location = new System.Drawing.Point(426, 4);
-            this.saveCameraImageButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.saveCameraImageButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveCameraImageButton.Name = "saveCameraImageButton";
             this.saveCameraImageButton.Size = new System.Drawing.Size(414, 56);
             this.saveCameraImageButton.TabIndex = 14;
@@ -265,7 +265,7 @@
             this.stopCameraButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopCameraButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.stopCameraButton.Location = new System.Drawing.Point(4, 148);
-            this.stopCameraButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.stopCameraButton.Margin = new System.Windows.Forms.Padding(4);
             this.stopCameraButton.Name = "stopCameraButton";
             this.stopCameraButton.Size = new System.Drawing.Size(844, 56);
             this.stopCameraButton.TabIndex = 15;
@@ -280,7 +280,7 @@
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Location = new System.Drawing.Point(417, 601);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 21;
@@ -291,7 +291,7 @@
             this.thresholdNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.thresholdNumberBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.thresholdNumberBox.Location = new System.Drawing.Point(4, 4);
-            this.thresholdNumberBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.thresholdNumberBox.Margin = new System.Windows.Forms.Padding(4);
             this.thresholdNumberBox.Maximum = new decimal(new int[] {
             200,
             0,
@@ -348,7 +348,7 @@
             // 
             this.trackBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.trackBar1.Location = new System.Drawing.Point(-4, 17);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Maximum = 200;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(841, 80);
@@ -370,7 +370,7 @@
             this.thresholdControlPanel.Controls.Add(this.invertCheckBox, 1, 0);
             this.thresholdControlPanel.Controls.Add(this.trackbar1Panel, 0, 1);
             this.thresholdControlPanel.Location = new System.Drawing.Point(1091, 557);
-            this.thresholdControlPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.thresholdControlPanel.Margin = new System.Windows.Forms.Padding(4);
             this.thresholdControlPanel.Name = "thresholdControlPanel";
             this.thresholdControlPanel.RowCount = 2;
             this.thresholdControlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -390,7 +390,7 @@
             this.trackbar1Panel.Controls.Add(this.label5);
             this.trackbar1Panel.Controls.Add(this.trackBar1);
             this.trackbar1Panel.Location = new System.Drawing.Point(4, 54);
-            this.trackbar1Panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackbar1Panel.Margin = new System.Windows.Forms.Padding(4);
             this.trackbar1Panel.Name = "trackbar1Panel";
             this.trackbar1Panel.Size = new System.Drawing.Size(841, 105);
             this.trackbar1Panel.TabIndex = 22;
@@ -405,7 +405,7 @@
             this.clearImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clearImageButton.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.clearImageButton.Location = new System.Drawing.Point(4, 220);
-            this.clearImageButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.clearImageButton.Margin = new System.Windows.Forms.Padding(4);
             this.clearImageButton.Name = "clearImageButton";
             this.clearImageButton.Size = new System.Drawing.Size(844, 56);
             this.clearImageButton.TabIndex = 26;
@@ -425,7 +425,7 @@
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.clearImageButton, 0, 3);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(167, 640);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 4;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -446,7 +446,7 @@
             this.tableLayoutPanel5.Controls.Add(this.takePictureButton, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.saveCameraImageButton, 1, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(4, 76);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
@@ -465,7 +465,7 @@
             this.tableLayoutPanel4.Controls.Add(this.uploadImageFromFileButton, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.uploadImageFromFileTextbox, 0, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(165, 554);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -502,7 +502,7 @@
             this.uploadImageFromFileTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.uploadImageFromFileTextbox.ForeColor = System.Drawing.Color.White;
             this.uploadImageFromFileTextbox.Location = new System.Drawing.Point(4, 4);
-            this.uploadImageFromFileTextbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.uploadImageFromFileTextbox.Margin = new System.Windows.Forms.Padding(4);
             this.uploadImageFromFileTextbox.Name = "uploadImageFromFileTextbox";
             this.uploadImageFromFileTextbox.Size = new System.Drawing.Size(419, 44);
             this.uploadImageFromFileTextbox.TabIndex = 29;
@@ -520,7 +520,7 @@
             this.printingButtonsPanel.Controls.Add(this.generateGcodeButton, 0, 0);
             this.printingButtonsPanel.Controls.Add(this.stopPrintingButton, 2, 1);
             this.printingButtonsPanel.Controls.Add(this.pausePrintingButton, 1, 1);
-            this.printingButtonsPanel.Location = new System.Drawing.Point(3, 55);
+            this.printingButtonsPanel.Location = new System.Drawing.Point(3, 75);
             this.printingButtonsPanel.Name = "printingButtonsPanel";
             this.printingButtonsPanel.RowCount = 1;
             this.printingButtonsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -617,7 +617,7 @@
             this.tableLayoutPanel2.Controls.Add(this.LoadGCodeFromFileButton, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.loadedGcodeTextBox, 0, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -654,7 +654,7 @@
             this.loadedGcodeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.loadedGcodeTextBox.ForeColor = System.Drawing.Color.White;
             this.loadedGcodeTextBox.Location = new System.Drawing.Point(4, 4);
-            this.loadedGcodeTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loadedGcodeTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.loadedGcodeTextBox.Name = "loadedGcodeTextBox";
             this.loadedGcodeTextBox.Size = new System.Drawing.Size(410, 44);
             this.loadedGcodeTextBox.TabIndex = 29;
@@ -669,7 +669,7 @@
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.printingButtonsPanel, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(1086, 734);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.00787F));
@@ -685,9 +685,9 @@
             // 
             this.recentPicture0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture0.Location = new System.Drawing.Point(19, 19);
-            this.recentPicture0.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture0.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture0.Name = "recentPicture0";
-            this.recentPicture0.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.recentPicture0.Padding = new System.Windows.Forms.Padding(7);
             this.recentPicture0.Size = new System.Drawing.Size(278, 208);
             this.recentPicture0.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.recentPicture0.TabIndex = 30;
@@ -698,7 +698,7 @@
             // 
             this.recentPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture1.Location = new System.Drawing.Point(305, 19);
-            this.recentPicture1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture1.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture1.Name = "recentPicture1";
             this.recentPicture1.Size = new System.Drawing.Size(278, 208);
             this.recentPicture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -710,7 +710,7 @@
             // 
             this.recentPicture2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture2.Location = new System.Drawing.Point(591, 19);
-            this.recentPicture2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture2.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture2.Name = "recentPicture2";
             this.recentPicture2.Size = new System.Drawing.Size(278, 208);
             this.recentPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -722,7 +722,7 @@
             // 
             this.recentPicture4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture4.Location = new System.Drawing.Point(1163, 19);
-            this.recentPicture4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture4.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture4.Name = "recentPicture4";
             this.recentPicture4.Size = new System.Drawing.Size(278, 208);
             this.recentPicture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -734,7 +734,7 @@
             // 
             this.recentPicture3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture3.Location = new System.Drawing.Point(877, 19);
-            this.recentPicture3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture3.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture3.Name = "recentPicture3";
             this.recentPicture3.Size = new System.Drawing.Size(278, 208);
             this.recentPicture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -762,9 +762,9 @@
             this.tableLayoutPanel6.Controls.Add(this.recentPicture1, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.recentPicture2, 2, 0);
             this.tableLayoutPanel6.Location = new System.Drawing.Point(165, 960);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(15, 15, 15, 15);
+            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(15);
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(1746, 246);
@@ -774,7 +774,7 @@
             // 
             this.recentPicture5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.recentPicture5.Location = new System.Drawing.Point(1449, 19);
-            this.recentPicture5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.recentPicture5.Margin = new System.Windows.Forms.Padding(4);
             this.recentPicture5.Name = "recentPicture5";
             this.recentPicture5.Size = new System.Drawing.Size(278, 208);
             this.recentPicture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
