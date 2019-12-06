@@ -100,7 +100,6 @@ void Stepper_Motor::ResetMotor()
     StepCount = 0;
     TotalSteps = 0;
     AccelCurveIndex = 0;
-    MinDelay = min_delay_default;
 }
 
 void Stepper_Motor::Home()
