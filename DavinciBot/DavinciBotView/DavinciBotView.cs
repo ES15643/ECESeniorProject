@@ -35,6 +35,7 @@ namespace DavinciBotView
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
+        private int nextRecentPictureIndex;
         private int CAMERA_DEVICE_NUMBER = 5;
         private bool printingPaused = false;
         private DaVinciBotClient client = new DaVinciBotClient();
@@ -423,18 +424,16 @@ namespace DavinciBotView
             string oldDir = Environment.CurrentDirectory;
             Environment.CurrentDirectory = MASTER_DIRECTORY;
 
-            loadedImagePath = "temp.jpg";
-            OurPictureBox.Image.Save(loadedImagePath);
-            //AUTOSCALE IMAGE HERE
-            var bmp = AutoScaleImage("temp.jpg");
-            bmp.Save(FINAL_SCALED_IMAGE);
-
-            AddToRecentPictures();
-            Environment.CurrentDirectory = oldDir;
+            UpdateRecentPicturePath();
 
             FindContour(DEFAULT_THRESHOLD_VALUE);
             imageLoaded = true;
             EnableImageControls(true);
+
+        }
+        private void SaveCameraImageCopy(Bitmap bmp)
+        {
+            int i = 0;
 
         }
 
@@ -658,21 +657,10 @@ namespace DavinciBotView
                 ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
-
-                //PULL OUT INTO FUNCTION
                 loadedImagePath = filePath;
                 uploadImageFromFileTextbox.Text = loadedImagePath;
 
-                string oldDir = Environment.CurrentDirectory;
-                Environment.CurrentDirectory = MASTER_DIRECTORY;
-
-                Bitmap bmp = AutoScaleImage(loadedImagePath);
-                bmp.Save(FINAL_SCALED_IMAGE);
-                OurPictureBox.Image = (Bitmap)bmp.Clone();
-                bmp.Dispose();
-                AddToRecentPictures();
-
-                Environment.CurrentDirectory = oldDir;
+                UpdateRecentPicturePath();
                 
                 //END THREAD
                 //stopLoadingImageProgressBar
@@ -689,6 +677,23 @@ namespace DavinciBotView
                 imageLoaded = true;
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+        }
+
+        private void UpdateRecentPicturePath()
+        {
+            string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = MASTER_DIRECTORY;
+
+            Bitmap bmp = AutoScaleImage(loadedImagePath);
+            bmp.Save(FINAL_SCALED_IMAGE);
+            loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
+            bmp.Save(loadedImagePath);
+            AddToRecentPictures(loadedImagePath);
+            OurPictureBox.Image = (Bitmap)bmp.Clone();
+            bmp.Dispose();
+
+
+            Environment.CurrentDirectory = oldDir;
         }
 
         private void StartPrintingButton_Click(object sender, EventArgs e)
@@ -798,15 +803,15 @@ namespace DavinciBotView
         /// <summary>
         /// Adds to the recent pictures list
         /// </summary>
-        private void AddToRecentPictures()
+        private void AddToRecentPictures(string filename)
         {
-            using (var fs = new FileStream(FIRST_SCALED_IMAGE, FileMode.Open))
+            
+            using (var fs = new FileStream(filename, FileMode.Open))
             {
                 Bitmap bmp = new Bitmap(fs);
                 Bitmap item = (Bitmap)bmp.Clone();
-                recentPictures.AddFirst(new RecentPictureObject(bmp, FIRST_SCALED_IMAGE));
+                recentPictures.AddFirst(new RecentPictureObject(bmp, filename));
             }
-
             UpdateRecentPictureBoxes();
         }
         /// <summary>
@@ -814,17 +819,27 @@ namespace DavinciBotView
         /// </summary>
         private void UpdateRecentPictureBoxes()
         {
-            //  IEnumerator<Image> iter = new IEnumerator<Image>();
             int listSize = recentPictures.Count;
             int i = 0;
             foreach (RecentPictureObject o in recentPictures)
             {
                 recentPictureBoxes[i].Image = o.Image;
                 EnableRecentPictureBox(i, true);
-                i++;
                 if (i == 6)
-                    return;
+                {
+                    nextRecentPictureIndex = 0;
+                }
+                else
+                {
+                    nextRecentPictureIndex++;
+                }
             }
+            return;
+        }
+
+        private int FindLastRecentPictureIndex()
+        {
+            return 0;
         }
 
         private void recentPicture0_Click(object sender, EventArgs e)
@@ -872,7 +887,7 @@ namespace DavinciBotView
 
             var bmp = pic.Image;
             OurPictureBox.Image = (Bitmap)bmp.Clone();
-            AddToRecentPictures(); //fix this to eliminate images showing up twice
+            AddToRecentPictures(pic.Filepath); //fix this to eliminate images showing up twice
             Environment.CurrentDirectory = oldDir;
             HandleThresholdValueChange("");
             FindContour(DEFAULT_THRESHOLD_VALUE);
