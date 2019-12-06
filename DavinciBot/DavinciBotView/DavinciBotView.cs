@@ -127,7 +127,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void LoadGCodeFromFileButton_Click(object sender, EventArgs e)
         {
-            ResetLoadedImage();
+            
             var fileContent = string.Empty;
             var filePath = string.Empty;
             OpenFileDialog openFile = new OpenFileDialog();
@@ -141,6 +141,7 @@ namespace DavinciBotView
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
                 gCodeFilePath = filePath;
@@ -184,6 +185,7 @@ namespace DavinciBotView
             else
             {
                 string oldDir = Environment.CurrentDirectory;
+                Environment.CurrentDirectory = MASTER_DIRECTORY;
                 RunPythonScript("gcode", 0);
                 Environment.CurrentDirectory = oldDir;
 
@@ -209,7 +211,6 @@ namespace DavinciBotView
         {
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
-                Environment.CurrentDirectory = MASTER_DIRECTORY;
                 string pScript = BuildPythonScript(mode);
 
                 runspace.Open();
@@ -239,8 +240,8 @@ namespace DavinciBotView
             {
                 case "gcode":
                     {
-
-                        using (var fs = new FileStream(FINAL_SCALED_IMAGE, System.IO.FileMode.Open))
+                        string oldDir = Environment.CurrentDirectory;
+                        using (var fs = new FileStream("preview_contour.jpg", System.IO.FileMode.Open))
                         {
                             Bitmap bmp = new Bitmap(fs);
                             Bitmap map;
@@ -252,7 +253,7 @@ namespace DavinciBotView
                                 map = (Bitmap)bmp.Clone();
                                 fs.Close();
                                 map.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                                map.Save(FINAL_SCALED_IMAGE);
+                                map.Save("preview_contour.jpg");
                             }
                         }
                         //need to change this to scale image properly based on user inputs
@@ -267,7 +268,7 @@ namespace DavinciBotView
                         script = "python "
                             + "./imgcode.py "
                             + '"'
-                            + FINAL_SCALED_IMAGE
+                            + "preview_contour.jpg"
                             + '"'
                             + " ./commands.gco "
                             + x_offset_mm + ' '
@@ -277,7 +278,6 @@ namespace DavinciBotView
                             + feedrate + ' '
                             + max_laser_power + ' '
                             + number_of_colors;
-
                         break;
                     }
                 case "contour":
@@ -315,15 +315,18 @@ namespace DavinciBotView
         private void FindContour(int threshold)
         {
             string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = MASTER_DIRECTORY;
             RunPythonScript("contour", threshold);
-
             using (var fs = new FileStream("preview_contour.jpg", System.IO.FileMode.Open))
             {
                 var bmp = new Bitmap(fs);
                 var map = (Bitmap)bmp.Clone();
-                previewImageBox.Image = map; //(Bitmap)bmp.Clone();
+                previewImageBox.Image = map;
+                fs.Close();//(Bitmap)bmp.Clone();
                 contourCopy = map;
             }
+            //previewImageBox.Image.Save("preview_contour.jpg");
+            
             Environment.CurrentDirectory = oldDir;
         }
 
@@ -363,6 +366,7 @@ namespace DavinciBotView
         {
             uploadImageFromFileTextbox.Text = "";
             startedCamera = true;
+            ResetLoadedImage();
             StartCamera();
         }
 
@@ -827,6 +831,8 @@ namespace DavinciBotView
             startedCamera = false;
             OurPictureBox.Image = null;
             previewImageBox.Image = null;
+            thresholdNumberBox.Value = 100;
+            trackBar1.Value = 100;
             EnableCameraControls(false);
             EnableGcodeControls(false);
             EnableImageControls(false);
