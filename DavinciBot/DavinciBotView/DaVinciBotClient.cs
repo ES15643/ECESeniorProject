@@ -100,7 +100,7 @@ namespace DavinciBotView
             return true;
         }
 
-        public bool StopJob()
+        public bool PauseJob()
         {
             string stop = "Stop\n";
             stream.Write(Encoding.UTF8.GetBytes(stop), 0, stop.Length);

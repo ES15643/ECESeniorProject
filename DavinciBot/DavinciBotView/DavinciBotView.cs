@@ -36,7 +36,7 @@ namespace DavinciBotView
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
         private int CAMERA_DEVICE_NUMBER = 5;
-        private bool paused = false;
+        private bool printingPaused = false;
         private DaVinciBotClient client = new DaVinciBotClient();
 
         //Customize form objects in here
@@ -58,6 +58,8 @@ namespace DavinciBotView
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
+            EnablePrintingControls(false);
+
             this.ActiveControl = uploadImageFromFileButton;
 
             recentPictureBoxes.Add(recentPicture0);
@@ -74,13 +76,10 @@ namespace DavinciBotView
         /// <param name="m"></param>
         private void EnableImageControls(bool m)
         {
-            if (imageLoaded)
-            {
-                trackBar1.Enabled = m;
-                thresholdNumberBox.Enabled = m;
-                invertCheckBox.Enabled = m;
-                generateGcodeButton.Enabled = m;
-            }
+            trackBar1.Enabled = m;
+            thresholdNumberBox.Enabled = m;
+            invertCheckBox.Enabled = m;
+            generateGcodeButton.Enabled = m;
         }
         private void EnableCameraControls(bool m)
         {
@@ -93,10 +92,13 @@ namespace DavinciBotView
         private void EnableGcodeControls(bool m)
         {
             generateGcodeButton.Enabled = m;
+            printingPaused = false;
+        }
+        private void EnablePrintingControls(bool m)
+        {
             startPrintingButton.Enabled = m;
             stopPrintingButton.Enabled = m;
             pausePrintingButton.Enabled = m;
-            paused = false;
         }
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
@@ -185,6 +187,8 @@ namespace DavinciBotView
                     }
                 }
             }
+
+            startPrintingButton.Enabled = true;
         }
 
         /// <summary>
@@ -659,12 +663,12 @@ namespace DavinciBotView
 
                 Environment.CurrentDirectory = oldDir;
                 HandleThresholdValueChange("");
-                
+
                 FindContour(DEFAULT_THRESHOLD_VALUE);
                 //END HERE
                 EnableImageControls(true);
                 EnableGcodeControls(true);
-                imageLoaded = true;                
+                imageLoaded = true;
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
@@ -672,6 +676,9 @@ namespace DavinciBotView
         private void StartPrintingButton_Click(object sender, EventArgs e)
         {
             client.RunClient();
+            startPrintingButton.Enabled = false;
+            LoadGCodeFromFileButton.Enabled = false;
+            generateGcodeButton.Enabled = false;
         }
 
         private void SaveCameraImageButton_Click(object sender, EventArgs e)
@@ -765,6 +772,7 @@ namespace DavinciBotView
             EnableCameraControls(false);
             EnableGcodeControls(false);
             EnableImageControls(false);
+            EnablePrintingControls(false);
         }
 
         /// <summary>
@@ -832,15 +840,15 @@ namespace DavinciBotView
         {
             RecentPictureObject pic = recentPictures.ElementAt<RecentPictureObject>(t);
             recentPictures.Remove(recentPictures.ElementAt<RecentPictureObject>(t));
-            
+
             string oldDir = Environment.CurrentDirectory;
-            
+
             Environment.CurrentDirectory = MASTER_DIRECTORY;
-            
+
             pic.Image.Save(FINAL_SCALED_IMAGE);
             loadedImagePath = Path.GetFileName(FINAL_SCALED_IMAGE);
             uploadImageFromFileTextbox.Text = loadedImagePath;
-            
+
             var bmp = pic.Image;
             OurPictureBox.Image = (Bitmap)bmp.Clone();
             AddToRecentPictures(); //fix this to eliminate images showing up twice
@@ -855,7 +863,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
-            client.StopJob();
+            client.PauseJob();
         }
 
         /// <summary>
@@ -865,7 +873,21 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void pausePrintingButton_Click(object sender, EventArgs e)
         {
-            
+            HandlePauseJob();
+        }
+        private void HandlePauseJob()
+        {
+            if (printingPaused)
+            {
+                client.ResumeJob();
+                pausePrintingButton.Text = "Pause Printing";
+            }
+            else
+            {
+                client.PauseJob();
+                pausePrintingButton.Text = "Resume Printing";
+            }
+            printingPaused = !printingPaused;
         }
     }
 }
