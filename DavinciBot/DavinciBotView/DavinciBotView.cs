@@ -35,6 +35,13 @@ namespace DavinciBotView
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
+        private int nextRecentPictureIndex;
+        private int CAMERA_DEVICE_NUMBER = 5;
+        private bool printingPaused = false;
+        private DaVinciBotClient client = new DaVinciBotClient();
+        private bool stopLoadingImageProgressBar = false;
+        private bool stopContourProgressBar = false;
+        private bool stopGcodeProgressBar = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -51,10 +58,12 @@ namespace DavinciBotView
         {
             //videoSource = new VideoCaptureDevice();
             Devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            frame = new VideoCaptureDevice(Devices[1].MonikerString);
+            frame = new VideoCaptureDevice(Devices[CAMERA_DEVICE_NUMBER].MonikerString);
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
+            EnablePrintingControls(false);
+
             this.ActiveControl = uploadImageFromFileButton;
 
             recentPictureBoxes.Add(recentPicture0);
@@ -63,6 +72,8 @@ namespace DavinciBotView
             recentPictureBoxes.Add(recentPicture3);
             recentPictureBoxes.Add(recentPicture4);
             recentPictureBoxes.Add(recentPicture5);
+
+            EnableAllRecentPictureBoxes(false);
         }
 
         /// <summary>
@@ -71,13 +82,10 @@ namespace DavinciBotView
         /// <param name="m"></param>
         private void EnableImageControls(bool m)
         {
-            if (imageLoaded)
-            {
-                trackBar1.Enabled = m;
-                thresholdNumberBox.Enabled = m;
-                invertCheckBox.Enabled = m;
-                generateGcodeButton.Enabled = m;
-            }
+            trackBar1.Enabled = m;
+            thresholdNumberBox.Enabled = m;
+            invertCheckBox.Enabled = m;
+            generateGcodeButton.Enabled = m;
         }
         private void EnableCameraControls(bool m)
         {
@@ -89,9 +97,17 @@ namespace DavinciBotView
         }
         private void EnableGcodeControls(bool m)
         {
+            startPrintingButton.Enabled = m;
+            pausePrintingButton.Enabled = m;
+            stopPrintingButton.Enabled = m;
             generateGcodeButton.Enabled = m;
+            printingPaused = false;
+        }
+        private void EnablePrintingControls(bool m)
+        {
             startPrintingButton.Enabled = m;
             stopPrintingButton.Enabled = m;
+            pausePrintingButton.Enabled = m;
         }
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
@@ -180,6 +196,8 @@ namespace DavinciBotView
                     }
                 }
             }
+
+            startPrintingButton.Enabled = true;
         }
 
         /// <summary>
@@ -379,7 +397,7 @@ namespace DavinciBotView
             }
             catch (Exception) //need e?
             {
-                throw;
+                //throw;
             }
         }
 
@@ -406,18 +424,16 @@ namespace DavinciBotView
             string oldDir = Environment.CurrentDirectory;
             Environment.CurrentDirectory = MASTER_DIRECTORY;
 
-            loadedImagePath = "temp.jpg";
-            OurPictureBox.Image.Save(loadedImagePath);
-            //AUTOSCALE IMAGE HERE
-            var bmp = AutoScaleImage("temp.jpg");
-            bmp.Save(FINAL_SCALED_IMAGE);
-
-            AddToRecentPictures();
-            Environment.CurrentDirectory = oldDir;
+            UpdateRecentPicturePath();
 
             FindContour(DEFAULT_THRESHOLD_VALUE);
             imageLoaded = true;
             EnableImageControls(true);
+
+        }
+        private void SaveCameraImageCopy(Bitmap bmp)
+        {
+            int i = 0;
 
         }
 
@@ -589,63 +605,6 @@ namespace DavinciBotView
             StartCamera();
         }
 
-        //Need to remember to add cancel functionality to this
-        private void RunGcodeClient()
-        {
-            TcpClient client = new TcpClient();
-            Console.WriteLine("Connecting...");
-
-            client.Connect("192.168.4.1", 80);
-            //client.Connect(IPAddress.Loopback, 80);
-
-            Console.WriteLine("Connected");
-
-            string[] commands = File.ReadAllLines(@"..\..\commands.gco");
-
-            int numCommands = commands.Length;
-
-            NetworkStream stream = client.GetStream();
-
-            int count = 0;
-            int index = 0;
-
-            foreach (string line in commands)
-            {
-                byte[] command = Encoding.UTF8.GetBytes(line + "\n");
-
-                if (count == 0)
-                {
-                    byte[] request = new byte[5];
-
-                    while (request.Select(x => int.Parse(x.ToString())).Sum() == 0) { stream.Read(request, 0, request.Length); }
-
-                    string result = Encoding.UTF8.GetString(request);
-
-                    if (BitConverter.IsLittleEndian)
-                        Array.Reverse(request);
-
-                    count = Convert.ToInt32(result);
-                }
-
-                stream.Write(command, 0, command.Length);
-
-                count -= command.Length;
-                index++;
-
-                Console.WriteLine((double)index / (double)numCommands);
-            }
-
-            string endMessage = "Transmission Complete\n";
-
-            stream.Write(Encoding.UTF8.GetBytes(endMessage), 0, endMessage.Length);
-            stream.Read(new byte[1], 0, 1);
-
-            stream.Close();
-            client.Close();
-
-            return;
-        }
-
         private void UploadImageFromFileButton_Click(object sender, EventArgs e)
         {
             /*
@@ -692,38 +651,59 @@ namespace DavinciBotView
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                //SPIN THREAD TO START A PROGRESS BAR
+                // -> run loadingImage progress bar here
+                //
                 ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
-
-                //PULL OUT INTO FUNCTION
                 loadedImagePath = filePath;
                 uploadImageFromFileTextbox.Text = loadedImagePath;
 
-                string oldDir = Environment.CurrentDirectory;
-                Environment.CurrentDirectory = MASTER_DIRECTORY;
-
-                Bitmap bmp = AutoScaleImage(loadedImagePath);
-                bmp.Save(FINAL_SCALED_IMAGE);
-                OurPictureBox.Image = (Bitmap)bmp.Clone();
-                bmp.Dispose();
-                AddToRecentPictures();
-
-                Environment.CurrentDirectory = oldDir;
-                HandleThresholdValueChange("");
+                UpdateRecentPicturePath();
                 
+                //END THREAD
+                //stopLoadingImageProgressBar
+
+                HandleThresholdValueChange("");
+
+
+                //START THREAD 
+                //Contour thread
                 FindContour(DEFAULT_THRESHOLD_VALUE);
-                //END HERE
+                //END CONTOUR THREAD HERE
                 EnableImageControls(true);
                 EnableGcodeControls(true);
-                imageLoaded = true;                
+                imageLoaded = true;
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
+        private void UpdateRecentPicturePath()
+        {
+            string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = MASTER_DIRECTORY;
+
+            Bitmap bmp = AutoScaleImage(loadedImagePath);
+            bmp.Save(FINAL_SCALED_IMAGE);
+            loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
+            bmp.Save(loadedImagePath);
+            AddToRecentPictures(loadedImagePath);
+            OurPictureBox.Image = (Bitmap)bmp.Clone();
+            bmp.Dispose();
+
+
+            Environment.CurrentDirectory = oldDir;
+        }
+
         private void StartPrintingButton_Click(object sender, EventArgs e)
         {
-            RunGcodeClient();
+            startPrintingButton.Enabled = false;
+            LoadGCodeFromFileButton.Enabled = false;
+            generateGcodeButton.Enabled = false;
+            client.RunClient(); //SHOULD START 
+            //TESTING ONLY
+            startPrintingButton.Enabled = true;
         }
 
         private void SaveCameraImageButton_Click(object sender, EventArgs e)
@@ -817,20 +797,21 @@ namespace DavinciBotView
             EnableCameraControls(false);
             EnableGcodeControls(false);
             EnableImageControls(false);
+            EnablePrintingControls(false);
         }
 
         /// <summary>
         /// Adds to the recent pictures list
         /// </summary>
-        private void AddToRecentPictures()
+        private void AddToRecentPictures(string filename)
         {
-            using (var fs = new FileStream(FIRST_SCALED_IMAGE, FileMode.Open))
+            
+            using (var fs = new FileStream(filename, FileMode.Open))
             {
                 Bitmap bmp = new Bitmap(fs);
                 Bitmap item = (Bitmap)bmp.Clone();
-                recentPictures.AddFirst(new RecentPictureObject(bmp, FIRST_SCALED_IMAGE));
+                recentPictures.AddFirst(new RecentPictureObject(bmp, filename));
             }
-
             UpdateRecentPictureBoxes();
         }
         /// <summary>
@@ -838,16 +819,27 @@ namespace DavinciBotView
         /// </summary>
         private void UpdateRecentPictureBoxes()
         {
-            //  IEnumerator<Image> iter = new IEnumerator<Image>();
             int listSize = recentPictures.Count;
             int i = 0;
             foreach (RecentPictureObject o in recentPictures)
             {
                 recentPictureBoxes[i].Image = o.Image;
-                i++;
+                EnableRecentPictureBox(i, true);
                 if (i == 6)
-                    return;
+                {
+                    nextRecentPictureIndex = 0;
+                }
+                else
+                {
+                    nextRecentPictureIndex++;
+                }
             }
+            return;
+        }
+
+        private int FindLastRecentPictureIndex()
+        {
+            return 0;
         }
 
         private void recentPicture0_Click(object sender, EventArgs e)
@@ -884,18 +876,18 @@ namespace DavinciBotView
         {
             RecentPictureObject pic = recentPictures.ElementAt<RecentPictureObject>(t);
             recentPictures.Remove(recentPictures.ElementAt<RecentPictureObject>(t));
-            
+
             string oldDir = Environment.CurrentDirectory;
-            
+
             Environment.CurrentDirectory = MASTER_DIRECTORY;
-            
+
             pic.Image.Save(FINAL_SCALED_IMAGE);
             loadedImagePath = Path.GetFileName(FINAL_SCALED_IMAGE);
             uploadImageFromFileTextbox.Text = loadedImagePath;
-            
+
             var bmp = pic.Image;
             OurPictureBox.Image = (Bitmap)bmp.Clone();
-            AddToRecentPictures(); //fix this to eliminate images showing up twice
+            AddToRecentPictures(pic.Filepath); //fix this to eliminate images showing up twice
             Environment.CurrentDirectory = oldDir;
             HandleThresholdValueChange("");
             FindContour(DEFAULT_THRESHOLD_VALUE);
@@ -907,7 +899,66 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
+            client.CancelJob();
+        }
 
+        /// <summary>
+        /// Toggles between pause/unpause
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pausePrintingButton_Click(object sender, EventArgs e)
+        {
+            HandlePauseJob();
+        }
+        private void HandlePauseJob()
+        {
+            if (printingPaused)
+            {
+                client.ResumeJob();
+                pausePrintingButton.Text = "Pause Printing";
+            }
+            else
+            {
+                client.PauseJob();
+                pausePrintingButton.Text = "Resume Printing";
+            }
+            printingPaused = !printingPaused;
+        }
+
+        private void EnableRecentPictureBox(int i, bool m)
+        {
+            if(i == 0)
+            {
+                recentPicture0.Enabled = m;
+            }
+            if (i == 1)
+            {
+                recentPicture1.Enabled = m;
+            }
+            if (i == 2)
+            {
+                recentPicture2.Enabled = m;
+            }
+            if (i == 3)
+            {
+                recentPicture3.Enabled = m;
+            }
+            if (i == 4)
+            {
+                recentPicture4.Enabled = m;
+            }
+            if (i == 5)
+            {
+                recentPicture5.Enabled = m;
+            }
+        }
+        private void EnableAllRecentPictureBoxes(bool m)
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                EnableRecentPictureBox(i, m);
+            }
         }
     }
 }

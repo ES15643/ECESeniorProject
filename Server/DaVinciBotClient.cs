@@ -4,15 +4,21 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 /// <summary>
 /// Client class for the DaVinci Bot.  Loads commands from gcode file and passes them one by one to the esp32 access point.
 /// </summary>
 public class DaVinciBotClient
 {
-	static void Main(string[] args)
+    private NetworkStream stream;
+    private TcpClient client;
+    private bool paused = false;
+    private bool killed = false;
+
+	public void RunClient()
     {
-        TcpClient client = new TcpClient();
+        client = new TcpClient();
         Console.WriteLine("Connecting...");
 
         client.Connect("192.168.4.1", 80);
@@ -24,13 +30,20 @@ public class DaVinciBotClient
 
         int numCommands = commands.Length;
 
-        NetworkStream stream = client.GetStream();
+        stream = client.GetStream();
 
         int count = 0;
         int index = 0;
 
         foreach(string line in commands)
         {
+            while (paused) ;
+
+            if(killed)
+            {
+                return;
+            }
+
             byte[] command = Encoding.UTF8.GetBytes(line + "\n");
 
             if (count == 0)
@@ -64,5 +77,43 @@ public class DaVinciBotClient
         client.Close();
 
         return;
+    }
+
+    public bool CancelJob()
+    {
+        string kill = "Kill\n";
+        stream.Write(Encoding.UTF8.GetBytes(kill), 0, kill.Length);
+
+        killed = true;
+
+        stream.Close();
+        client.Close();
+
+        return true;
+    }
+
+    public bool StopJob()
+    {
+        string stop = "Stop\n";
+        stream.Write(Encoding.UTF8.GetBytes(stop), 0, stop.Length);
+
+        paused = true;
+
+        return true;
+    }
+
+    public bool ResumeJob()
+    {
+        if (paused)
+        {
+            string resume = "Resume\n";
+            stream.Write(Encoding.UTF8.GetBytes(resume), 0, resume.Length);
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
     }
 }
