@@ -56,12 +56,12 @@ void loop()
     client.print(EEPROM_SIZE);
 		while (client.connected())
 		{
-			if (client.available() || !pause)
+			if (client.available())
 			{
 				char c = client.read();
 				if (c == '\n')
 				{
-					if (currentLine == "Transmission Complete")
+					if (currentLine == "Transmission Complete" && !pause)
 					{
 						EEPROM.commit();
 						TransmitData(addr);
@@ -93,7 +93,7 @@ void loop()
               EEPROM.write(index, 0);
             }
           }
-					else
+					else if (!pause)
 					{
 						EEPROM.writeString(addr, currentLine + '\n');
 						addr += currentLine.length() + 1;
