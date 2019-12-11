@@ -1,5 +1,4 @@
 #include "gcode_interpretation.h"
-#include <SoftwareSerial.h>
 
 // Globals for Printer
 gcode_interpretation gcinter = gcode_interpretation();
@@ -130,9 +129,9 @@ ISR(TIMER1_COMPA_vect)
 
 void setup()
 {
-     Serial.begin(115200);
-    //  mySerial.begin(115200);
-     Serial3.begin(115200);
+    Serial.begin(115200);
+    Serial3.begin(115200);
+    Serial1.begin(9600);
 
     x_home = true;
     y_home = true;
@@ -216,20 +215,23 @@ void loop()
     //         }
     //     }
     // }
+    
 
    if(Serial3.available() > 0)
    {
         currentGCode = Serial3.readString();
-        if (currentGCode == "Instructions ready. Transmit?\r\n")
-        {
-            Serial3.println('Y');
-        }
-        else
-        {
-            // Serial.print(currentGCode);
-            gcinter.interpret_gcode(currentGCode);
-            Serial3.println('Y');
-        }
+        gcinter.interpret_gcode(currentGCode);
+        // if (currentGCode == "Instructions ready. Transmit?\r\n")
+        // {
+        Serial3.println();
+        // }
+        // else
+        // {
+        //     // Serial1.println(currentGCode);
+        //     // Serial.println(currentGCode);
+        //     gcinter.interpret_gcode(currentGCode);
+        //     //Serial3.println('Y');
+        // }
    }
 
    

@@ -31,7 +31,7 @@ namespace DavinciBotView
         private const string MASTER_DIRECTORY = "../../../../Image_Processor_Files";
         private const int AUTO_SCALE_MAX_HEIGHT = 300;
         private int AUTO_SCALE_MAX_WIDTH = 300;
-        public const string FINAL_SCALED_IMAGE = "resizedImage.bmp";
+        public string FINAL_SCALED_IMAGE = "resizedImage.bmp";
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
@@ -418,12 +418,9 @@ namespace DavinciBotView
             //Puts it in the main box. Save this for later.
             OurPictureBox.Image = temp;
             pictureTakenWithCamera = true;
-            //make sure to update loadedImagePath to this temp file
-            //uploadImageFromFileTextbox 
-            //SaveFileDialog saveCameraImage = new SaveFileDialog
+            loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
+            temp.Save("recentPicture" + nextRecentPictureIndex.ToString() + ".jpg");
             string oldDir = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = MASTER_DIRECTORY;
-
             UpdateRecentPicturePath();
 
             FindContour(DEFAULT_THRESHOLD_VALUE);
@@ -685,10 +682,10 @@ namespace DavinciBotView
             Environment.CurrentDirectory = MASTER_DIRECTORY;
 
             Bitmap bmp = AutoScaleImage(loadedImagePath);
-            bmp.Save(FINAL_SCALED_IMAGE);
             loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
             bmp.Save(loadedImagePath);
-            AddToRecentPictures(loadedImagePath);
+            FINAL_SCALED_IMAGE = Path.GetFullPath(loadedImagePath); 
+            AddToRecentPictures(FINAL_SCALED_IMAGE);
             OurPictureBox.Image = (Bitmap)bmp.Clone();
             bmp.Dispose();
 
@@ -804,12 +801,12 @@ namespace DavinciBotView
         /// Adds to the recent pictures list
         /// </summary>
         private void AddToRecentPictures(string filename)
-        {
-            
+        {          
             using (var fs = new FileStream(filename, FileMode.Open))
             {
                 Bitmap bmp = new Bitmap(fs);
                 Bitmap item = (Bitmap)bmp.Clone();
+                //string fullPath = Path.GetFileName(filename);
                 recentPictures.AddFirst(new RecentPictureObject(bmp, filename));
             }
             UpdateRecentPictureBoxes();
@@ -825,16 +822,47 @@ namespace DavinciBotView
             {
                 recentPictureBoxes[i].Image = o.Image;
                 EnableRecentPictureBox(i, true);
-                if (i == 6)
+                UpdateThumbnailImage(i, o.Image);
+                if (i == 5)
                 {
-                    nextRecentPictureIndex = 0;
+                    i = 0;
                 }
                 else
                 {
-                    nextRecentPictureIndex++;
+                    i++;
                 }
+
             }
+            nextRecentPictureIndex = i;
             return;
+        }
+
+        private void UpdateThumbnailImage(int i, Image im)
+        {
+            if (i == 0)
+            {
+                recentPicture0.Image = im;
+            }
+            if (i == 1)
+            {
+                recentPicture1.Image = im;
+            }
+            if (i == 2)
+            {
+                recentPicture2.Image = im;
+            }
+            if (i == 3)
+            {
+                recentPicture3.Image = im;
+            }
+            if (i == 4)
+            {
+                recentPicture4.Image = im;
+            }
+            if (i == 5)
+            {
+                recentPicture5.Image = im;
+            }
         }
 
         private int FindLastRecentPictureIndex()
@@ -882,7 +910,7 @@ namespace DavinciBotView
             Environment.CurrentDirectory = MASTER_DIRECTORY;
 
             pic.Image.Save(FINAL_SCALED_IMAGE);
-            loadedImagePath = Path.GetFileName(FINAL_SCALED_IMAGE);
+            loadedImagePath = pic.Filepath;
             uploadImageFromFileTextbox.Text = loadedImagePath;
 
             var bmp = pic.Image;
@@ -952,6 +980,8 @@ namespace DavinciBotView
             {
                 recentPicture5.Enabled = m;
             }
+
+
         }
         private void EnableAllRecentPictureBoxes(bool m)
         {

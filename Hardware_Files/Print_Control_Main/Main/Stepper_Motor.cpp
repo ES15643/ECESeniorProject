@@ -82,11 +82,11 @@ void Stepper_Motor::Step()
 
     if (Direction == 0)
     {
-        CurPos -= 0.00125;
+        CurPos -= 0.00125;//step_to_mm;
     }
     else
     {
-        CurPos += 0.00125;
+        CurPos += 0.00125;//step_to_mm;
     }
 }
 

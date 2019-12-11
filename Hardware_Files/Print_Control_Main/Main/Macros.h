@@ -27,7 +27,6 @@
 #define RX 32
 #define TX 33
 
-
 #define X_Step_High PORTB |= 0b00000001;
 #define X_Step_Low PORTB &= ~0b00000001;
 #define X_MovePos PORTB |= 0b00000010;
@@ -44,5 +43,7 @@
 #define TriggeredX ((PORTE & ~(1 << 5)) == 0 || (PORTD & ~(1 << 2)) == 0)
 #define TriggeredY ((PORTD & ~(0b1001)) == 0)
 
+#define step_to_mm 0.005
+
 #define min_delay_default 50
-#define accel_default 1000
+#define accel_default 500

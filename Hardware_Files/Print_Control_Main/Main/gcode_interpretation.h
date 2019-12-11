@@ -25,9 +25,9 @@ class gcode_interpretation
     Stepper_Motor* GetMotors(){ return stpms; }
 
     private:
-    uint32_t stepRatio = StepsPerRev;
-    bool homingx = false;
-    bool homingy = false;
+    volatile uint32_t stepRatio = StepsPerRev;
+    volatile bool homingx = false;
+    volatile bool homingy = false;
     Stepper_Motor stpms[NumOFMotors];
 
 };
