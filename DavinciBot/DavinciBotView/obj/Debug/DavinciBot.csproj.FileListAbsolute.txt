@@ -35,3 +35,23 @@ C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\Davi
 C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.CopyComplete
 C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.exe
 C:\Users\ebrig\Documents\College\Fall2019\ECESeniorProject\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.pdb
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.exe.config
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.exe
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\DavinciBotView.pdb
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.dll
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.Video.dll
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\System.Management.Automation.dll
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\Microsoft.Management.Infrastructure.dll
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.xml
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.Video.xml
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\bin\Debug\System.Management.Automation.xml
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csprojAssemblyReference.cache
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.DavinciBotView.resources
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.Properties.Resources.resources
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.GenerateResource.cache
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.CoreCompileInputs.cache
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBot.csproj.CopyComplete
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.exe
+C:\Users\Kobekow Laptop\Documents\U of U class folders\Comp. Eng\Senior_Project\ECESeniorProject\DavinciBot\DavinciBotView\obj\Debug\DavinciBotView.pdb

@@ -5,8 +5,6 @@
 
 class Stepper_Motor
 {
-    #define min_delay_default 20
-    #define accel_default 1000
     public:
     Stepper_Motor(){}
     Stepper_Motor(int stepsPerRevolution, uint8_t directionPin, uint8_t stepPin, bool x_plane = true); 
@@ -18,7 +16,7 @@ class Stepper_Motor
     // Gets
     bool MotorIsMoving(){ return MovingDone; }
     uint8_t GetDir(){ return Direction; }
-    long GetCurPos(){ return CurPos; }
+    float GetCurPos(){ return CurPos; }
     float GetAccel(){ return Accel; }
     float GetCurrentDelay(){ return CurrentDelay; }
     unsigned long GetTotalSteps(){ return TotalSteps; }
@@ -50,7 +48,7 @@ class Stepper_Motor
     volatile uint8_t DirPin;
     volatile uint8_t StepPin;
     volatile uint8_t Direction;
-    volatile float Accel = 1000;
+    volatile float Accel = accel_default;
     volatile float CurrentDelay; // d
     volatile float CurPos;
     volatile unsigned long TotalSteps;
@@ -58,7 +56,7 @@ class Stepper_Motor
     volatile unsigned int StartingDelay; // c0
     volatile unsigned int AccelCurveIndex;
     volatile unsigned int SPR; // Steps Per Rev
-    volatile unsigned int MinDelay = 20; // Max Speed
+    volatile unsigned int MinDelay = min_delay_default; // Max Speed
     volatile unsigned long StepCount; // Current Step
     volatile unsigned int TruncateDelay; // d1
 

@@ -19,6 +19,8 @@ String currentGCode = "";
 
 // volatile int triggered = LOW;
 
+// SoftwareSerial mySerial(RX, TX);
+
 void nextInterval()
 {
     unsigned int delay = 65500;
@@ -84,13 +86,13 @@ ISR(TIMER1_COMPA_vect)
             {
                 boundaryTriggeredY();
             }
+        }
 
-            if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps())
+        if (stpms[i].GetStepCount() >= stpms[i].GetTotalSteps())
             {
                 stpms[i].SetMotorDone();
                 stepperFlags &= ~(1 << i);
             }
-        }
 
         if (stpms[i].GetStepsToMax() == 0)
         {
@@ -127,7 +129,9 @@ ISR(TIMER1_COMPA_vect)
 
 void setup()
 {
-     Serial.begin(115200);
+    Serial.begin(115200);
+    Serial3.begin(115200);
+    Serial1.begin(9600);
 
     x_home = true;
     y_home = true;
@@ -150,6 +154,9 @@ void setup()
 
     pinMode(stmp2_DirectionPin, OUTPUT);
     pinMode(stmp2_StepPin, OUTPUT);
+
+    pinMode(stpm3_dir, OUTPUT);
+    pinMode(stpm3_step, OUTPUT);
     
     // x plane switches
     pinMode(40, INPUT_PULLUP);
@@ -172,59 +179,62 @@ void setup()
     //Enable interrupt pins
     pinMode(48, OUTPUT);
     pinMode(49, OUTPUT);
+    pinMode(7, OUTPUT);
 
-    Home();   
+    pinMode(solen, OUTPUT);
+
+    Home(); 
+
+    // stpms[2].MoveMotor(2 * StepsPerRev, 0);  
 }
 
 void Home()
 {
-    uint8_t bytesRead;
-    bool run = true;
-    Serial.println("Home Motors? Y/N");
-
-    while(run)
-    {
-        if (Serial.available() > 0)
-        {
-            bytesRead = Serial.read();
-            if (bytesRead == 'y')
-            {
-                run = false;
-                gcinter.Home(); // Home Motors
-                Serial.println("motor Ready");
-                Serial.println("Ready to Start y/n?");
-            }
-        }
-    }
+    gcinter.raise_medium();
+    gcinter.Home(); // Home Motors
 }
 
 void loop()
 {   
-    uint8_t bytesRead;
-    if (Serial.available() > 0)
-    {
-        bytesRead = Serial.read();
-        if (bytesRead == 'y')
-        {
-            int length = sizeof(gcodesForTesting)/sizeof(*gcodesForTesting);
-            Serial.println("Starting");
-            for (int i = 0; i < length; i++)
-            {
-                Serial.println("Using " + gcodesForTesting[i]);
-                gcinter.interpret_gcode(gcodesForTesting[i]);
-                Serial.print("X pos: ");
-                Serial.println(stpms[0].GetCurPos());
-                Serial.print("Y pos: ");
-                Serial.println(stpms[1].GetCurPos());
-            }
-        }
-    }
+    // uint8_t bytesRead;
+    // if (Serial.available() > 0)
+    // {
+    //     bytesRead = Serial.read();
+    //     if (bytesRead == 'y')
+    //     {
+    //         int length = sizeof(gcodesForTesting)/sizeof(*gcodesForTesting);
+    //         Serial.println("Starting");
+    //         for (int i = 0; i < length; i++)
+    //         {
+    //             Serial.println("Using " + gcodesForTesting[i]);
+    //             gcinter.interpret_gcode(gcodesForTesting[i]);
+    //             Serial.print("X pos: ");
+    //             Serial.println(stpms[0].GetCurPos());
+    //             Serial.print("Y pos: ");
+    //             Serial.println(stpms[1].GetCurPos());
+    //         }
+    //     }
+    // }
+    
 
-//    while(!Serial3.available()) {}
+   if(Serial3.available() > 0)
+   {
+        currentGCode = Serial3.readString();
+        gcinter.interpret_gcode(currentGCode);
+        // if (currentGCode == "Instructions ready. Transmit?\r\n")
+        // {
+        Serial3.println();
+        // }
+        // else
+        // {
+        //     // Serial1.println(currentGCode);
+        //     // Serial.println(currentGCode);
+        //     gcinter.interpret_gcode(currentGCode);
+        //     //Serial3.println('Y');
+        // }
+   }
 
-//    currentGCode = Serial3.readString();
-//    gcinter.interpret_gcode(currentGCode);
-//    Serial3.print('Y');
+   
 }
 
 void boundaryTriggeredX()

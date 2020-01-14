@@ -29,15 +29,19 @@ namespace DavinciBotView
         private const string MASTER_GCODE_FILE = "commands.gco";
         private const int DEFAULT_THRESHOLD_VALUE = 100;
         private const string MASTER_DIRECTORY = "../../../../Image_Processor_Files";
-        private const int AUTO_SCALE_MAX_HEIGHT = 300;
+        private const int AUTO_SCALE_MAX_HEIGHT = 500;
         private int AUTO_SCALE_MAX_WIDTH = 300;
-        public const string FINAL_SCALED_IMAGE = "resizedImage.bmp";
+        public string FINAL_SCALED_IMAGE = "resizedImage.bmp";
         public const string FIRST_SCALED_IMAGE = "firstScaledImage.bmp";
         private LinkedList<RecentPictureObject> recentPictures = new LinkedList<RecentPictureObject>();
         private List<PictureBox> recentPictureBoxes = new List<PictureBox>(6);
-        private int CAMERA_DEVICE_NUMBER = 5;
-        private bool paused = false;
+        private int nextRecentPictureIndex;
+        private int CAMERA_DEVICE_NUMBER = 0;
+        private bool printingPaused = false;
         private DaVinciBotClient client = new DaVinciBotClient();
+        private bool stopLoadingImageProgressBar = false;
+        private bool stopContourProgressBar = false;
+        private bool stopGcodeProgressBar = false;
 
         //Customize form objects in here
         public DavinciBotView()
@@ -58,6 +62,8 @@ namespace DavinciBotView
             EnableImageControls(false);
             EnableCameraControls(false);
             EnableGcodeControls(false);
+            EnablePrintingControls(false);
+
             this.ActiveControl = uploadImageFromFileButton;
 
             recentPictureBoxes.Add(recentPicture0);
@@ -66,6 +72,8 @@ namespace DavinciBotView
             recentPictureBoxes.Add(recentPicture3);
             recentPictureBoxes.Add(recentPicture4);
             recentPictureBoxes.Add(recentPicture5);
+
+            EnableAllRecentPictureBoxes(false);
         }
 
         /// <summary>
@@ -74,13 +82,10 @@ namespace DavinciBotView
         /// <param name="m"></param>
         private void EnableImageControls(bool m)
         {
-            if (imageLoaded)
-            {
-                trackBar1.Enabled = m;
-                thresholdNumberBox.Enabled = m;
-                invertCheckBox.Enabled = m;
-                generateGcodeButton.Enabled = m;
-            }
+            trackBar1.Enabled = m;
+            thresholdNumberBox.Enabled = m;
+            invertCheckBox.Enabled = m;
+            generateGcodeButton.Enabled = m;
         }
         private void EnableCameraControls(bool m)
         {
@@ -92,11 +97,17 @@ namespace DavinciBotView
         }
         private void EnableGcodeControls(bool m)
         {
+            startPrintingButton.Enabled = m;
+            pausePrintingButton.Enabled = m;
+            stopPrintingButton.Enabled = m;
             generateGcodeButton.Enabled = m;
+            printingPaused = false;
+        }
+        private void EnablePrintingControls(bool m)
+        {
             startPrintingButton.Enabled = m;
             stopPrintingButton.Enabled = m;
             pausePrintingButton.Enabled = m;
-            paused = false;
         }
 
         private void LoadFromFileToolbarButton_Click(object sender, EventArgs e)
@@ -116,6 +127,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void LoadGCodeFromFileButton_Click(object sender, EventArgs e)
         {
+            
             var fileContent = string.Empty;
             var filePath = string.Empty;
             OpenFileDialog openFile = new OpenFileDialog();
@@ -129,6 +141,7 @@ namespace DavinciBotView
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
                 gCodeFilePath = filePath;
@@ -172,6 +185,7 @@ namespace DavinciBotView
             else
             {
                 string oldDir = Environment.CurrentDirectory;
+                Environment.CurrentDirectory = MASTER_DIRECTORY;
                 RunPythonScript("gcode", 0);
                 Environment.CurrentDirectory = oldDir;
 
@@ -185,6 +199,8 @@ namespace DavinciBotView
                     }
                 }
             }
+
+            startPrintingButton.Enabled = true;
         }
 
         /// <summary>
@@ -195,7 +211,6 @@ namespace DavinciBotView
         {
             using (Runspace runspace = RunspaceFactory.CreateRunspace())
             {
-                Environment.CurrentDirectory = MASTER_DIRECTORY;
                 string pScript = BuildPythonScript(mode);
 
                 runspace.Open();
@@ -220,15 +235,32 @@ namespace DavinciBotView
         private string BuildPythonScript(string mode)
         {
             string script;
+
             switch (mode)
             {
                 case "gcode":
                     {
+                        string oldDir = Environment.CurrentDirectory;
+                        using (var fs = new FileStream("preview_contour.jpg", System.IO.FileMode.Open))
+                        {
+                            Bitmap bmp = new Bitmap(fs);
+                            Bitmap map;
+                            int bh = bmp.Height;
+                            int bw = bmp.Width;
+
+                            if (bh > bw)
+                            {
+                                map = (Bitmap)bmp.Clone();
+                                fs.Close();
+                                map.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                                map.Save("preview_contour.jpg");
+                            }
+                        }
                         //need to change this to scale image properly based on user inputs
                         double x_offset_mm = 0;
                         double y_offset_mm = 0;
-                        double output_image_horizontal_size_mm = 400;
-                        double pixel_size_mm = .5;
+                        double output_image_horizontal_size_mm = 50;
+                        double pixel_size_mm = .2;
                         double feedrate = 100;
                         double max_laser_power = 255;
                         int number_of_colors = 2;
@@ -236,7 +268,7 @@ namespace DavinciBotView
                         script = "python "
                             + "./imgcode.py "
                             + '"'
-                            + FINAL_SCALED_IMAGE
+                            + "preview_contour.jpg"
                             + '"'
                             + " ./commands.gco "
                             + x_offset_mm + ' '
@@ -246,7 +278,6 @@ namespace DavinciBotView
                             + feedrate + ' '
                             + max_laser_power + ' '
                             + number_of_colors;
-
                         break;
                     }
                 case "contour":
@@ -284,15 +315,18 @@ namespace DavinciBotView
         private void FindContour(int threshold)
         {
             string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = MASTER_DIRECTORY;
             RunPythonScript("contour", threshold);
-
             using (var fs = new FileStream("preview_contour.jpg", System.IO.FileMode.Open))
             {
                 var bmp = new Bitmap(fs);
                 var map = (Bitmap)bmp.Clone();
-                previewImageBox.Image = map; //(Bitmap)bmp.Clone();
+                previewImageBox.Image = map;
+                fs.Close();//(Bitmap)bmp.Clone();
                 contourCopy = map;
             }
+            //previewImageBox.Image.Save("preview_contour.jpg");
+            
             Environment.CurrentDirectory = oldDir;
         }
 
@@ -331,6 +365,8 @@ namespace DavinciBotView
         private void StartCameraButton_Click(object sender, EventArgs e)
         {
             uploadImageFromFileTextbox.Text = "";
+            startedCamera = true;
+            ResetLoadedImage();
             StartCamera();
         }
 
@@ -405,24 +441,21 @@ namespace DavinciBotView
             //Puts it in the main box. Save this for later.
             OurPictureBox.Image = temp;
             pictureTakenWithCamera = true;
-            //make sure to update loadedImagePath to this temp file
-            //uploadImageFromFileTextbox 
-            //SaveFileDialog saveCameraImage = new SaveFileDialog
+            loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
             string oldDir = Environment.CurrentDirectory;
             Environment.CurrentDirectory = MASTER_DIRECTORY;
-
-            loadedImagePath = "temp.jpg";
-            OurPictureBox.Image.Save(loadedImagePath);
-            //AUTOSCALE IMAGE HERE
-            var bmp = AutoScaleImage("temp.jpg");
-            bmp.Save(FINAL_SCALED_IMAGE);
-
-            AddToRecentPictures();
+            temp.Save("recentPicture" + nextRecentPictureIndex.ToString() + ".jpg");
             Environment.CurrentDirectory = oldDir;
+            UpdateRecentPicturePath();
 
             FindContour(DEFAULT_THRESHOLD_VALUE);
             imageLoaded = true;
             EnableImageControls(true);
+
+        }
+        private void SaveCameraImageCopy(Bitmap bmp)
+        {
+            int i = 0;
 
         }
 
@@ -627,6 +660,11 @@ namespace DavinciBotView
 
         private void HandleUploadedImage(object sender, EventArgs e)
         {
+            if(startedCamera)
+            {
+                StopCamera();
+                startedCamera = false;
+            }
             var fileContent = string.Empty;
             var filePath = string.Empty;
             OpenFileDialog openFile = new OpenFileDialog();
@@ -640,38 +678,59 @@ namespace DavinciBotView
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                //SPIN THREAD TO START A PROGRESS BAR
+                // -> run loadingImage progress bar here
+                //
                 ResetLoadedImage();
                 //Get the path of specified file
                 filePath = openFile.FileName;
-
-                //PULL OUT INTO FUNCTION
                 loadedImagePath = filePath;
                 uploadImageFromFileTextbox.Text = loadedImagePath;
 
-                string oldDir = Environment.CurrentDirectory;
-                Environment.CurrentDirectory = MASTER_DIRECTORY;
+                UpdateRecentPicturePath();
 
-                Bitmap bmp = AutoScaleImage(loadedImagePath);
-                bmp.Save(FINAL_SCALED_IMAGE);
-                OurPictureBox.Image = (Bitmap)bmp.Clone();
-                bmp.Dispose();
-                AddToRecentPictures();
+                //END THREAD
+                //stopLoadingImageProgressBar
 
-                Environment.CurrentDirectory = oldDir;
                 HandleThresholdValueChange("");
-                
+
+
+                //START THREAD 
+                //Contour thread
                 FindContour(DEFAULT_THRESHOLD_VALUE);
-                //END HERE
+                //END CONTOUR THREAD HERE
                 EnableImageControls(true);
                 EnableGcodeControls(true);
-                imageLoaded = true;                
+                imageLoaded = true;
             }
             // MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
         }
 
+        private void UpdateRecentPicturePath()
+        {
+            string oldDir = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = MASTER_DIRECTORY;
+
+            Bitmap bmp = AutoScaleImage(loadedImagePath);
+            loadedImagePath = "recentPicture" + nextRecentPictureIndex.ToString() + ".jpg";
+            bmp.Save(loadedImagePath);
+            FINAL_SCALED_IMAGE = Path.GetFullPath(loadedImagePath);
+            AddToRecentPictures(FINAL_SCALED_IMAGE);
+            OurPictureBox.Image = (Bitmap)bmp.Clone();
+            bmp.Dispose();
+
+
+            Environment.CurrentDirectory = oldDir;
+        }
+
         private void StartPrintingButton_Click(object sender, EventArgs e)
         {
-            client.RunClient();
+            startPrintingButton.Enabled = false;
+            LoadGCodeFromFileButton.Enabled = false;
+            generateGcodeButton.Enabled = false;
+            client.RunClient(); //SHOULD START 
+            //TESTING ONLY
+            startPrintingButton.Enabled = true;
         }
 
         private void SaveCameraImageButton_Click(object sender, EventArgs e)
@@ -724,10 +783,10 @@ namespace DavinciBotView
             {
                 Bitmap original = new Bitmap(fs);
                 double scaleFactor = 1;
-                int oHeight = original.Height;
-                int oWidth = original.Width;
+                double oHeight = original.Height;
+                double oWidth = original.Width;
 
-                if (oHeight > oWidth && (oHeight > AUTO_SCALE_MAX_HEIGHT))
+                if ((oHeight > oWidth && (oHeight > AUTO_SCALE_MAX_HEIGHT)) || (oWidth == oHeight))
                 {
                     scaleFactor = oHeight / AUTO_SCALE_MAX_HEIGHT;
                 }
@@ -737,10 +796,20 @@ namespace DavinciBotView
                 }
 
                 int scaledWidth = (int)(original.Width / scaleFactor);
+                if(scaledWidth == 0)
+                {
+                    scaleFactor = 1;
+                }
                 int scaledHeight = (int)(original.Height / scaleFactor);
+                if(scaledHeight == 0)
+                {
+                    scaleFactor = 1;
+                }
 
                 resized = new Bitmap(original, new Size(scaledWidth, scaledHeight));
                 resized.Save("firstScaledImage.bmp");
+                resized.Save("preview_contour.jpg");
+                FINAL_SCALED_IMAGE = "preview_contour.jpg";
                 fs.Dispose();
             }
             //Environment.CurrentDirectory = oldDir;
@@ -762,23 +831,26 @@ namespace DavinciBotView
             startedCamera = false;
             OurPictureBox.Image = null;
             previewImageBox.Image = null;
+            thresholdNumberBox.Value = 100;
+            trackBar1.Value = 100;
             EnableCameraControls(false);
             EnableGcodeControls(false);
             EnableImageControls(false);
+            EnablePrintingControls(false);
         }
 
         /// <summary>
         /// Adds to the recent pictures list
         /// </summary>
-        private void AddToRecentPictures()
+        private void AddToRecentPictures(string filename)
         {
-            using (var fs = new FileStream(FIRST_SCALED_IMAGE, FileMode.Open))
+            using (var fs = new FileStream(filename, FileMode.Open))
             {
                 Bitmap bmp = new Bitmap(fs);
                 Bitmap item = (Bitmap)bmp.Clone();
-                recentPictures.AddFirst(new RecentPictureObject(bmp, FIRST_SCALED_IMAGE));
+                //string fullPath = Path.GetFileName(filename);
+                recentPictures.AddFirst(new RecentPictureObject(bmp, filename));
             }
-
             UpdateRecentPictureBoxes();
         }
         /// <summary>
@@ -786,16 +858,58 @@ namespace DavinciBotView
         /// </summary>
         private void UpdateRecentPictureBoxes()
         {
-            //  IEnumerator<Image> iter = new IEnumerator<Image>();
             int listSize = recentPictures.Count;
             int i = 0;
             foreach (RecentPictureObject o in recentPictures)
             {
                 recentPictureBoxes[i].Image = o.Image;
-                i++;
-                if (i == 6)
-                    return;
+                EnableRecentPictureBox(i, true);
+                UpdateThumbnailImage(i, o.Image);
+                if (i == 5)
+                {
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
+
             }
+            nextRecentPictureIndex = i;
+            return;
+        }
+
+        private void UpdateThumbnailImage(int i, Image im)
+        {
+            if (i == 0)
+            {
+                recentPicture0.Image = im;
+            }
+            if (i == 1)
+            {
+                recentPicture1.Image = im;
+            }
+            if (i == 2)
+            {
+                recentPicture2.Image = im;
+            }
+            if (i == 3)
+            {
+                recentPicture3.Image = im;
+            }
+            if (i == 4)
+            {
+                recentPicture4.Image = im;
+            }
+            if (i == 5)
+            {
+                recentPicture5.Image = im;
+            }
+        }
+
+        private int FindLastRecentPictureIndex()
+        {
+            return 0;
         }
 
         private void recentPicture0_Click(object sender, EventArgs e)
@@ -832,18 +946,18 @@ namespace DavinciBotView
         {
             RecentPictureObject pic = recentPictures.ElementAt<RecentPictureObject>(t);
             recentPictures.Remove(recentPictures.ElementAt<RecentPictureObject>(t));
-            
+
             string oldDir = Environment.CurrentDirectory;
-            
+
             Environment.CurrentDirectory = MASTER_DIRECTORY;
-            
+
             pic.Image.Save(FINAL_SCALED_IMAGE);
-            loadedImagePath = Path.GetFileName(FINAL_SCALED_IMAGE);
+            loadedImagePath = pic.Filepath;
             uploadImageFromFileTextbox.Text = loadedImagePath;
-            
+
             var bmp = pic.Image;
             OurPictureBox.Image = (Bitmap)bmp.Clone();
-            AddToRecentPictures(); //fix this to eliminate images showing up twice
+            AddToRecentPictures(pic.Filepath); //fix this to eliminate images showing up twice
             Environment.CurrentDirectory = oldDir;
             HandleThresholdValueChange("");
             FindContour(DEFAULT_THRESHOLD_VALUE);
@@ -855,7 +969,7 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void stopPrintingButton_Click(object sender, EventArgs e)
         {
-            client.StopJob();
+            client.CancelJob();
         }
 
         /// <summary>
@@ -865,7 +979,58 @@ namespace DavinciBotView
         /// <param name="e"></param>
         private void pausePrintingButton_Click(object sender, EventArgs e)
         {
-            
+            HandlePauseJob();
+        }
+        private void HandlePauseJob()
+        {
+            if (printingPaused)
+            {
+                client.ResumeJob();
+                pausePrintingButton.Text = "Pause Printing";
+            }
+            else
+            {
+                client.PauseJob();
+                pausePrintingButton.Text = "Resume Printing";
+            }
+            printingPaused = !printingPaused;
+        }
+
+        private void EnableRecentPictureBox(int i, bool m)
+        {
+            if (i == 0)
+            {
+                recentPicture0.Enabled = m;
+            }
+            if (i == 1)
+            {
+                recentPicture1.Enabled = m;
+            }
+            if (i == 2)
+            {
+                recentPicture2.Enabled = m;
+            }
+            if (i == 3)
+            {
+                recentPicture3.Enabled = m;
+            }
+            if (i == 4)
+            {
+                recentPicture4.Enabled = m;
+            }
+            if (i == 5)
+            {
+                recentPicture5.Enabled = m;
+            }
+
+
+        }
+        private void EnableAllRecentPictureBoxes(bool m)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                EnableRecentPictureBox(i, m);
+            }
         }
     }
 }

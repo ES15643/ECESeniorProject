@@ -82,11 +82,11 @@ void Stepper_Motor::Step()
 
     if (Direction == 0)
     {
-        CurPos -= 0.00125;
+        CurPos -= 0.00125;//step_to_mm;
     }
     else
     {
-        CurPos += 0.00125;
+        CurPos += 0.00125;//step_to_mm;
     }
 }
 
@@ -100,7 +100,6 @@ void Stepper_Motor::ResetMotor()
     StepCount = 0;
     TotalSteps = 0;
     AccelCurveIndex = 0;
-    MinDelay = min_delay_default;
 }
 
 void Stepper_Motor::Home()
@@ -114,7 +113,7 @@ void Stepper_Motor::Home()
     {
         stepperFlags |= (1 << 1);
     }
-    TotalSteps = 20000;
+    TotalSteps = 80000;
     MovingDone = false;
 
     Enable_Timer
